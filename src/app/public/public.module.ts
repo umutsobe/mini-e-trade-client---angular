@@ -6,4 +6,4 @@ import { ComponentsModule } from './components/components.module';
   declarations: [],
   imports: [CommonModule, ComponentsModule],
 })
-export class UiModule {}
+export class PublicModule {}

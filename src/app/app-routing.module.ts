@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
-import { HomeComponent } from './ui/components/home/home.component';
+import { HomeComponent } from './public/components/home/home.component';
 import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
@@ -28,11 +28,11 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   {
     path: 'basket',
-    loadChildren: () => import('./ui/components/basket/basket.module').then((module) => module.BasketModule),
+    loadChildren: () => import('./public/components/basket/basket.module').then((module) => module.BasketModule),
   },
   {
     path: 'products',
-    loadChildren: () => import('./ui/components/products/products.module').then((module) => module.ProductsModule),
+    loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule),
   },
 ];
 
