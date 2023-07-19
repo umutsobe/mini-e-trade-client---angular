@@ -10,11 +10,12 @@ import { HeaderComponent } from './common-components/header/header.component';
 import { FooterComponent } from './common-components/footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PublicModule } from './public/public.module';
-
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
   providers: [],
   bootstrap: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule],
+  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule],
 })
 export class AppModule {}

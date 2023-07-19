@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-declare var $: any;
+import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
@@ -7,7 +6,7 @@ declare var $: any;
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent {}
-$(document).ready(() => {
-  alert('addawd');
-});
+export class AppComponent implements OnInit {
+  constructor() {}
+  ngOnInit(): void {}
+}
