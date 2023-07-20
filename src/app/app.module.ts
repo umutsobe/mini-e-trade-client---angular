@@ -12,10 +12,23 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PublicModule } from './public/public.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
-  providers: [],
+  providers: [{ provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true }],
   bootstrap: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AdminModule,
+    PublicModule,
+    BrowserAnimationsModule,
+    NgbModule,
+    FontAwesomeModule,
+    ToastrModule.forRoot(),
+    NgxSpinnerModule,
+    HttpClientModule,
+  ],
 })
 export class AppModule {}
