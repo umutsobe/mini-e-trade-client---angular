@@ -18,17 +18,6 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [AppComponent, HeaderComponent, FooterComponent],
   providers: [{ provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true }],
   bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AdminModule,
-    PublicModule,
-    BrowserAnimationsModule,
-    NgbModule,
-    FontAwesomeModule,
-    ToastrModule.forRoot(),
-    NgxSpinnerModule,
-    HttpClientModule,
-  ],
+  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule, HttpClientModule],
 })
 export class AppModule {}
