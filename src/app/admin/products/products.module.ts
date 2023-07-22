@@ -10,8 +10,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FileUploadModule } from '../../services/common/file-upload/file-upload.module';
 @NgModule({
   declarations: [ProductsComponent, CreateComponent, ListComponent],
-  imports: [MatFormFieldModule, MatDialogModule, MatTableModule, MatPaginatorModule, ReactiveFormsModule, NgxSpinnerModule, CommonModule, RouterModule.forChild([{ path: '', component: ProductsComponent }])],
+  imports: [MatFormFieldModule, MatDialogModule, MatTableModule, MatPaginatorModule, ReactiveFormsModule, NgxSpinnerModule, CommonModule, RouterModule.forChild([{ path: '', component: ProductsComponent }]), FileUploadModule],
 })
 export class ProductsModule {}

@@ -26,6 +26,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
       </div>
       <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
     </form>
+    <app-file-upload></app-file-upload>
   `,
 })
 export class CreateComponent {
