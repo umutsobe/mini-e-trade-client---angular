@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 import { HttpClientService } from '../http-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-file-upload',
   template: `
     <div class="center">
-      <ngx-file-drop dropZoneLabel="Drop files here" [accept]="fileFormats" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" (onFileDrop)="selectedFiles($event)">
+      <ngx-file-drop dropZoneLabel="Drop files here" [accept]="fileFormats" (onFileDrop)="selectedFiles($event)">
         <!-- accept = seçilecek dosya tipini belirtir -->
         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
           <button class="btn btn-primary" type="button" (click)="openFileSelector()">Dosya Seç</button>
@@ -31,7 +31,7 @@ import { ToastrService } from 'ngx-toastr';
         </table>
       </div>
     </div>
-    <button (click)="send()" *ngIf="files" class="btn btn-primary">Gönder</button>
+    <button (click)="send()" *ngIf="files" class="btn btn-success">Gönder</button>
   `,
 })
 export class FileUploadComponent {
@@ -72,12 +72,7 @@ export class FileUploadComponent {
           }
         );
     }
-  }
-  public fileLeave(event) {
-    console.log(event);
-  }
-  public fileOver(event) {
-    console.log(event);
+    this.files = [];
   }
 }
 
