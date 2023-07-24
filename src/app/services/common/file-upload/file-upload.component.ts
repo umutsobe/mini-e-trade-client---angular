@@ -3,6 +3,7 @@ import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 import { HttpClientService } from '../http-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-file-upload',
@@ -14,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
           <button class="btn btn-primary" type="button" (click)="openFileSelector()">Dosya Seç</button>
         </ng-template>
       </ngx-file-drop>
-      <div class="upload-table" *ngIf="files">
+      <div class="upload-table" *ngIf="files.length > 0">
         <table class="table">
           <thead>
             <tr>
@@ -35,8 +36,8 @@ import { ToastrService } from 'ngx-toastr';
   `,
 })
 export class FileUploadComponent {
-  constructor(private http: HttpClientService, private toastr: ToastrService) {}
-  public files: NgxFileDropEntry[];
+  constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService) {}
+  public files: NgxFileDropEntry[] = [];
 
   // @Input() options: Partial<FileUploadOptions>; //böyle daha modülerdi ama ben amele versiyonu yapacağım
 
@@ -47,6 +48,8 @@ export class FileUploadComponent {
   }
 
   send() {
+    this.spinner.show();
+    ('');
     for (const file of this.files) {
       const fileData: FormData = new FormData();
       (file.fileEntry as FileSystemFileEntry).file((_file: File) => {
@@ -65,10 +68,12 @@ export class FileUploadComponent {
           (data) => {
             //success
             this.toastr.success('Dosya başarıyla eklenmiştir');
+            this.spinner.hide();
           },
           (error: HttpErrorResponse) => {
             //error
             this.toastr.error('Dosyalar yüklenirken hata oluştu');
+            this.spinner.hide();
           }
         );
     }
