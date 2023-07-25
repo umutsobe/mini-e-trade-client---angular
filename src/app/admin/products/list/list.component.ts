@@ -6,6 +6,7 @@ import { ProductService } from 'src/app/services/models/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
+import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange-service';
 declare var $: any;
 @Component({
   selector: 'app-list',
@@ -36,14 +37,40 @@ declare var $: any;
 
         <ng-container matColumnDef="updatedDate">
           <th mat-header-cell *matHeaderCellDef>UpdatedDate</th>
-          <td mat-cell *matCellDef="let element">{{ formatDate(element.updatedDate) }}</td>
+          <td mat-cell *matCellDef="let element">
+            {{ formatDate(element.updatedDate) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="photo">
+          <th mat-header-cell *matHeaderCellDef>Photo</th>
+          <td mat-cell *matCellDef="let element">
+            <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhoto" (click)="openPhotoDialog(element)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
+            <!-- dialog -->
+            <div class="modal fade" id="selectPhoto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Fotoğraf Ekleme</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <app-file-upload></app-file-upload>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef>Delete</th>
           <td mat-cell *matCellDef="let element">
             <!-- <img (click)="delete(element.id)" src="/assets/delete.png" width="25" style="cursor:pointer;" /> -->
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
             <!-- dialog modal -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -87,9 +114,9 @@ declare var $: any;
   styleUrls: ['list.component.style.css'],
 })
 export class ListComponent implements OnInit {
-  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
+  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}
 
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate', 'delete', 'edit'];
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate', 'photo', 'delete', 'edit'];
   dataSource: MatTableDataSource<List_Product> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -124,7 +151,7 @@ export class ListComponent implements OnInit {
   //dialog penceresinde seçilen ürün
   selectedProduct: List_Product; // dialog penceresinde sorun yaşadım. o anki element id'ye erişemiyordum ben de böyle çözüm sağladım.
 
-  openDialog(element: List_Product) {
+  openDeleteDialog(element: List_Product) {
     this.selectedProduct = element;
   }
   delete() {
@@ -134,5 +161,8 @@ export class ListComponent implements OnInit {
       this.toastr.success('Ürün Başarıyla Silindi');
       this.getProducts();
     });
+  }
+  openPhotoDialog(element) {
+    this.idService.setId(element.id);
   }
 }

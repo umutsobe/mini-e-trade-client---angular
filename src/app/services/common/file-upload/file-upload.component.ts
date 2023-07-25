@@ -4,6 +4,7 @@ import { HttpClientService } from '../http-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { IdExchangeService } from '../../data-exchange/id-exchange-service';
 
 @Component({
   selector: 'app-file-upload',
@@ -32,11 +33,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
         </table>
       </div>
     </div>
-    <button (click)="send()" *ngIf="files" class="btn btn-success">Gönder</button>
+    <button (click)="send()" *ngIf="files.length > 0" class="btn btn-success">Gönder</button>
   `,
 })
 export class FileUploadComponent {
-  constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService) {}
+  constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService, private idService: IdExchangeService) {}
   public files: NgxFileDropEntry[] = [];
 
   // @Input() options: Partial<FileUploadOptions>; //böyle daha modülerdi ama ben amele versiyonu yapacağım
@@ -56,11 +57,14 @@ export class FileUploadComponent {
         fileData.append(_file.name, _file, file.relativePath);
       });
 
+      console.log(this.idService.getId());
+
       this.http
         .post(
           {
             controller: 'ProductControllers',
             action: 'upload',
+            queryString: `id=${this.idService.getId()}`,
           },
           fileData
         )
