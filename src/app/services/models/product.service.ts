@@ -4,12 +4,14 @@ import { CreateProduct } from 'src/app/contracts/create_product';
 import { Observable, firstValueFrom } from 'rxjs';
 import { List_Product } from 'src/app/contracts/list_product';
 import { HttpErrorResponse } from '@angular/common/http';
+import { List_Product_Image } from 'src/app/contracts/list_product_image';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   constructor(private http: HttpClientService) {}
+
   create(product: CreateProduct): Observable<CreateProduct> {
     return this.http.post(
       {
@@ -37,6 +39,27 @@ export class ProductService {
         controller: 'ProductControllers',
       },
       id
+    );
+  }
+
+  readImages(id: string): Observable<List_Product_Image[]> {
+    return this.http.get<List_Product_Image[]>(
+      {
+        action: 'getproductimages',
+        controller: 'productcontrollers',
+      },
+      id
+    );
+  }
+
+  deleteImage(productId: string, imageId: string): Observable<any> {
+    return this.http.delete(
+      {
+        action: 'DeleteImage',
+        controller: 'ProductControllers',
+        queryString: `imageId=${imageId}`, //apideki imageId ismi ile buradaki aynı olmak zorunda
+      },
+      productId
     );
   }
 }

@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class IdExchangeService {
-  private id: string;
+  public id: string;
 
   getId(): string {
     return this.id;
   }
-  setId(id: string) {
+  setId(id) {
     this.id = id;
   }
 }
