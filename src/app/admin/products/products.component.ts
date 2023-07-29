@@ -3,16 +3,12 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-products',
   template: `
-    <div class="row">
-      <div class="col-3 left-panel">
-        <app-create></app-create>
-      </div>
-      <div class="col-9 right-panel">
-        <app-list></app-list>
-      </div>
+    <div class="d-flex justify-content-center my-4 ">
+      <button routerLink="create" class="btn-lg btn btn-primary me-2 ">Create Product</button>
+      <button routerLink="list" class="btn-lg btn btn-primary">List Product</button>
     </div>
-    <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
+
+    <router-outlet></router-outlet>
   `,
-  styleUrls: ['products.component.style.css'],
 })
 export class ProductsComponent {}

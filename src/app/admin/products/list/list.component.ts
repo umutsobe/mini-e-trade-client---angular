@@ -136,7 +136,6 @@ declare var $: any;
       </div>
     </div>
   `,
-  styleUrls: ['list.component.style.css'],
 })
 export class ListComponent implements OnInit {
   constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}

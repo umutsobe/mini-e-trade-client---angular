@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
@@ -13,11 +12,12 @@ import { PublicModule } from './public/public.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
   providers: [{ provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true }],
   bootstrap: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule, HttpClientModule, RouterModule],
 })
 export class AppModule {}

@@ -7,25 +7,27 @@ import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-create',
   template: `
-    <h1 class=" mt-2 text-center ">Create Product</h1>
-    <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" formControlName="name" />
-        <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
-      </div>
-      <div class="mb-3">
-        <label for="price" class="form-label">Price</label>
-        <input class="form-control" id="price" rows="3" formControlName="price" />
-        <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">Fiyat girişi zorunludur</div>
-      </div>
-      <div class="mb-3">
-        <label for="stock" class="form-label">Stock</label>
-        <input class="form-control" id="stock" rows="3" formControlName="stock" />
-        <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">Stock girişi zorunludur</div>
-      </div>
-      <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
-    </form>
+    <div class="w-50 mx-auto">
+      <h1 class=" mt-2 text-center ">Create Product</h1>
+      <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" formControlName="name" />
+          <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input class="form-control" id="price" rows="3" formControlName="price" />
+          <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">Fiyat girişi zorunludur</div>
+        </div>
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input class="form-control" id="stock" rows="3" formControlName="stock" />
+          <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">Stock girişi zorunludur</div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+      </form>
+    </div>
   `,
 })
 export class CreateComponent {

@@ -1,15 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from './services/common/http-client.service';
-declare var $: any;
 @Component({
   selector: 'app-root',
   template: `
     <app-header></app-header>
-    <router-outlet></router-outlet>
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+    <div style="margin-top: 250px;">
+      <app-footer></app-footer>
+    </div>
   `,
 })
-export class AppComponent implements OnInit {
-  constructor(private http: HttpClientService) {}
-  ngOnInit(): void {}
-}
+export class AppComponent {}
