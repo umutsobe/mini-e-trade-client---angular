@@ -27,7 +27,7 @@ declare var $: any;
         </ng-container>
 
         <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef>Weight</th>
+          <th mat-header-cell *matHeaderCellDef>Price</th>
           <td mat-cell *matCellDef="let element">{{ element.price }}</td>
         </ng-container>
 
