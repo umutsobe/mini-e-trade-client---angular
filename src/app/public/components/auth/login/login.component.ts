@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
   selector: 'app-login',
   template: `
-    <form [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-top: 75px;" class="w-25 mx-auto">
+    <form [formGroup]="frm" (ngSubmit)="onSubmit(emailOrUserName.value, password.value)" style="margin-top: 75px;" class="w-25 mx-auto">
       <h1 class="mb-4">Giriş Yap</h1>
 
       <div class="mb-3">
-        <label for="email" class="form-label">E-Mail</label>
-        <input type="text" class="form-control" id="email" formControlName="email" />
-        <div *ngIf="!email.valid && (email.dirty || email.touched)" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
+        <label for="emailOrUserName" class="form-label">E-Mail or Username</label>
+        <input type="text" class="form-control" id="emailOrUserName" formControlName="emailOrUserName" />
+        <div *ngIf="!emailOrUserName.valid && (emailOrUserName.dirty || emailOrUserName.touched)" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
       </div>
 
       <div class="mb-3">
@@ -27,17 +29,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent {
   frm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService) {}
 
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+      emailOrUserName: ['', [Validators.required, Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     });
   }
-  onSubmit() {}
-  get email() {
-    return this.frm.get('email');
+  async onSubmit(emailOrUserName: string, password: string) {
+    this.spinner.show();
+    await this.userService.login(emailOrUserName, password, () => {
+      this.spinner.hide();
+    });
+  }
+
+  get emailOrUserName() {
+    return this.frm.get('emailOrUserName');
   }
   get password() {
     return this.frm.get('password');
