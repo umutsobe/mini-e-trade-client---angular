@@ -13,11 +13,53 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { JwtModule } from '@auth0/angular-jwt';
+import { LoginComponent } from './public/components/auth/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent],
-  providers: [{ provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true }],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent],
+  providers: [
+    { provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('719960856381-8eaoopcgmmkjn2nv91bklf4utlqkc62s.apps.googleusercontent.com'),
+          },
+        ],
+        onError: (err) => {
+          console.error(err);
+        },
+      } as SocialAuthServiceConfig,
+    },
+  ],
   bootstrap: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, AdminModule, PublicModule, BrowserAnimationsModule, NgbModule, FontAwesomeModule, ToastrModule.forRoot(), NgxSpinnerModule, HttpClientModule, RouterModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AdminModule,
+    PublicModule,
+    BrowserAnimationsModule,
+    NgbModule,
+    FontAwesomeModule,
+    ToastrModule.forRoot(),
+    NgxSpinnerModule,
+    HttpClientModule,
+    RouterModule,
+    ReactiveFormsModule,
+    SocialLoginModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem('accessToken'),
+        allowedDomains: ['localhost:7041'],
+      },
+    }),
+  ],
 })
 export class AppModule {}

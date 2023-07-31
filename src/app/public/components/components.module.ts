@@ -4,6 +4,7 @@ import { ProductsModule } from './products/products.module';
 import { BasketModule } from './basket/basket.module';
 import { HomeModule } from './home/home.module';
 import { AuthModule } from './auth/auth.module';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [],

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { HeaderComponent } from './common-components/header/header.component';
+
 @Component({
   selector: 'app-root',
   template: `
-    <app-header></app-header>
+    <app-header #myComponent></app-header>
     <div>
       <router-outlet></router-outlet>
     </div>

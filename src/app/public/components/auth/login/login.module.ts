@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [],
   imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild([{ path: '', component: LoginComponent }])],
 })
 export class LoginModule {}

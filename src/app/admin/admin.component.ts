@@ -13,11 +13,10 @@ import { Component } from '@angular/core';
           <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
         </ul>
       </div>
-      <div class="col-10 right-panel">
+      <div class="col-10 right-panel" style="height: 600px; border-radius: 10px;">
         <router-outlet></router-outlet>
       </div>
     </div>
   `,
-  styleUrls: ['admin.component.style.css'],
 })
 export class AdminComponent {}

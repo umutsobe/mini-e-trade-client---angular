@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
@@ -29,7 +31,7 @@ import { UserService } from 'src/app/services/models/user.service';
 export class LoginComponent {
   frm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
@@ -39,8 +41,23 @@ export class LoginComponent {
   }
   async onSubmit(emailOrUserName: string, password: string) {
     this.spinner.show();
+
     await this.userService.login(emailOrUserName, password, () => {
       this.spinner.hide();
+
+      this.authService.identityCheck();
+
+      // this.activatedRoute.queryParams.subscribe((params) => {
+      //   const returnUrl: string = params['returnUrl'];
+      //   debugger;
+      //   if (returnUrl) {
+      //     this.router.navigate([returnUrl]);
+      //   }
+      // });
+    });
+
+    this.router.navigate(['']).then(() => {
+      window.location.reload();
     });
   }
 
