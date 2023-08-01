@@ -8,12 +8,5 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class BasketComponent {
   constructor(private spinner: NgxSpinnerService) {}
-  ngOnInit(): void {
-    this.spinner.show();
-
-    setTimeout(() => {
-      /** spinner ends after 5 seconds */
-      this.spinner.hide();
-    }, 2000);
-  }
+  ngOnInit(): void {}
 }

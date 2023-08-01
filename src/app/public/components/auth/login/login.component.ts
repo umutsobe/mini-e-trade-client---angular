@@ -1,7 +1,10 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { async } from 'rxjs';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
@@ -24,6 +27,8 @@ import { UserService } from 'src/app/services/models/user.service';
       </div>
 
       <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+      <asl-google-signin-button type="standard" size="large" theme="outline" style="border-radius: 5px;"></asl-google-signin-button>
+
       <a routerLink="/register" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Üye Değil Misiniz? Kayıt Olun </a>
     </form>
   `,
@@ -31,7 +36,34 @@ import { UserService } from 'src/app/services/models/user.service';
 export class LoginComponent {
   frm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private socialAuthService: SocialAuthService, private toastr: ToastrService) {
+    socialAuthService.authState.subscribe(async (user: SocialUser) => {
+      console.log(user);
+      this.spinner.show();
+
+      if (!user.lastName) {
+        user.lastName = '.';
+      }
+      if (!user.name) {
+        user.name = '.';
+      }
+      if (!user.firstName) {
+        user.firstName = '.';
+      }
+
+      await this.userService.googleLogin(user, () => {
+        spinner.hide();
+        authService.identityCheck();
+
+        this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
+        setTimeout(() => {
+          this.router.navigate(['']).then(() => {
+            window.location.reload();
+          });
+        }, 1500);
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
@@ -46,19 +78,15 @@ export class LoginComponent {
       this.spinner.hide();
 
       this.authService.identityCheck();
-
-      // this.activatedRoute.queryParams.subscribe((params) => {
-      //   const returnUrl: string = params['returnUrl'];
-      //   debugger;
-      //   if (returnUrl) {
-      //     this.router.navigate([returnUrl]);
-      //   }
-      // });
     });
 
-    this.router.navigate(['']).then(() => {
-      window.location.reload();
-    });
+    //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
+    this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
+    setTimeout(() => {
+      this.router.navigate(['']).then(() => {
+        window.location.reload();
+      });
+    }, 1500);
   }
 
   get emailOrUserName() {

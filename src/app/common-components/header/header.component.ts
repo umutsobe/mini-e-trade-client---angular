@@ -10,14 +10,16 @@ import { AuthService } from 'src/app/services/common/auth/auth.service';
       <div class="container-fluid">
         <a routerLink="" role="button" class="ms-5 navbar-brand cursor-pointer">Home</a>
         <a routerLink="products" role="button" class="text-white me-4 nav-link cursor-pointer">Products</a>
-        <a routerLink="admin" role="button" class="text-white nav-link me-auto cursor-pointer" *ngIf="authService.isAuthenticated">Admin Panel</a>
+        <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated">Admin Panel</a></div>
         <form class="d-flex me-5 me-auto" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" />
           <button class="btn btn-warning" style="background-color: #f3a847;" type="button"><p style="margin-top: 1px; margin-bottom: 0;">Search</p></button>
         </form>
-        <a routerLink="register" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Register</button></a>
-        <a routerLink="login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Login</button></a>
-        <a role="button" class="text-white me-4 nav-link cursor-pointer" (click)="signOut()" *ngIf="authService.isAuthenticated"><button class="btn btn-success">Çıkış Yap</button></a>
+        <div class="d-flex">
+          <a routerLink="register" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Register</button></a>
+          <a routerLink="login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Login</button></a>
+          <a role="button" class="text-white me-4 nav-link cursor-pointer" (click)="signOut()" *ngIf="authService.isAuthenticated"><button class="btn btn-success">Çıkış Yap</button></a>
+        </div>
         <div routerLink="basket" role="button" class="d-flex align-items-center cursor-pointer">
           <fa-icon class="fs-4 me-1" [icon]="faBasketShopping"></fa-icon>
           <a class="nav-link text-white me-5">Basket</a>

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
-  declarations: [RegisterComponent],
+  declarations: [],
   imports: [CommonModule, NgxSpinnerModule, ReactiveFormsModule, RouterModule.forChild([{ path: '', component: RegisterComponent }])],
 })
 export class RegisterModule {}

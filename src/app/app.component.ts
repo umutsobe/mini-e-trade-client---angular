@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { HeaderComponent } from './common-components/header/header.component';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',

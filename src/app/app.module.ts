@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,11 +16,12 @@ import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './public/components/auth/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { RegisterComponent } from './public/components/auth/register/register.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent],
   providers: [
     { provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true },
     {
@@ -54,6 +55,7 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
     RouterModule,
     ReactiveFormsModule,
     SocialLoginModule,
+    GoogleSigninButtonModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem('accessToken'),
@@ -61,5 +63,6 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
       },
     }),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

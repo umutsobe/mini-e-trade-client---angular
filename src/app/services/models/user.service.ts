@@ -6,6 +6,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { TokenResponse } from 'src/app/contracts/token/tokenResponse';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SocialUser } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +41,25 @@ export class UserService {
       this.toastr.success('Giriş Başarılı', 'Login');
       this.spinner.hide();
     }
+  }
+
+  async googleLogin(user: SocialUser, callBackFunction?: () => void): Promise<any> {
+    const observable: Observable<SocialUser | TokenResponse> = this.http.post<SocialUser | TokenResponse>(
+      {
+        controller: 'users',
+        action: 'googlelogin',
+      },
+      user
+    );
+
+    const tokenResponse: TokenResponse = (await firstValueFrom(observable)) as TokenResponse;
+
+    if (tokenResponse) {
+      localStorage.setItem('accessToken', tokenResponse.token.accessToken);
+
+      this.toastr.success('Google Üzerinden Giriş Başarılı', 'Giriş Başarılı');
+    }
+
+    callBackFunction();
   }
 }
