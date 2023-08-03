@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BaseUrl } from 'src/app/contracts/base_url';
 import { List_Product } from 'src/app/contracts/list_product';
+import { FileService } from 'src/app/services/models/file.service';
 import { ProductService } from 'src/app/services/models/product.service';
 
 @Component({
@@ -13,7 +15,8 @@ import { ProductService } from 'src/app/services/models/product.service';
       <div class="col-9">
         <div class="d-flex flex-wrap">
           <div type="button" *ngFor="let product of products" class="card me-2 mb-2 product-card cursor-pointer" style="width: 16rem;">
-            <img src="/assets/product.jpg" class="card-img-top mb-0" />
+            <img *ngIf="!product.productImageFiles.length" src="/assets/product.jpg" class="card-img-top mb-0" />
+            <img *ngIf="product.productImageFiles.length" src="{{ this.baseUrl.url }}/{{ product.imagePath }}" class="card-img-top mb-0" />
             <div class="card-body m-0">
               <h5 class="card-header mt-0 p-0" style="font-size: 18px;">{{ product.name }}</h5>
               <div class="fa-star"></div>
@@ -47,7 +50,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   ],
 })
 export class ProductListComponent {
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService) {}
 
   products: List_Product[];
   currentPageNo: number;
@@ -55,14 +58,14 @@ export class ProductListComponent {
   totalPageCount: number;
   pageSize: number = 12;
   pageList: number[] = [];
-  // baseUrl: BaseUrl;
+  baseUrl: BaseUrl;
 
   scrollToTop() {
     window.scrollTo(0, 0);
   }
 
   async ngOnInit() {
-    // this.baseUrl = await this.fileService.getBaseStorageUrl();
+    this.baseUrl = await this.fileService.getBaseStorageUrl();
 
     this.activatedRoute.params.subscribe(async (params) => {
       this.currentPageNo = parseInt(params['pageNo'] ?? 1);
@@ -76,20 +79,20 @@ export class ProductListComponent {
 
       this.products = data.products;
 
-      // this.products = this.products.map<List_Product>((p) => {
-      //   const listProduct: List_Product = {
-      //     id: p.id,
-      //     createdDate: p.createdDate,
-      //     imagePath: p.productImageFiles.length ? p.productImageFiles.find((p) => p.showcase).path : '',
-      //     name: p.name,
-      //     price: p.price,
-      //     stock: p.stock,
-      //     updatedDate: p.updatedDate,
-      //     productImageFiles: p.productImageFiles,
-      //   };
+      this.products = this.products.map<List_Product>((p) => {
+        const listProduct: List_Product = {
+          id: p.id,
+          createdDate: p.createdDate,
+          imagePath: p.productImageFiles.length ? p.productImageFiles.find((p) => p.showcase).path : '',
+          name: p.name,
+          price: p.price,
+          stock: p.stock,
+          updatedDate: p.updatedDate,
+          productImageFiles: p.productImageFiles,
+        };
 
-      //   return listProduct;
-      // });
+        return listProduct;
+      });
 
       this.totalProductCount = data.totalProductCount;
       this.totalPageCount = Math.ceil(this.totalProductCount / this.pageSize);

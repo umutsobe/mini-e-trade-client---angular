@@ -62,4 +62,14 @@ export class ProductService {
       productId
     );
   }
+
+  async changeShowcaseImage(imageId: string, productId: string, successCallBack?: () => void): Promise<void> {
+    const changeShowcaseImageObservable = this.http.get({
+      controller: 'ProductControllers',
+      action: 'ChangeShowcaseImage',
+      queryString: `imageId=${imageId}&productId=${productId}`,
+    });
+    await firstValueFrom(changeShowcaseImageObservable);
+    successCallBack();
+  }
 }

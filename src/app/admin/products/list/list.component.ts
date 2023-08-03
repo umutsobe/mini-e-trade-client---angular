@@ -122,6 +122,11 @@ declare var $: any;
             <h4 class="text-center">Ürün Fotoğrafları</h4>
             <div class="d-flex flex-wrap justify-content-center">
               <div *ngFor="let x of productImages" class="card m-1" style="width:11rem">
+                <span class="m-1 d-flex">
+                  Is Showcase?
+                  <input class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(x.id)" />
+                </span>
+
                 <img src="{{ x.path }}" class="card-img-top" />
                 <div class="card-body text-center">
                   <button (click)="deleteImage(selectedProduct.id, x.id)" class="btn btn-danger">Delete</button>
@@ -205,6 +210,13 @@ export class ListComponent implements OnInit {
         this.spinner.hide();
       }
     );
+  }
+  showCase(imageId: string) {
+    this.spinner.show();
+
+    this.productService.changeShowcaseImage(imageId, this.selectedProduct.id as string, () => {
+      this.spinner.hide();
+    });
   }
 
   formatDate(dateString: string): string {
