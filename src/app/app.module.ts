@@ -11,7 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PublicModule } from './public/public.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './public/components/auth/login/login.component';
@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
+import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent],
@@ -39,6 +40,7 @@ import { RegisterComponent } from './public/components/auth/register/register.co
         },
       } as SocialAuthServiceConfig,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerInterceptorService, multi: true },
   ],
   bootstrap: [AppComponent],
   imports: [

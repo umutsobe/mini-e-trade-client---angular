@@ -39,7 +39,7 @@ declare var $: any;
         <ng-container matColumnDef="updatedDate">
           <th mat-header-cell *matHeaderCellDef>UpdatedDate</th>
           <td mat-cell *matCellDef="let element">
-            {{ formatDate(element.updatedDate) }}
+            {{ formatDate(element.updatedDate) == '0001-01-01 00:00:00' ? '-' : formatDate(element.updatedDate) }}
           </td>
         </ng-container>
 
