@@ -2,6 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-products',
-  template: `<p>products component</p>`,
+  template: ` <app-product-list></app-product-list> `,
 })
 export class ProductsComponent {}

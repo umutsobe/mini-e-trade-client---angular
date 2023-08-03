@@ -47,6 +47,7 @@ const routes: Routes = [
     path: 'products',
     loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule),
   },
+  { path: 'products/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
   { path: 'login', loadChildren: () => import('./public/components/auth/login/login.module').then((m) => m.LoginModule), canActivate: [LoginAfterGuard] },
   { path: 'error', component: ErrorComponent },

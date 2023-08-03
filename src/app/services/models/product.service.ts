@@ -21,9 +21,9 @@ export class ProductService {
     );
   }
 
-  read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalCount: number; products: List_Product[] }> {
-    const promiseData: Promise<{ totalCount: number; products: List_Product[] }> = this.http
-      .get<{ totalCount: number; products: List_Product[] }>({
+  read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {
+    const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.http
+      .get<{ totalProductCount: number; products: List_Product[] }>({
         controller: 'productControllers',
         queryString: `page=${page}&size=${size}`,
       })

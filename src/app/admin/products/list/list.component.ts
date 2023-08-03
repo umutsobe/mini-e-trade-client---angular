@@ -146,7 +146,7 @@ export class ListComponent implements OnInit {
 
   async getProducts() {
     this.spinner.show();
-    const allProducts: { totalCount: number; products: List_Product[] } = await this.productService.read(
+    const allProducts: { totalProductCount: number; products: List_Product[] } = await this.productService.read(
       this.paginator ? this.paginator.pageIndex : 0,
       this.paginator ? this.paginator.pageSize : 5,
       () => this.spinner.hide(),
@@ -156,7 +156,7 @@ export class ListComponent implements OnInit {
       }
     );
     this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
-    this.paginator.length = allProducts.totalCount;
+    this.paginator.length = allProducts.totalProductCount;
   }
 
   //dialog penceresinde seçilen ürün
