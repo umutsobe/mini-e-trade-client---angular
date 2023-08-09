@@ -36,7 +36,7 @@ import { UserService } from 'src/app/services/models/user.service';
 export class LoginComponent {
   frm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private socialAuthService: SocialAuthService, private toastr: ToastrService) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private router: Router, private socialAuthService: SocialAuthService, private toastr: ToastrService) {
     socialAuthService.authState.subscribe(async (user: SocialUser) => {
       console.log(user);
       this.spinner.show();

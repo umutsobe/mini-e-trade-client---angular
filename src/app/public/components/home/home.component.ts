@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   template: `
-    <p>home component</p>
+    <p style="margin-bottom: 450px;">home component</p>
     <br />
   `,
 })

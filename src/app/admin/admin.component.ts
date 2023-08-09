@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-layout',
   template: `
-    <h1 routerLink="/admin" role="button" class="mt-3 ms-5 mb-4 cursor-pointer" data-bs-theme="dark">Admin Panel</h1>
+    <h1 routerLink="/admin" role="button" class="mt-3 ms-5 mb-4 cursor-pointer" style="width: fit-content;">Admin Panel</h1>
     <div class="row mx-5">
       <div class="col-2 left-panel">
         <ul class="list-group">

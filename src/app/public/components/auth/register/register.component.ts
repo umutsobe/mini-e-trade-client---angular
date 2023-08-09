@@ -1,9 +1,12 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Create_User } from 'src/app/contracts/create_user';
 import { User } from 'src/app/entities/user';
+import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
@@ -43,6 +46,13 @@ import { UserService } from 'src/app/services/models/user.service';
       </div>
       <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="frm.invalid">Submit</button>
 
+      <div class="d-flex justify-content-center align-items-center w-100 bg-warning mb-3" style="padding: 10px; border-radius: 3px;">
+        <p class="mt-2" style="color: black;">Google ile Şifresiz Güvenli Kayıt Ol</p>
+      </div>
+      <div class="d-flex justify-content-center">
+        <asl-google-signin-button type="standard" size="large" theme="outline" style="border-radius: 5px;"></asl-google-signin-button>
+      </div>
+
       <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Üye Misiniz? Giriş Yapın </a>
       <!-- "login" demedik çünkü logini register altına getirmek istemiyordum. en baştan başlatmak istiyrudum. o yüzden "/login" dedik -->
     </form>
@@ -53,7 +63,34 @@ import { UserService } from 'src/app/services/models/user.service';
 export class RegisterComponent {
   frm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService, private socialAuthService: SocialAuthService, private authService: AuthService, private router: Router) {
+    socialAuthService.authState.subscribe(async (user: SocialUser) => {
+      console.log(user);
+      this.spinner.show();
+
+      if (!user.lastName) {
+        user.lastName = '.';
+      }
+      if (!user.name) {
+        user.name = '.';
+      }
+      if (!user.firstName) {
+        user.firstName = '.';
+      }
+
+      await this.userService.googleLogin(user, () => {
+        spinner.hide();
+        authService.identityCheck();
+
+        this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
+        setTimeout(() => {
+          this.router.navigate(['']).then(() => {
+            window.location.reload();
+          });
+        }, 1500);
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.frm = this.formBuilder.group({

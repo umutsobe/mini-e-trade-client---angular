@@ -25,6 +25,7 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
   declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent],
   providers: [
     { provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true },
+    { provide: 'baseSignalRUrl', useValue: 'https://localhost:7041/', multi: true },
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

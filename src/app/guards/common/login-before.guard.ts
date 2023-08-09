@@ -6,13 +6,13 @@ import { _isAuthenticated } from 'src/app/services/common/auth/auth.service';
   providedIn: 'root',
 })
 
-//login olduktan sonra ulaşılamayacak yerlere koy. mesela login, register sayfaları
-export class LoginAfterGuard implements CanActivate {
+//login olmamışken ulaşılamayacak yerlere koy
+export class LoginBeforeGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (_isAuthenticated) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 }

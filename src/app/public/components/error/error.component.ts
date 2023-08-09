@@ -2,6 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-error',
-  template: `<p>error component</p>`,
+  template: `<p style="margin-bottom: 500px;">error component</p>`,
 })
 export class ErrorComponent {}

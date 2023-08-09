@@ -7,6 +7,7 @@ import { ProductsComponent } from './admin/products/products.component';
 import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
+import { LoginBeforeGuard } from './guards/common/login-before.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,6 +43,7 @@ const routes: Routes = [
   {
     path: 'basket',
     loadChildren: () => import('./public/components/basket/basket.module').then((module) => module.BasketModule),
+    canActivate: [LoginBeforeGuard],
   },
   {
     path: 'products',

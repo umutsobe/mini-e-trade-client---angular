@@ -1,6 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { HeaderComponent } from './common-components/header/header.component';
-import { interval } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +7,7 @@ import { interval } from 'rxjs';
     <div>
       <router-outlet></router-outlet>
     </div>
-    <div style="margin-top: 250px;">
+    <div>
       <app-footer></app-footer>
     </div>
     <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>

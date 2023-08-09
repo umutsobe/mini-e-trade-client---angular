@@ -7,12 +7,13 @@ import { TokenResponse } from 'src/app/contracts/token/tokenResponse';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SocialUser } from '@abacritt/angularx-social-login';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService) {}
+  constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService, private jwtHelper: JwtHelperService) {}
 
   async create(user: User): Promise<Create_User> {
     const observable: Observable<Create_User | User> = this.http.post<Create_User | User>(
@@ -61,5 +62,13 @@ export class UserService {
     }
 
     callBackFunction();
+  }
+
+  getUserId(): string {
+    const token = localStorage.getItem('accessToken');
+    const decodedToken = this.jwtHelper.decodeToken(token);
+
+    const userId: string = decodedToken.userId;
+    return userId;
   }
 }
