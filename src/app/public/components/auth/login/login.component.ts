@@ -29,7 +29,8 @@ import { UserService } from 'src/app/services/models/user.service';
       <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
       <asl-google-signin-button type="standard" size="large" theme="outline" style="border-radius: 5px;"></asl-google-signin-button>
 
-      <a routerLink="/register" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Üye Değil Misiniz? Kayıt Olun </a>
+      <a routerLink="/register" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none;"> Üye Değil Misiniz? Kayıt Olun </a>
+      <a routerLink="/password-reset" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none; display: block;"> Şifremi unuttum </a>
     </form>
   `,
 })
@@ -68,7 +69,7 @@ export class LoginComponent {
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
       emailOrUserName: ['', [Validators.required, Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+      password: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
   async onSubmit(emailOrUserName: string, password: string) {

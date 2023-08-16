@@ -52,6 +52,8 @@ const routes: Routes = [
   { path: 'products/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
   { path: 'login', loadChildren: () => import('./public/components/auth/login/login.module').then((m) => m.LoginModule), canActivate: [LoginAfterGuard] },
+  { path: 'password-reset', loadChildren: () => import('./public/components/auth/password-reset/password-reset.module').then((m) => m.PasswordResetModule), canActivate: [LoginAfterGuard] },
+  { path: 'update-password/:userId/:resetToken', loadChildren: () => import('./public/components/auth/update-password/update-password.module').then((m) => m.UpdatePasswordModule), canActivate: [LoginAfterGuard] },
   { path: 'error', component: ErrorComponent },
   { path: '**', redirectTo: '/error' },
 ];

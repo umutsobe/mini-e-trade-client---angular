@@ -71,4 +71,45 @@ export class UserService {
     const userId: string = decodedToken.userId;
     return userId;
   }
+
+  async passwordReset(email: string, callBackFunction?: () => void) {
+    const observable = this.http.post(
+      {
+        controller: 'Users',
+        action: 'password-reset',
+      },
+      { email: email }
+    );
+
+    await firstValueFrom(observable);
+    callBackFunction();
+  }
+  async verifyResetToken(resetToken: string, userId: string, callBackFunction?: () => void): Promise<boolean> {
+    const observable: Observable<any> = this.http.post(
+      {
+        controller: 'users',
+        action: 'verify-reset-token',
+      },
+      {
+        resetToken: resetToken,
+        userId: userId,
+      }
+    );
+
+    const state: boolean = await firstValueFrom(observable);
+    callBackFunction();
+    return state;
+  }
+
+  async updatePassword(userId: string, resetToken: string, password: string, passwordRepeat: string) {
+    const observable: Observable<any> = this.http.post(
+      {
+        controller: 'users',
+        action: 'update-password',
+      },
+      { userId: userId, resetToken: resetToken, password: password, passwordRepeat: passwordRepeat }
+    );
+
+    await firstValueFrom(observable);
+  }
 }
