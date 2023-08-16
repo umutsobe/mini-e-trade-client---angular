@@ -16,35 +16,42 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="orderCode">
-          <th mat-header-cell *matHeaderCellDef>orderCode</th>
-          <td mat-cell *matCellDef="let element">{{ element.orderCode }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>orderCode</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.orderCode }}</td>
         </ng-container>
 
         <ng-container matColumnDef="userName">
-          <th mat-header-cell *matHeaderCellDef>userName</th>
-          <td mat-cell *matCellDef="let element">{{ element.userName }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>userName</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.userName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="totalPrice">
-          <th mat-header-cell *matHeaderCellDef>totalPrice</th>
-          <td mat-cell *matCellDef="let element">{{ element.totalPrice }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>totalPrice</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.totalPrice }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdDate">
-          <th mat-header-cell *matHeaderCellDef>CreatedDate</th>
-          <td mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>CreatedDate</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="completed">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Is Completed?</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
+            <img *ngIf="element.completed" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="orderDetail">
-          <th mat-header-cell *matHeaderCellDef>orderDetail</th>
-          <td mat-cell *matCellDef="let element">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>orderDetail</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
             <img type="button" data-bs-toggle="modal" data-bs-target="#orderDetailModal" (click)="openOrderDetailDialog(element)" src="/assets/orderDetail.png" width="25" style="cursor:pointer;" />
           </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef>Delete</th>
-          <td mat-cell *matCellDef="let element">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Delete</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
             <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
           </td>
         </ng-container>
@@ -87,6 +94,7 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
             <h1 class="modal-title fs-5" id="exampleModalLabel">Order Code: {{ selectedOrder ? selectedOrder.orderCode : '' }}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+
           <div *ngIf="selectedSingleOrder" class="modal-body">
             <div class="row my-2 py-2 text-center">
               <div class="col-5">Name</div>
@@ -107,7 +115,9 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
             <div class="mb-3">Adress: {{ selectedSingleOrder.address }}</div>
             <div>Description: {{ selectedSingleOrder.description }}</div>
           </div>
+          <h2 style="color: green;" class="ms-3 mt-2 mb-2 d-flex justify-content-center" *ngIf="selectedOrder ? selectedOrder.completed : false">Order Completed</h2>
           <div class="modal-footer">
+            <button *ngIf="selectedOrder ? !selectedOrder.completed : false" (click)="completeOrder()" type="button" class="btn btn-primary">Complete Order</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -118,7 +128,7 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
 export class OrderListComponent {
   constructor(private orderService: OrderService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
 
-  displayedColumns: string[] = ['orderCode', 'userName', 'totalPrice', 'createdDate', 'orderDetail', 'delete'];
+  displayedColumns: string[] = ['orderCode', 'userName', 'totalPrice', 'createdDate', 'completed', 'orderDetail', 'delete'];
   dataSource: MatTableDataSource<List_Order> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -154,7 +164,22 @@ export class OrderListComponent {
       }
     );
   }
+  async completeOrder() {
+    this.spinner.show();
 
+    this.orderService
+      .completeOrder(this.selectedOrder.id)
+      .then(() => {
+        this.toastr.success('Sipariş Başarıyla Onaylandı', 'Başarılı');
+        this.refresh();
+      })
+      .catch((err) => {
+        this.toastr.error(err, 'Hata');
+      })
+      .finally(() => {
+        this.spinner.hide();
+      });
+  }
   // delete() {
   //   this.spinner.show();
   //   this.orderService.delete(this.selectedOrder.id).subscribe(() => {

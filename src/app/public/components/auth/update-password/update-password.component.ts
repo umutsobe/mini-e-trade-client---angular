@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/models/user.service';
 @Component({
   selector: 'app-update-password',
   template: `
-    <div *ngIf="!state.state" class="alert alert-danger w-25 mx-auto" style="margin-top: 50px;">UnAuthorized!!</div>
+    <div *ngIf="!state.state" class="alert alert-danger w-25 mx-auto" style="margin-top: 50px;">Geçersiz Link!!</div>
 
     <form *ngIf="state.state" [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-top: 75px; margin-bottom: 300px;" class="w-25 mx-auto">
       <h1>Change Password</h1>

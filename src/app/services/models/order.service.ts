@@ -45,5 +45,18 @@ export class OrderService {
 
     return await promiseData;
   }
+
+  async completeOrder(id: string): Promise<void> {
+    const observable: Observable<any> = this.httpCLientService.get(
+      {
+        controller: 'order',
+        action: 'complete-order',
+      },
+      id
+    );
+
+    await firstValueFrom(observable);
+  }
+
   async delete() {}
 }

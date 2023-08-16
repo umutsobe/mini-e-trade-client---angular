@@ -97,8 +97,8 @@ export class RegisterComponent {
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       userName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
-      repeatPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+      password: ['', [Validators.required, Validators.maxLength(100)]],
+      repeatPassword: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
   async onSubmit(user: User) {
