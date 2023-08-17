@@ -26,7 +26,7 @@ export class UserService {
     return (await firstValueFrom(observable)) as Create_User;
   }
 
-  async login(emailOrUserName: string, password: string, callBackFunction?: () => void): Promise<any> {
+  async login(emailOrUserName: string, password: string): Promise<any> {
     const observable: Observable<any | TokenResponse> = this.http.post<any | TokenResponse>(
       {
         controller: 'users',
@@ -34,12 +34,10 @@ export class UserService {
       },
       { emailOrUserName, password }
     );
-
     const tokenResponse: TokenResponse = (await firstValueFrom(observable)) as TokenResponse;
 
     if (tokenResponse) {
       localStorage.setItem('accessToken', tokenResponse.token.accessToken);
-      this.toastr.success('Giriş Başarılı', 'Login');
       this.spinner.hide();
     }
   }
@@ -57,8 +55,6 @@ export class UserService {
 
     if (tokenResponse) {
       localStorage.setItem('accessToken', tokenResponse.token.accessToken);
-
-      this.toastr.success('Google Üzerinden Giriş Başarılı', 'Giriş Başarılı');
     }
 
     callBackFunction();

@@ -56,12 +56,9 @@ export class LoginComponent {
         spinner.hide();
         authService.identityCheck();
 
-        this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
-        setTimeout(() => {
-          this.router.navigate(['']).then(() => {
-            window.location.reload();
-          });
-        }, 1500);
+        this.router.navigate(['']).then(() => {
+          window.location.reload();
+        });
       });
     });
   }
@@ -74,20 +71,21 @@ export class LoginComponent {
   }
   async onSubmit(emailOrUserName: string, password: string) {
     this.spinner.show();
+    await this.userService
+      .login(emailOrUserName, password)
+      .then(() => {
+        //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
 
-    await this.userService.login(emailOrUserName, password, () => {
-      this.spinner.hide();
-
-      this.authService.identityCheck();
-    });
-
-    //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
-    this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
-    setTimeout(() => {
-      this.router.navigate(['']).then(() => {
-        window.location.reload();
+        this.router.navigate(['']).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((err) => {
+        this.toastr.error(err.message);
+      })
+      .finally(() => {
+        this.spinner.hide();
       });
-    }, 1500);
   }
 
   get emailOrUserName() {
