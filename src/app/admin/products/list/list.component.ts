@@ -224,6 +224,7 @@ export class ListComponent implements OnInit {
     const date = new Date(dateString);
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
   }
+
   async ngOnInit() {
     await this.getProducts();
   }

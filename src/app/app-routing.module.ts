@@ -8,6 +8,7 @@ import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
 import { LoginBeforeGuard } from './guards/common/login-before.guard';
+import { RoleComponent } from './admin/role/role.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,20 @@ const routes: Routes = [
         path: 'orders',
         loadChildren: () => import('./admin/orders/orders.module').then((module) => module.OrdersModule),
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'authorize-menu',
+        loadChildren: () => import('./admin/authorize-menu/authorize-menu.module').then((module) => module.AuthorizeMenuModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'roles',
+        component: RoleComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: 'create', loadChildren: () => import('./admin/role/create-role/create-role.module').then((module) => module.CreateRoleModule), canActivate: [AuthGuard] },
+          { path: 'list', loadChildren: () => import('./admin/role/role-list/role-list.module').then((module) => module.RoleListModule) },
+        ],
       },
     ],
     canActivate: [AuthGuard],
