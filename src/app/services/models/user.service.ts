@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SocialUser } from '@abacritt/angularx-social-login';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { List_User } from 'src/app/contracts/user/list_user';
 
 @Injectable({
   providedIn: 'root',
@@ -107,5 +108,47 @@ export class UserService {
     );
 
     await firstValueFrom(observable);
+  }
+
+  async getAllUsers(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalUsersCount: number; users: List_User[] }> {
+    const observable: Observable<{ totalUsersCount: number; users: List_User[] }> = this.http.get({
+      controller: 'users',
+      queryString: `page=${page}&size=${size}`,
+    });
+
+    const promiseData = firstValueFrom(observable);
+    promiseData.then((value) => successCallBack()).catch((error) => errorCallBack(error));
+
+    return await promiseData;
+  }
+
+  async assignRoleToUser(userId: string, roles: string[]) {
+    const observable: Observable<any> = this.http.post(
+      {
+        controller: 'users',
+        action: 'assign-role-to-user',
+      },
+      {
+        userId: userId,
+        roles: roles,
+      }
+    );
+
+    return await firstValueFrom(observable);
+  }
+
+  async getRolesToUser(userId: string, successCallBack?: () => void, errorCallBack?: (error) => void): Promise<string[]> {
+    const observable: Observable<{ userRoles: string[] }> = this.http.get(
+      {
+        controller: 'users',
+        action: 'get-roles-to-user',
+      },
+      userId
+    );
+
+    const promiseData = firstValueFrom(observable);
+    promiseData.then(() => successCallBack()).catch((error) => errorCallBack(error));
+
+    return (await promiseData).userRoles;
   }
 }

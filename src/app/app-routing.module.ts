@@ -8,7 +8,6 @@ import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
 import { LoginBeforeGuard } from './guards/common/login-before.guard';
-import { RoleComponent } from './admin/role/role.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,11 +17,6 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       { path: '', component: DashboardComponent, canActivate: [AuthGuard] },
-      {
-        path: 'customers',
-        loadChildren: () => import('./admin/customers/customers.module').then((module) => module.CustomersModule),
-        canActivate: [AuthGuard],
-      },
       {
         path: 'products',
         component: ProductsComponent,
@@ -45,6 +39,11 @@ const routes: Routes = [
       {
         path: 'roles',
         loadChildren: () => import('./admin/role/role.module').then((module) => module.RoleModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'users',
+        loadChildren: () => import('./admin/users/users.module').then((module) => module.UsersModule),
         canActivate: [AuthGuard],
       },
     ],

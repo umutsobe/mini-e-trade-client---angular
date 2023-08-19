@@ -194,6 +194,7 @@ export class OrderListComponent {
     const date = new Date(dateString);
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
   }
+
   async ngOnInit() {
     await this.getOrders();
   }

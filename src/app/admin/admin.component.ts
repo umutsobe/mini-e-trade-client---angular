@@ -8,11 +8,11 @@ import { Component } from '@angular/core';
       <div class="col-2 left-panel">
         <ul class="list-group">
           <li routerLink="/admin" role="button" class="list-group-item cursor-pointer">Dashboard</li>
-          <!-- <li routerLink="customers" role="button" class="list-group-item cursor-pointer">Customers</li> -->
           <li routerLink="products" role="button" class="list-group-item cursor-pointer" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Products</li>
           <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
           <li routerLink="authorize-menu" role="button" class="list-group-item cursor-pointer">Authorize Menu</li>
           <li routerLink="roles" role="button" class="list-group-item cursor-pointer">Roles</li>
+          <li routerLink="users" role="button" class="list-group-item cursor-pointer">Users</li>
         </ul>
       </div>
       <div class="col-10 right-panel" style="height: 1000px; border-radius: 10px;">
