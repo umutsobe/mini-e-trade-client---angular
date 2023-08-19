@@ -10,7 +10,7 @@ import { RoleService } from 'src/app/services/models/role.service';
 @Component({
   selector: 'app-role-list',
   template: `
-    <h1 class="mt-2 text-center" id="title">Products</h1>
+    <h1 class="mt-2 text-center" id="title">Roles</h1>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">

@@ -3,4 +3,5 @@ export class Action {
   httpType: string;
   definition: string;
   code: string;
+  menuName: string;
 }

@@ -44,12 +44,8 @@ const routes: Routes = [
       },
       {
         path: 'roles',
-        component: RoleComponent,
+        loadChildren: () => import('./admin/role/role.module').then((module) => module.RoleModule),
         canActivate: [AuthGuard],
-        children: [
-          { path: 'create', loadChildren: () => import('./admin/role/create-role/create-role.module').then((module) => module.CreateRoleModule), canActivate: [AuthGuard] },
-          { path: 'list', loadChildren: () => import('./admin/role/role-list/role-list.module').then((module) => module.RoleListModule) },
-        ],
       },
     ],
     canActivate: [AuthGuard],

@@ -7,7 +7,7 @@ import { RoleService } from 'src/app/services/models/role.service';
 @Component({
   selector: 'app-create-role',
   template: `
-    <div class="w-50 mx-auto">
+    <div class="w-75 mx-auto">
       <h1 class=" mt-2 text-center ">Create Role</h1>
       <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
         <div class="mb-3">
