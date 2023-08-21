@@ -61,7 +61,10 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
     GoogleSigninButtonModule,
     JwtModule.forRoot({
       config: {
-        tokenGetter: () => localStorage.getItem('accessToken'),
+        tokenGetter: () => {
+          if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
+          return '';
+        },
         allowedDomains: ['localhost:7041'],
       },
     }),

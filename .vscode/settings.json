@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/3a97a0b5-9ba2-49c9-b0f3-eecc6cbee6d0/resourceGroups/mini-e-trade-group/providers/Microsoft.Web/sites/mini-e-trade",
+  "appService.deploySubpath": "dist"
+}
