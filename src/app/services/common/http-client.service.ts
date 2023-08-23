@@ -1,12 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpClientService {
-  constructor(private http: HttpClient, @Inject('baseUrl') private baseUrl: string) {}
+  constructor(private http: HttpClient) {}
+
+  baseUrl: string = environment.apiUrl;
 
   private url(requestParameter: Partial<RequestParameters>): string {
     return `${requestParameter.baseUrl ? requestParameter.baseUrl : this.baseUrl}/${requestParameter.controller}${requestParameter.action ? `/${requestParameter.action}` : ''}`;

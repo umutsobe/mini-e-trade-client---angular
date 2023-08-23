@@ -20,12 +20,11 @@ import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } 
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
 import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent],
   providers: [
-    { provide: 'baseUrl', useValue: 'https://localhost:7041/api', multi: true },
-    { provide: 'baseSignalRUrl', useValue: 'https://localhost:7041/', multi: true },
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -33,7 +32,7 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('719960856381-8eaoopcgmmkjn2nv91bklf4utlqkc62s.apps.googleusercontent.com'),
+            provider: new GoogleLoginProvider(environment.googleLoginCredential),
           },
         ],
         onError: (err) => {
@@ -65,10 +64,12 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
           if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
           return '';
         },
-        allowedDomains: ['localhost:7041'],
+        allowedDomains: [environment.jwtDomain],
       },
     }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule {}
+export class AppModule {
+  environment = environment;
+}

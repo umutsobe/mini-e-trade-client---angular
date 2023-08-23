@@ -12,7 +12,7 @@ declare var $: any;
       <div class="container-fluid">
         <a routerLink="" role="button" class="ms-5 navbar-brand cursor-pointer">Home</a>
         <a routerLink="products/1" role="button" class="text-white me-4 nav-link cursor-pointer">Products</a>
-        <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated">Admin Panel</a></div>
+        <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())">Admin Panel</a></div>
         <form class="d-flex me-5 me-auto" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" />
           <button class="btn btn-warning" style="background-color: #f3a847;" type="button"><p style="margin-top: 1px; margin-bottom: 0;">Search</p></button>

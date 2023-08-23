@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../services/common/auth/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -10,9 +11,9 @@ import { Component } from '@angular/core';
           <li routerLink="/admin" role="button" class="list-group-item cursor-pointer">Dashboard</li>
           <li routerLink="products" role="button" class="list-group-item cursor-pointer" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Products</li>
           <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
-          <li routerLink="authorize-menu" role="button" class="list-group-item cursor-pointer">Authorize Menu</li>
-          <li routerLink="roles" role="button" class="list-group-item cursor-pointer">Roles</li>
-          <li routerLink="users" role="button" class="list-group-item cursor-pointer">Users</li>
+          <li *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="list-group-item cursor-pointer">Endpoint-Role Menu</li>
+          <li *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="list-group-item cursor-pointer">Roles</li>
+          <li *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="list-group-item cursor-pointer">Users</li>
         </ul>
       </div>
       <div class="col-10 right-panel" style="height: 1000px; border-radius: 10px;">
@@ -21,4 +22,6 @@ import { Component } from '@angular/core';
     </div>
   `,
 })
-export class AdminComponent {}
+export class AdminComponent {
+  constructor(public authService: AuthService) {}
+}

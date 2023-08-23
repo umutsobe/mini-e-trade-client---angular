@@ -46,17 +46,15 @@ export class CreateComponent {
       price: parseInt(this.price.value),
       stock: parseFloat(this.stock.value),
     };
-    this.productService.create(product).subscribe(
-      () => {
-        this.toastr.success('Ürün başarıyla eklendi', 'Ürün Ekleme');
-        this.spinner.hide();
-      },
-      (err) => {
-        this.spinner.hide();
-        // İlk olarak, err.error.errors'ı doğrudan errorArray olarak atamak yerine
-        // hatanın tümüne erişebilmek için errorObject adında bir değişken oluşturun.
-        const errorObject = err.error.errors;
 
+    this.productService
+      .create(product)
+      .then(() => {
+        this.spinner.hide();
+      })
+      .catch((err) => {
+        this.spinner.hide();
+        const errorObject = err.error.errors;
         // Eğer hatanın içindeki hata objeleri key-value şeklindeyse, direkt olarak
         // bu objenin değerlerini gezerek işlem yapabilirsiniz.
         // Burada kullanılan türleri CreateProduct'un türüne göre ayarlayabilirsiniz.
@@ -68,8 +66,7 @@ export class CreateComponent {
             });
           }
         }
-      }
-    );
+      });
   }
 
   get name() {

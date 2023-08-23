@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HubUrlsService {
-  constructor(@Inject('baseSignalRUrl') private baseSginalUrl: string) {}
+  baseSginalUrl: string = environment.signalRUrl;
 
   get ProductHub() {
     return this.baseSginalUrl + 'product-hub';

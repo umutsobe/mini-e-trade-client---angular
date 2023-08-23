@@ -110,16 +110,13 @@ export class UserService {
     await firstValueFrom(observable);
   }
 
-  async getAllUsers(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalUsersCount: number; users: List_User[] }> {
+  async getAllUsers(page: number = 0, size: number = 5): Promise<{ totalUsersCount: number; users: List_User[] }> {
     const observable: Observable<{ totalUsersCount: number; users: List_User[] }> = this.http.get({
       controller: 'users',
       queryString: `page=${page}&size=${size}`,
     });
 
-    const promiseData = firstValueFrom(observable);
-    promiseData.then((value) => successCallBack()).catch((error) => errorCallBack(error));
-
-    return await promiseData;
+    return await firstValueFrom(observable);
   }
 
   async assignRoleToUser(userId: string, roles: string[]) {

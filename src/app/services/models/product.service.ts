@@ -12,13 +12,15 @@ import { List_Product_Image } from 'src/app/contracts/list_product_image';
 export class ProductService {
   constructor(private http: HttpClientService) {}
 
-  create(product: CreateProduct): Observable<CreateProduct> {
-    return this.http.post(
+  async create(product: CreateProduct): Promise<CreateProduct> {
+    const observable: Observable<CreateProduct> = this.http.post(
       {
         controller: 'ProductControllers',
       },
       product
     );
+
+    return await firstValueFrom(observable);
   }
 
   read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {

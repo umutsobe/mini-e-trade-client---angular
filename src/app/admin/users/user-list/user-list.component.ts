@@ -86,12 +86,16 @@ export class UserListComponent implements OnInit {
   async getUsers() {
     this.spinner.show();
 
-    const allUsers: { totalUsersCount: number; users: List_User[] } = await this.userService.getAllUsers(
-      this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5,
-      () => this.spinner.hide(),
-      (errorMessage) => this.toastr.error(errorMessage)
-    );
+    const allUsers: { totalUsersCount: number; users: List_User[] } = await this.userService
+      .getAllUsers(this.paginator ? this.paginator.pageIndex : 0, this.paginator ? this.paginator.pageSize : 5)
+      .catch((err) => {
+        this.toastr.error(err);
+        return { totalUsersCount: 0, users: null };
+      })
+      .finally(() => {
+        this.spinner.hide();
+      });
+
     this.dataSource = new MatTableDataSource<List_User>(allUsers.users);
     this.paginator.length = allUsers.totalUsersCount;
   }

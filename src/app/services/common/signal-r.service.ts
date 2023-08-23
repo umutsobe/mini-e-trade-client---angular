@@ -15,7 +15,6 @@ export class SignalRService {
 
     hubConnection
       .start() //bağlantıyı başlattık
-      .then(() => console.log('Connected')) //eğer hata gelmezse burayı
       .catch((error) => setTimeout(() => this.start(hubUrl), 2000)); // eğer hata gelirse de 2 saniyede bir yeniden bağlanmaya çalış. recursive'e girdik. hata gelmeyene kadar start yeniden çalışacak
 
     hubConnection.onreconnected((connectionId) => console.log('Reconnected'));

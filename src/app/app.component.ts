@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApplicationService } from './services/models/application.service';
+import { AuthService } from './services/common/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +15,8 @@ import { ApplicationService } from './services/models/application.service';
     <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
   `,
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private authService: AuthService) {
+    console.log(authService.isAdmin());
+  }
+}
