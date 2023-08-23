@@ -45,4 +45,13 @@ export class AuthorizationEndpointService {
 
     return (await promiseData).roles;
   }
+
+  async updateEndpoints() {
+    const observable: Observable<any> = this.httpClientService.get({
+      controller: 'Endpoint',
+      action: 'UpdateMenusAndEndpoints',
+    });
+
+    return await firstValueFrom(observable);
+  }
 }

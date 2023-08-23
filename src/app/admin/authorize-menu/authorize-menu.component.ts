@@ -13,6 +13,8 @@ import { RoleService } from 'src/app/services/models/role.service';
 @Component({
   selector: 'app-authorize-menu',
   template: `
+    <button (click)="updateEndpoints()" class="btn btn-primary ms-3 mb-3 btn-sm">UpdateMenusAndEndpoints</button>
+
     <mat-tree class="bg-dark mb-1" [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
         <button mat-icon-button disabled></button>
@@ -110,6 +112,21 @@ export class AuthorizeMenuComponent implements OnInit {
         this.toastr.error(err);
       });
   }
+
+  updateEndpoints() {
+    this.spinner.show();
+    this.authorizationEndpointService
+      .updateEndpoints()
+      .then(() => {
+        this.spinner.hide();
+        this.toastr.success('Updated Menus and Endpoints');
+      })
+      .catch((err) => {
+        this.spinner.hide();
+        this.toastr.error(err);
+      });
+  }
+
   //tree funcs vs..
 
   async ngOnInit() {
