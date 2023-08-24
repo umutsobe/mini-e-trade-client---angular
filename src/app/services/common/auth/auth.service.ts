@@ -22,6 +22,10 @@ export class AuthService {
     if (this.DecodedToken.roleName) return this.DecodedToken.roleName;
     return '';
   }
+  get UserId(): string {
+    if (this.DecodedToken.userId) return this.DecodedToken.userId;
+    return '';
+  }
 
   identityCheck() {
     const token = localStorage.getItem('accessToken'); //token aldık

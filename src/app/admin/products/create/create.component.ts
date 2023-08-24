@@ -29,6 +29,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
       </form>
     </div>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class CreateComponent {
   frm: FormGroup;

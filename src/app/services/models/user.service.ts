@@ -35,12 +35,7 @@ export class UserService {
       },
       { emailOrUserName, password }
     );
-    const tokenResponse: TokenResponse = (await firstValueFrom(observable)) as TokenResponse;
-
-    if (tokenResponse) {
-      localStorage.setItem('accessToken', tokenResponse.token.accessToken);
-      this.spinner.hide();
-    }
+    return (await firstValueFrom(observable)) as TokenResponse;
   }
 
   async googleLogin(user: SocialUser, callBackFunction?: () => void): Promise<any> {
@@ -54,7 +49,7 @@ export class UserService {
 
     const tokenResponse: TokenResponse = (await firstValueFrom(observable)) as TokenResponse;
 
-    if (tokenResponse) {
+    if (tokenResponse.token) {
       localStorage.setItem('accessToken', tokenResponse.token.accessToken);
     }
 

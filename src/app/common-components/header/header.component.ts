@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { faBasketShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 
 declare var $: any;
@@ -20,19 +21,37 @@ declare var $: any;
         <div class="d-flex">
           <a routerLink="register" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Register</button></a>
           <a routerLink="login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-success">Login</button></a>
-          <a role="button" class="text-white me-4 nav-link cursor-pointer" (click)="signOut()" *ngIf="authService.isAuthenticated"><button class="btn btn-success">Çıkış Yap</button></a>
         </div>
+
+        <div *ngIf="authService.isAuthenticated" class="dropdown me-3">
+          <div class="btn dropdown-toggle text-white " style="background-color: #F11A7B;" type="button" data-bs-toggle="dropdown" aria-expanded="false">Account</div>
+
+          <ul class="dropdown-menu">
+            <li><a routerLink="account" role="button" class="dropdown-item">Hesabım</a></li>
+            <li><a routerLink="account/orders" role="button" class="dropdown-item">Siparişlerim</a></li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li><a role="button" class="dropdown-item text-danger" (click)="signOut()">Çıkış Yap</a></li>
+          </ul>
+        </div>
+
         <div *ngIf="authService.isAuthenticated" routerLink="basket" role="button" class="d-flex align-items-center cursor-pointer">
           <fa-icon class="fs-4 me-1" [icon]="faBasketShopping"></fa-icon>
-          <a class="nav-link text-white me-5">Basket</a>
+          <a class="nav-link text-white me-3">Basket</a>
         </div>
-        <button (click)="toggleTheme()" class="btn btn-success btn-sm">{{ toggleThemeString }}</button>
+
+        <div (click)="toggleTheme()" class="d-flex flex-column justify-content-center align-items-center">
+          <fa-icon role="button" class="fs-5 m-0" [icon]="faCircleHalfStroke"></fa-icon>
+          <p role="button" class="m-0" style="font-size: 10px;color: white;">{{ toggleThemeString }}</p>
+        </div>
       </div>
     </nav>
   `,
 })
 export class HeaderComponent implements OnInit {
   faBasketShopping = faBasketShopping;
+  faCircleHalfStroke = faCircleHalfStroke;
   toggleThemeString: string;
 
   constructor(public authService: AuthService, private router: Router) {}

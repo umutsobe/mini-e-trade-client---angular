@@ -1,0 +1,83 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { UpdateUserPassword } from 'src/app/contracts/account/UpdateUserPassword';
+import { AuthService } from 'src/app/services/common/auth/auth.service';
+import { AccountService } from 'src/app/services/models/account.service';
+
+@Component({
+  selector: 'app-password-change',
+  template: `
+    <div class="row">
+      <form [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-bottom: 300px;" class=" ms-5 w-50">
+        <h1>Change Password</h1>
+        <div class="mb-5">
+          <label for="currentPassword" class="form-label">Mevcut Şifre</label>
+          <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword" />
+          <div *ngIf="!currentPassword.valid && (currentPassword.dirty || currentPassword.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">Yeni Şifre</label>
+          <input type="password" class="form-control" id="newPassword" formControlName="newPassword" />
+          <div *ngIf="!newPassword.valid && (newPassword.dirty || newPassword.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="newPasswordRepeat" class="form-label">Yeni Şifre Tekrar</label>
+          <input type="password" id="newPasswordRepeat" class="form-control" formControlName="newPasswordRepeat" />
+          <div *ngIf="!newPasswordRepeat.valid && (newPasswordRepeat.dirty || newPasswordRepeat.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+        </div>
+        <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+      </form>
+    </div>
+  `,
+})
+export class PasswordChangeComponent implements OnInit {
+  frm: FormGroup;
+
+  constructor(private formBuilder: FormBuilder, private spinner: NgxSpinnerService, private toastr: ToastrService, private accountService: AccountService, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.frm = this.formBuilder.group({
+      currentPassword: ['', [Validators.required, Validators.maxLength(100)]],
+      newPassword: ['', [Validators.required, Validators.maxLength(100)]],
+      newPasswordRepeat: ['', [Validators.required, Validators.maxLength(100)]],
+    });
+  }
+
+  async onSubmit() {
+    const userModel: UpdateUserPassword = new UpdateUserPassword();
+    userModel.userId = this.authService.UserId;
+    userModel.newPassword = this.newPassword.value;
+    userModel.oldPassword = this.currentPassword.value;
+    let token;
+    this.accountService
+      .updateUserPassword(userModel)
+      .then((response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+
+        this.spinner.hide();
+        this.toastr.success('Şifre Başarıyla Değiştirildi');
+      })
+      .catch((err) => {
+        this.spinner.hide();
+        this.toastr.error(err.message);
+      })
+      .finally(() => {
+        this.authService.identityCheck();
+        console.log(token);
+      });
+  }
+
+  get currentPassword() {
+    return this.frm.get('currentPassword');
+  }
+  get newPassword() {
+    return this.frm.get('newPassword');
+  }
+  get newPasswordRepeat() {
+    return this.frm.get('newPasswordRepeat');
+  }
+}

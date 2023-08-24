@@ -19,6 +19,13 @@ import { RoleService } from 'src/app/services/models/role.service';
       </form>
     </div>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class CreateRoleComponent {
   frm: FormGroup;

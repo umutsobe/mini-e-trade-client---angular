@@ -33,6 +33,13 @@ import { UserService } from 'src/app/services/models/user.service';
       <a routerLink="/password-reset" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none; display: block;"> Şifremi unuttum </a>
     </form>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class LoginComponent {
   frm: FormGroup;
@@ -73,15 +80,17 @@ export class LoginComponent {
     this.spinner.show();
     await this.userService
       .login(emailOrUserName, password)
-      .then(() => {
+      .then((response) => {
         //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
+        if (response.token) {
+          localStorage.setItem('accessToken', response.token.accessToken);
 
-        this.router.navigate(['']).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((err) => {
-        this.toastr.error(err.message);
+          this.router.navigate(['']).then(() => {
+            window.location.reload();
+          });
+        } else if (response.message) {
+          this.toastr.error(response.message);
+        }
       })
       .finally(() => {
         this.spinner.hide();

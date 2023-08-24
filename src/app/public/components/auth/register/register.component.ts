@@ -59,6 +59,13 @@ import { UserService } from 'src/app/services/models/user.service';
 
     <router-outlet></router-outlet>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class RegisterComponent {
   frm: FormGroup;

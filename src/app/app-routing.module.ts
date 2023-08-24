@@ -10,6 +10,8 @@ import { LoginAfterGuard } from './guards/common/login-after.guard';
 import { LoginBeforeGuard } from './guards/common/login-before.guard';
 import { AdminPanelGuard } from './guards/admin-panel/admin-panel.guard';
 import { SpecialAdminGuard } from './guards/admin-panel/special.admin.guard';
+import { AccountComponent } from './public/components/account/account.component';
+import { UserDetailsComponent } from './public/components/account/user-details/user-details.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,17 +39,35 @@ const routes: Routes = [
       {
         path: 'authorize-menu',
         loadChildren: () => import('./admin/authorize-menu/authorize-menu.module').then((module) => module.AuthorizeMenuModule),
-        canActivate: [AuthGuard, AdminPanelGuard, SpecialAdminGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'roles',
         loadChildren: () => import('./admin/role/role.module').then((module) => module.RoleModule),
-        canActivate: [AuthGuard, AdminPanelGuard, SpecialAdminGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'users',
         loadChildren: () => import('./admin/users/users.module').then((module) => module.UsersModule),
-        canActivate: [AuthGuard, AdminPanelGuard, SpecialAdminGuard],
+        canActivate: [AuthGuard],
+      },
+    ],
+  },
+  {
+    path: 'account',
+    component: AccountComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', component: UserDetailsComponent, canActivate: [AuthGuard] },
+      {
+        path: 'orders',
+        loadChildren: () => import('./public/components/account/user-orders/user-orders.module').then((module) => module.UserOrdersModule),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'password-change',
+        loadChildren: () => import('./public/components/account/password-change/password-change.module').then((module) => module.PasswordChangeModule),
+        canActivate: [AuthGuard],
       },
     ],
   },

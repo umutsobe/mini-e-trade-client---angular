@@ -16,7 +16,7 @@ import { AuthService } from '../services/common/auth/auth.service';
           <li *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="list-group-item cursor-pointer">Users</li>
         </ul>
       </div>
-      <div class="col-10 right-panel" style="height: 1000px; border-radius: 10px;">
+      <div class="col-10 right-panel" style="border-radius: 10px;">
         <router-outlet></router-outlet>
       </div>
     </div>
