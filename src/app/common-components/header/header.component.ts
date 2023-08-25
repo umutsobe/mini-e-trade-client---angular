@@ -2,7 +2,8 @@ import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular
 import { Router } from '@angular/router';
 import { faBasketShopping } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from 'src/app/services/common/auth/auth.service';
+import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
+import { AccountService } from 'src/app/services/models/account.service';
 
 declare var $: any;
 
@@ -26,12 +27,14 @@ declare var $: any;
         <div *ngIf="authService.isAuthenticated" class="dropdown me-3">
           <div class="btn dropdown-toggle text-white " style="background-color: #F11A7B;" type="button" data-bs-toggle="dropdown" aria-expanded="false">Account</div>
 
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" style="width: 70px;">
+            <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
+            <li><hr class="dropdown-divider" /></li>
+
             <li><a routerLink="account" role="button" class="dropdown-item">Hesabım</a></li>
             <li><a routerLink="account/orders" role="button" class="dropdown-item">Siparişlerim</a></li>
 
             <li><hr class="dropdown-divider" /></li>
-
             <li><a role="button" class="dropdown-item text-danger" (click)="signOut()">Çıkış Yap</a></li>
           </ul>
         </div>
@@ -53,10 +56,16 @@ export class HeaderComponent implements OnInit {
   faBasketShopping = faBasketShopping;
   faCircleHalfStroke = faCircleHalfStroke;
   toggleThemeString: string;
-
-  constructor(public authService: AuthService, private router: Router) {}
+  name: string = '';
+  constructor(public authService: AuthService, private router: Router, private accountService: AccountService) {}
   ngOnInit(): void {
     this.authService.identityCheck();
+
+    if (_isAuthenticated)
+      this.accountService.getUserDetails().then((response) => {
+        this.name = response.name;
+      });
+
     if (!localStorage.getItem('theme')) {
       localStorage.setItem('theme', 'light');
     } else {

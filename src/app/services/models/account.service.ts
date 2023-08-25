@@ -5,6 +5,8 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { HttpClientService } from '../common/http-client.service';
 import { ListUserOrders } from 'src/app/contracts/account/ListUserOrders';
 import { UpdateUserPassword } from 'src/app/contracts/account/UpdateUserPassword';
+import { ListUserAddresess } from 'src/app/contracts/account/Address/ListUserAddresess';
+import { CreateUserAddress } from 'src/app/contracts/account/Address/CreateUserAddress';
 
 @Injectable({
   providedIn: 'root',
@@ -66,6 +68,42 @@ export class AccountService {
         action: 'UpdateUserPassword',
       },
       model
+    );
+
+    return await firstValueFrom(observable);
+  }
+
+  async getUserAdresses(userId: string): Promise<ListUserAddresess[]> {
+    const observable: Observable<ListUserAddresess[]> = this.http.get(
+      {
+        controller: 'account',
+        action: 'GetUserAddresses',
+      },
+      userId
+    );
+
+    return await firstValueFrom(observable);
+  }
+
+  async createUserAddress(model: CreateUserAddress): Promise<any> {
+    const observable: Observable<any> = this.http.post(
+      {
+        controller: 'account',
+        action: 'AddUserAddress',
+      },
+      model
+    );
+
+    return await firstValueFrom(observable);
+  }
+
+  async deleteUserAddress(addressId: string): Promise<any> {
+    const observable: Observable<any> = this.http.delete(
+      {
+        controller: 'account',
+        action: 'DeleteUserAdsress',
+      },
+      addressId
     );
 
     return await firstValueFrom(observable);

@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
               <li routerLink="/account" role="button" class="list-group-item cursor-pointer">User Details</li>
               <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
               <li routerLink="password-change" role="button" class="list-group-item cursor-pointer">Password Change</li>
+              <li routerLink="my-addresess" role="button" class="list-group-item cursor-pointer">My Addresess</li>
             </ul>
           </div>
         </div>

@@ -8,8 +8,8 @@ import { AccountService } from 'src/app/services/models/account.service';
   selector: 'app-user-orders',
   template: `
     <div *ngIf="orders == null ? false : orders.length > 0" style="margin-bottom: 500px;">
-      <div *ngFor="let order of orders" class="mb-4" style="border: 1px solid #85E6C5; border-radius: 10px;">
-        <div class="d-flex p-3 m-0 justify-content-between" style="border-bottom: 1px solid #85E6C5;">
+      <div *ngFor="let order of orders" class="mb-4 card">
+        <div class="d-flex p-3 m-0 justify-content-between card-header">
           <div>
             <h4 class="m-0">{{ orders == null ? '' : order.createdDate }}</h4>
             <h4 class="m-0">Toplam: {{ orders == null ? '' : (order.totalPrice | currency : '₺') }}</h4>
@@ -17,7 +17,7 @@ import { AccountService } from 'src/app/services/models/account.service';
           <h4>OrderCode: {{ orders == null ? '' : order.orderCode }}</h4>
         </div>
 
-        <div *ngFor="let orderItem of order.orderItems" class="my-2 py-2">
+        <div *ngFor="let orderItem of order.orderItems" class="my-2 py-2 card-body">
           <!-- iterasyon burada olacak -->
           <div class="py-2 ms-5 d-flex">
             <img width="120px" src="/assets/product.jpg" style="border-radius: 10px;" />

@@ -69,6 +69,11 @@ const routes: Routes = [
         loadChildren: () => import('./public/components/account/password-change/password-change.module').then((module) => module.PasswordChangeModule),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'my-addresess',
+        loadChildren: () => import('./public/components/account/addresess/addresess.module').then((module) => module.AddresessModule),
+        canActivate: [AuthGuard],
+      },
     ],
   },
 
