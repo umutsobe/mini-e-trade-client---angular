@@ -6,7 +6,7 @@ import { SignalRService } from 'src/app/services/common/signal-r.service';
 
 @Component({
   selector: 'app-dashboard',
-  template: `<p>DashboardComponent</p>`,
+  template: `<p style="margin-bottom: 500px;">DashboardComponent</p>`,
 })
 export class DashboardComponent implements OnInit {
   constructor(private signalRService: SignalRService, private toastr: ToastrService, private hubUrlsService: HubUrlsService) {

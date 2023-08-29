@@ -63,7 +63,7 @@ export class FileUploadComponent {
         .post(
           {
             controller: 'ProductControllers',
-            action: 'upload',
+            action: 'UploadProductImage',
             queryString: `id=${this.idService.getId()}`,
           },
           fileData

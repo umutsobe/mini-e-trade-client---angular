@@ -18,7 +18,16 @@
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/web.config"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/web.config",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@kolkov/angular-editor/assets/",
+                "output": "./assets/fonts/"
+              }
+            ],
             "styles": ["@angular/material/prebuilt-themes/pink-bluegrey.css", "node_modules/bootstrap/dist/css/bootstrap.min.css", "node_modules/ngx-toastr/toastr.css", "node_modules/ngx-spinner/animations/ball-spin-clockwise-fade.css"],
             "scripts": ["node_modules/jquery/dist/jquery.min.js", "node_modules/jquery/dist/jquery.min.js", "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           },

@@ -1,13 +1,16 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { List_Product } from 'src/app/contracts/list_product';
+import { List_Product } from 'src/app/contracts//product/list_product';
 import { ProductService } from 'src/app/services/models/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
 import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange-service';
-import { List_Product_Image } from 'src/app/contracts/list_product_image';
+import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
+import { List_Category } from 'src/app/contracts/category/list_category';
+import { MatSelectionList } from '@angular/material/list';
+import { CategoryService } from 'src/app/services/models/category.service';
 declare var $: any;
 @Component({
   selector: 'app-list',
@@ -17,50 +20,50 @@ declare var $: any;
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Name</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.name }}</td>
         </ng-container>
 
         <ng-container matColumnDef="stock">
-          <th mat-header-cell *matHeaderCellDef>Stock</th>
-          <td mat-cell *matCellDef="let element">{{ element.stock }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Stock</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.stock }}</td>
         </ng-container>
 
         <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef>Price</th>
-          <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Price</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ element.price }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdDate">
-          <th mat-header-cell *matHeaderCellDef>CreatedDate</th>
-          <td mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>CreatedDate</th>
+          <td class="text-center" mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="updatedDate">
-          <th mat-header-cell *matHeaderCellDef>UpdatedDate</th>
-          <td mat-cell *matCellDef="let element">
-            {{ formatDate(element.updatedDate) == '0001-01-01 00:00:00' ? '-' : formatDate(element.updatedDate) }}
+        <ng-container matColumnDef="category">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Assign Category</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
+            <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(element)" class="btn btn-primary btn-sm">Select Category</button>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="photo">
-          <th mat-header-cell *matHeaderCellDef>Photo</th>
-          <td mat-cell *matCellDef="let element">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Photo</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
             <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(element)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
             <!-- dialog -->
           </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef>Delete</th>
-          <td mat-cell *matCellDef="let element">
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Delete</th>
+          <td class="text-center" mat-cell *matCellDef="let element">
             <!-- <img (click)="delete(element.id)" src="/assets/delete.png" width="25" style="cursor:pointer;" /> -->
             <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
           </td>
         </ng-container>
 
         <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef>Edit</th>
+          <th class="text-center" mat-header-cell *matHeaderCellDef>Edit</th>
           <td mat-cell *matCellDef="let element">
             <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
           </td>
@@ -140,12 +143,33 @@ declare var $: any;
         </div>
       </div>
     </div>
+
+    <!-- category modal -->
+
+    <div class="modal fade" id="categoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h2>{{ selectedProduct ? selectedProduct.name : '' }}</h2>
+            <mat-selection-list #categoryComponent>
+              <mat-list-option *ngFor="let category of listCategories" selected="{{ category.selected }}">
+                {{ category.name }}
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+          <div class="modal-footer">
+            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Kategorileri Ata</button>
+            <button (click)="closeCategoryDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   `,
 })
 export class ListComponent implements OnInit {
-  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}
+  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService, private categoryService: CategoryService) {}
 
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate', 'photo', 'delete', 'edit'];
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'category', 'photo', 'delete', 'edit'];
   dataSource: MatTableDataSource<List_Product> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -165,7 +189,7 @@ export class ListComponent implements OnInit {
   }
 
   //dialog penceresinde seçilen ürün
-  selectedProduct: List_Product; // dialog penceresinde sorun yaşadım. o anki element id'ye erişemiyordum ben de böyle çözüm sağladım.
+  selectedProduct: List_Product;
 
   openDeleteDialog(element: List_Product) {
     this.selectedProduct = element;
@@ -223,6 +247,33 @@ export class ListComponent implements OnInit {
     // date daha güzel görünür
     const date = new Date(dateString);
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
+  }
+
+  categories: { categories: List_Category[]; totalCategoryCount: number };
+  assignedCategories: Array<string> = [];
+  listCategories: { name: string; selected: boolean }[];
+
+  async openCategoryDialog(element) {
+    this.selectedProduct = element;
+    this.assignedCategories = await this.productService.getCategoriesByProductId(element.id);
+
+    this.categories = await this.categoryService.getCategories(0, 100);
+
+    this.listCategories = this.categories.categories.map((r: any) => {
+      return {
+        name: r.name,
+        selected: this.assignedCategories?.indexOf(r.name) > -1,
+      };
+    });
+  }
+
+  assignCategories(categoryComponent: MatSelectionList) {
+    const categories: string[] = categoryComponent.selectedOptions.selected.map((o) => o._elementRef.nativeElement.innerText);
+    this.productService.assignCategoriesToProduct(this.selectedProduct.id, categories);
+  }
+
+  closeCategoryDialog() {
+    this.listCategories = [];
   }
 
   async ngOnInit() {

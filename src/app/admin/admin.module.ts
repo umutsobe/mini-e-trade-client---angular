@@ -8,9 +8,10 @@ import { ProductsModule } from './products/products.module';
 import { AuthorizeMenuModule } from './authorize-menu/authorize-menu.module';
 import { RoleModule } from './role/role.module';
 import { UsersModule } from './users/users.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @NgModule({
   declarations: [AdminComponent],
-  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), AuthorizeMenuModule, RoleModule, UsersModule],
+  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), AuthorizeMenuModule, RoleModule, UsersModule, CategoriesModule],
 })
 export class AdminModule {}

@@ -7,9 +7,7 @@ import { ProductsComponent } from './admin/products/products.component';
 import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
-import { LoginBeforeGuard } from './guards/common/login-before.guard';
 import { AdminPanelGuard } from './guards/admin-panel/admin-panel.guard';
-import { SpecialAdminGuard } from './guards/admin-panel/special.admin.guard';
 import { AccountComponent } from './public/components/account/account.component';
 import { UserDetailsComponent } from './public/components/account/user-details/user-details.component';
 
@@ -30,6 +28,11 @@ const routes: Routes = [
           { path: 'create', loadChildren: () => import('./admin/products/create/create.module').then((module) => module.CreateModule), canActivate: [AuthGuard, AdminPanelGuard] },
           { path: 'list', loadChildren: () => import('./admin/products/list/list.module').then((module) => module.ListModule), canActivate: [AuthGuard, AdminPanelGuard] },
         ],
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./admin/categories/categories.module').then((module) => module.CategoriesModule),
+        canActivate: [AuthGuard, AdminPanelGuard],
       },
       {
         path: 'orders',
@@ -87,6 +90,8 @@ const routes: Routes = [
     loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule),
   },
   { path: 'products/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
+  { path: 'products/category/:categoryName', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
+  { path: 'products/category/:categoryName/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
 
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
 

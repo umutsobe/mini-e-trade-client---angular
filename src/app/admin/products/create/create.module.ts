@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CreateComponent } from './create.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [CreateComponent],
-  imports: [CommonModule, RouterModule.forChild([{ path: '', component: CreateComponent }]), ReactiveFormsModule],
+  imports: [CommonModule, RouterModule.forChild([{ path: '', component: CreateComponent }]), ReactiveFormsModule, MatListModule, AngularEditorModule],
   exports: [CreateComponent],
 })
 export class CreateModule {}

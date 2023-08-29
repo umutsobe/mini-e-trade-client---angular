@@ -4,4 +4,5 @@ export class Action {
   definition: string;
   code: string;
   menuName: string;
+  assignedRoles: string[];
 }

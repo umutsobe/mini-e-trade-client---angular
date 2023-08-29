@@ -26,8 +26,17 @@ import { UserService } from 'src/app/services/models/user.service';
         <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur. Ve en az 6 karakterli olmalıdır</div>
       </div>
 
-      <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
-      <asl-google-signin-button type="standard" size="large" theme="outline" style="border-radius: 5px;"></asl-google-signin-button>
+      <button type="submit" class="mb-4 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+      <div type="button" class=" d-flex justify-content-center align-items-center p-1" style="background-color: #dc2626;border-radius: 8px;">
+        <div style="width: 30px;">
+          <svg viewBox="0 0 488 512"><path fill="white" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
+        </div>
+        <p style="color: white;" class="d-flex ms-3 mt-2">Sign in with Google</p>
+      </div>
+
+      <div class="">
+        <asl-google-signin-button width="350" size="large" type="standard" style="opacity: 0.0001; position: relative; top: -46px;"></asl-google-signin-button>
+      </div>
 
       <a routerLink="/register" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none;"> Üye Değil Misiniz? Kayıt Olun </a>
       <a routerLink="/password-reset" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none; display: block;"> Şifremi unuttum </a>

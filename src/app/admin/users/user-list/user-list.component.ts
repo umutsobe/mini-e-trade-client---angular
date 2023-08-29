@@ -46,7 +46,7 @@ import { UserService } from 'src/app/services/models/user.service';
 
       <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
     </div>
-    <div class="d-flex justify-content-end mt-2">
+    <div style="margin-bottom: 500px;" class="d-flex justify-content-end mt-2">
       <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
     </div>
 
@@ -79,10 +79,6 @@ export class UserListComponent implements OnInit {
   dataSource: MatTableDataSource<List_User> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  roles: { datas: List_Role[]; totalCount: number }; //ham rolümüz
-  assignedRoles: Array<string> = []; // backende göndereceğimiz roller
-  listRoles: { name: string; selected: boolean }[]; // listelerkenki rol formatımız
-
   async getUsers() {
     this.spinner.show();
 
@@ -107,6 +103,10 @@ export class UserListComponent implements OnInit {
     userName: '',
   };
 
+  roles: { datas: List_Role[]; totalCount: number }; //ham rolümüz
+  assignedRoles: Array<string> = []; // backende göndereceğimiz roller
+  listRoles: { name: string; selected: boolean }[]; // listelerkenki rol formatımız
+
   async openRoleDialog(element: List_User) {
     this.selectedUser.email = element.email;
     this.selectedUser.id = element.id;
@@ -123,6 +123,9 @@ export class UserListComponent implements OnInit {
         selected: this.assignedRoles?.indexOf(r.name) > -1,
       };
     });
+    console.log(this.roles);
+    console.log(this.assignedRoles);
+    console.log(this.listRoles);
   }
 
   closeDialog() {

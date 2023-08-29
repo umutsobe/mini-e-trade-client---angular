@@ -9,7 +9,8 @@ import { AuthService } from '../services/common/auth/auth.service';
       <div class="col-2 left-panel">
         <ul class="list-group">
           <li routerLink="/admin" role="button" class="list-group-item cursor-pointer">Dashboard</li>
-          <li routerLink="products" role="button" class="list-group-item cursor-pointer" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Products</li>
+          <li routerLink="products" role="button" class="list-group-item cursor-pointer">Products</li>
+          <li routerLink="categories" role="button" class="list-group-item cursor-pointer">Categories</li>
           <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
           <li *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="list-group-item cursor-pointer">Endpoint-Role Menu</li>
           <li *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="list-group-item cursor-pointer">Roles</li>

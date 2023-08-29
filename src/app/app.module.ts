@@ -21,9 +21,10 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
 import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
 import { environment } from 'src/environments/environment';
+import { CategoryComponent } from './common-components/category/category.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent, CategoryComponent],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

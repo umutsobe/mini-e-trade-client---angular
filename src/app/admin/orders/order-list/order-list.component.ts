@@ -62,7 +62,7 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
 
       <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
     </div>
-    <div class="d-flex justify-content-end mt-2">
+    <div style="margin-bottom: 500px;" class="d-flex justify-content-end mt-2">
       <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
     </div>
 

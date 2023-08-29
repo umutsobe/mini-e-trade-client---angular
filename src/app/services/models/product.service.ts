@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClientService } from '../common/http-client.service';
-import { CreateProduct } from 'src/app/contracts/create_product';
+import { CreateProduct } from 'src/app/contracts/product/create_product';
 import { Observable, firstValueFrom } from 'rxjs';
-import { List_Product } from 'src/app/contracts/list_product';
+import { List_Product } from 'src/app/contracts/product/list_product';
 import { HttpErrorResponse } from '@angular/common/http';
-import { List_Product_Image } from 'src/app/contracts/list_product_image';
+import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class ProductService {
     const observable: Observable<CreateProduct> = this.http.post(
       {
         controller: 'ProductControllers',
+        action: 'CreateProduct',
       },
       product
     );
@@ -27,6 +28,7 @@ export class ProductService {
     const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.http
       .get<{ totalProductCount: number; products: List_Product[] }>({
         controller: 'productControllers',
+        action: 'GetAllProducts',
         queryString: `page=${page}&size=${size}`,
       })
       .toPromise();
@@ -39,6 +41,7 @@ export class ProductService {
     return this.http.delete(
       {
         controller: 'ProductControllers',
+        action: 'DeleteProductById',
       },
       id
     );
@@ -73,5 +76,42 @@ export class ProductService {
     });
     await firstValueFrom(changeShowcaseImageObservable);
     successCallBack();
+  }
+
+  getProductsByCategory(categoryName: string, page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {
+    const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.http
+      .get<{ totalProductCount: number; products: List_Product[] }>({
+        controller: 'productControllers',
+        action: 'GetProductsByCategory',
+        queryString: `categoryName=${categoryName}&page=${page}&size=${size}`,
+      })
+      .toPromise();
+
+    promiseData.then((d) => successCallback()).catch((errorResponse: HttpErrorResponse) => errorCallback(errorResponse.message));
+    return promiseData;
+  }
+
+  async getCategoriesByProductId(productId: string): Promise<string[]> {
+    const observable: Observable<string[]> = this.http.get(
+      {
+        controller: 'productControllers',
+        action: 'GetCategoriesByProduct',
+      },
+      productId
+    );
+
+    return await firstValueFrom(observable);
+  }
+
+  async assignCategoriesToProduct(productId: string, categoryNames: string[]): Promise<any> {
+    const observable: Observable<any> = this.http.post(
+      {
+        controller: 'productControllers',
+        action: 'AssignCategoryToProduct',
+      },
+      { productId: productId, categoryNames: categoryNames }
+    );
+
+    return await firstValueFrom(observable);
   }
 }

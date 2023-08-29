@@ -3,14 +3,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { List_Role } from 'src/app/contracts/role/list_role';
-import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange-service';
-import { RoleService } from 'src/app/services/models/role.service';
+import { List_Category } from 'src/app/contracts/category/list_category';
+import { CategoryService } from 'src/app/services/models/category.service';
 
 @Component({
-  selector: 'app-role-list',
+  selector: 'app-list-category',
   template: `
-    <h1 class="mt-2 text-center" id="title">Roles</h1>
+    <h1 class="mt-2 text-center" id="title">Categories</h1>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
@@ -18,10 +17,17 @@ import { RoleService } from 'src/app/services/models/role.service';
           <td mat-cell *matCellDef="let element">{{ element.name }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="edit">
+          <th mat-header-cell *matHeaderCellDef>edit</th>
+          <td mat-cell *matCellDef="let element">
+            <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef>Delete</th>
           <td mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteRole" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteCategory" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
           </td>
         </ng-container>
 
@@ -37,16 +43,16 @@ import { RoleService } from 'src/app/services/models/role.service';
 
     <!-- delete dialog -->
 
-    <div class="modal fade" id="deleteRole" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Rol Silme İşlemi</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Kategori Silme İşlemi</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger">Rol silme işlemi geri alınamaz!!!</p>
-            <p>Silinecek Rol: {{ selectedRole ? selectedRole.name : '' }}</p>
+            <p class="text-danger">Kategori silme işlemi geri alınamaz!!!</p>
+            <p>Silinecek Kategori: {{ selectedCategory ? selectedCategory.name : '' }}</p>
             <!-- null hatası almamak için kontrol -->
           </div>
           <div class="modal-footer">
@@ -58,17 +64,17 @@ import { RoleService } from 'src/app/services/models/role.service';
     </div>
   `,
 })
-export class RoleListComponent {
-  constructor(private roleService: RoleService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}
+export class ListCategoryComponent {
+  constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private categoryService: CategoryService) {}
 
-  displayedColumns: string[] = ['name', 'delete'];
-  dataSource: MatTableDataSource<List_Role> = null;
+  displayedColumns: string[] = ['name', 'edit', 'delete'];
+  dataSource: MatTableDataSource<List_Category> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  async getRoles() {
+  async getCategories() {
     this.spinner.show();
 
-    const allRoles: { datas: List_Role[]; totalCount: number } = await this.roleService.getRoles(
+    const allCategories: { categories: List_Category[]; totalCategoryCount: number } = await this.categoryService.getCategories(
       this.paginator ? this.paginator.pageIndex : 0,
       this.paginator ? this.paginator.pageSize : 5,
       () => {
@@ -79,28 +85,28 @@ export class RoleListComponent {
       }
     );
 
-    this.dataSource = new MatTableDataSource<List_Role>(allRoles.datas);
-    this.paginator.length = allRoles.totalCount;
+    this.dataSource = new MatTableDataSource<List_Category>(allCategories.categories);
+    this.paginator.length = allCategories.totalCategoryCount;
   }
 
-  selectedRole: List_Role = {
+  selectedCategory: List_Category = {
     id: '',
     name: '',
   };
 
   openDeleteDialog(element) {
-    this.selectedRole = element;
+    this.selectedCategory = element;
   }
 
   delete() {
     this.spinner.show();
 
-    this.roleService
-      .delete(this.selectedRole.id)
+    this.categoryService
+      .delete(this.selectedCategory.id)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${this.selectedRole.name} başarıyla silindi`, 'Başarılı');
-        this.getRoles();
+        this.toastr.success(`${this.selectedCategory.name} başarıyla silindi`, 'Başarılı');
+        this.getCategories();
       })
       .catch((err) => {
         this.spinner.hide();
@@ -109,12 +115,12 @@ export class RoleListComponent {
   }
 
   async ngOnInit() {
-    await this.getRoles();
+    await this.getCategories();
   }
   async pageChanged() {
-    await this.getRoles();
+    await this.getCategories();
   }
   async refresh() {
-    await this.getRoles();
+    await this.getCategories();
   }
 }

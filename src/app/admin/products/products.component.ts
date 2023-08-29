@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
     </div>
 
     <router-outlet></router-outlet>
+    <div style="margin-bottom: 900px;"></div>
   `,
 })
 export class ProductsComponent {}

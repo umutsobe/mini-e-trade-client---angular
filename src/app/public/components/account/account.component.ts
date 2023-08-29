@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-account',
   template: `
-    <div class="row mx-5" style="margin-top: 100px;">
+    <h1 class="fs-2 mb-4" style="margin-left: 260px; margin-top: 100px;">Account</h1>
+    <div class="row mx-5" style="">
       <div class="col-3 left-panel">
         <div class="d-flex justify-content-end">
           <div style="width: 240px;">

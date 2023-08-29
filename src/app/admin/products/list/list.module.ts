@@ -8,10 +8,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FileUploadModule } from 'src/app/services/common/file-upload/file-upload.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [ListComponent],
-  imports: [CommonModule, RouterModule.forChild([{ path: '', component: ListComponent }]), MatFormFieldModule, MatDialogModule, MatTableModule, MatPaginatorModule, FileUploadModule, NgxSpinnerModule],
+  imports: [CommonModule, RouterModule.forChild([{ path: '', component: ListComponent }]), MatFormFieldModule, MatDialogModule, MatTableModule, MatPaginatorModule, FileUploadModule, NgxSpinnerModule, MatListModule],
   exports: [ListComponent],
 })
 export class ListModule {}

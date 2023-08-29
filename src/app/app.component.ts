@@ -5,7 +5,8 @@ import { AuthService } from './services/common/auth/auth.service';
 @Component({
   selector: 'app-root',
   template: `
-    <app-header #myComponent></app-header>
+    <app-header></app-header>
+    <app-category></app-category>
     <div>
       <router-outlet></router-outlet>
     </div>
@@ -15,8 +16,4 @@ import { AuthService } from './services/common/auth/auth.service';
     <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
   `,
 })
-export class AppComponent {
-  constructor(private authService: AuthService) {
-    console.log(authService.isAdmin());
-  }
-}
+export class AppComponent {}
