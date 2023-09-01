@@ -4,24 +4,38 @@ import { AuthService } from '../services/common/auth/auth.service';
 @Component({
   selector: 'app-layout',
   template: `
-    <h1 routerLink="/admin" role="button" class="mt-3 ms-5 mb-4 cursor-pointer" style="width: fit-content;">Admin Panel</h1>
-    <div class="row mx-5">
+    <div class="row mx-2 mt-5">
       <div class="col-2 left-panel">
-        <ul class="list-group">
-          <li routerLink="/admin" role="button" class="list-group-item cursor-pointer">Dashboard</li>
-          <li routerLink="products" role="button" class="list-group-item cursor-pointer">Products</li>
-          <li routerLink="categories" role="button" class="list-group-item cursor-pointer">Categories</li>
-          <li routerLink="orders" role="button" class="list-group-item cursor-pointer">Orders</li>
-          <li *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="list-group-item cursor-pointer">Endpoint-Role Menu</li>
-          <li *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="list-group-item cursor-pointer">Roles</li>
-          <li *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="list-group-item cursor-pointer">Users</li>
-        </ul>
+        <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+          <h1 routerLink="/admin" role="button" class="text-center cursor-pointer w-100">Admin Panel</h1>
+          <div class="p-3" style="height: 500px ;border-radius: 10px;">
+            <div routerLink="/admin" role="button" class="item cursor-pointer">Dashboard</div>
+            <div routerLink="list-product" role="button" class="item cursor-pointer">Products</div>
+            <div routerLink="create-product" role="button" class="item cursor-pointer">Create Product</div>
+            <div routerLink="categories" role="button" class="item cursor-pointer">Categories</div>
+            <div routerLink="orders" role="button" class="item cursor-pointer">Orders</div>
+            <div *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
+            <div *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="item cursor-pointer">Roles</div>
+            <div *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="item cursor-pointer">Users</div>
+          </div>
+        </div>
       </div>
-      <div class="col-10 right-panel" style="border-radius: 10px;">
+      <div class="col-10 right-panel mt-2" style="border-radius: 10px;">
         <router-outlet></router-outlet>
       </div>
     </div>
   `,
+  styles: [
+    `
+      .item {
+        padding: 10px 3px 10px 5px;
+      }
+      .item:hover {
+        border-right: 1px solid gray;
+        opacity: 0.8;
+      }
+    `,
+  ],
 })
 export class AdminComponent {
   constructor(public authService: AuthService) {}

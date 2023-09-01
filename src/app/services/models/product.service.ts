@@ -5,6 +5,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { List_Product } from 'src/app/contracts/product/list_product';
 import { HttpErrorResponse } from '@angular/common/http';
 import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
+import { ProductFilter } from 'src/app/contracts/product/filter_product';
 
 @Injectable({
   providedIn: 'root',
@@ -78,19 +79,6 @@ export class ProductService {
     successCallBack();
   }
 
-  getProductsByCategory(categoryName: string, page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {
-    const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.http
-      .get<{ totalProductCount: number; products: List_Product[] }>({
-        controller: 'productControllers',
-        action: 'GetProductsByCategory',
-        queryString: `categoryName=${categoryName}&page=${page}&size=${size}`,
-      })
-      .toPromise();
-
-    promiseData.then((d) => successCallback()).catch((errorResponse: HttpErrorResponse) => errorCallback(errorResponse.message));
-    return promiseData;
-  }
-
   async getCategoriesByProductId(productId: string): Promise<string[]> {
     const observable: Observable<string[]> = this.http.get(
       {
@@ -111,6 +99,16 @@ export class ProductService {
       },
       { productId: productId, categoryNames: categoryNames }
     );
+
+    return await firstValueFrom(observable);
+  }
+
+  async getProductsByFilter(filterQueryString: string): Promise<{ totalProductCount: number; products: List_Product[] }> {
+    const observable: Observable<{ totalProductCount: number; products: List_Product[] }> = this.http.get({
+      controller: 'productControllers',
+      action: 'GetProductsByFilter',
+      queryString: `${filterQueryString}`,
+    });
 
     return await firstValueFrom(observable);
   }

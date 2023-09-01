@@ -11,15 +11,22 @@
 .list-group-item:hover {
   border: 2px solid rgb(255, 255, 255);
 }
-.active {
-  background-color: #277fd8;
-}
 .categories {
   background-color: #39456a;
+  z-index: 50;
   border-radius: 0;
   height: 44px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  overflow-x: hidden; /* ekran küçülürse kenardaki categoriler gizlenecek. yani ortaya en önemlileri koy */
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox için */
+  -ms-overflow-style: none; /* Internet Explorer için */
+  /* ekran küçülürse kenardaki categoriler gizlenecek. yani ortaya en önemlileri koy */
+  overflow-y: hidden;
+}
+.row .col-4 {
+  display: flex inherit;
+  justify-content: center;
+  color: aliceblue;
 }

@@ -10,35 +10,39 @@ import { CategoryService } from 'src/app/services/models/category.service';
   selector: 'app-list-category',
   template: `
     <h1 class="mt-2 text-center" id="title">Categories</h1>
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef>edit</th>
-          <td mat-cell *matCellDef="let element">
-            <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef>Delete</th>
-          <td mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteCategory" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <table class="table table-striped table-responsive">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">name</th>
+            <th scope="col">edit</th>
+            <th scope="col">delete</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.allCategories">
+          <tr *ngFor="let category of this.allCategories.categories" class="text-center">
+            <td>{{ category.name }}</td>
+            <td>
+              <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteCategory" (click)="openDeleteDialog(category)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            </td>
+          </tr>
+        </tbody>
       </table>
 
-      <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
-    </div>
-    <div class="d-flex justify-content-end mt-2">
-      <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
+      <div class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-2">
+        <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
+      </div>
     </div>
 
     <!-- delete dialog -->
@@ -67,16 +71,18 @@ import { CategoryService } from 'src/app/services/models/category.service';
 export class ListCategoryComponent {
   constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private categoryService: CategoryService) {}
 
-  displayedColumns: string[] = ['name', 'edit', 'delete'];
-  dataSource: MatTableDataSource<List_Category> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  allCategories: { totalCategoryCount: number; categories: List_Category[] };
+  currentPageNo: number = 0;
+  totalCategoryCount: number;
+  totalPageCount: number;
+  pageSize: number = 8;
 
   async getCategories() {
     this.spinner.show();
 
     const allCategories: { categories: List_Category[]; totalCategoryCount: number } = await this.categoryService.getCategories(
-      this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5,
+      this.currentPageNo,
+      this.pageSize,
       () => {
         this.spinner.hide();
       },
@@ -85,10 +91,30 @@ export class ListCategoryComponent {
       }
     );
 
-    this.dataSource = new MatTableDataSource<List_Category>(allCategories.categories);
-    this.paginator.length = allCategories.totalCategoryCount;
+    this.allCategories = allCategories;
+    this.totalCategoryCount = allCategories.totalCategoryCount;
+    this.totalPageCount = Math.ceil(this.totalCategoryCount / this.pageSize);
   }
-
+  prev() {
+    if (this.currentPageNo > 0) {
+      this.currentPageNo--;
+      this.getCategories();
+    }
+  }
+  next() {
+    if (this.currentPageNo != this.totalPageCount - 1) {
+      this.currentPageNo++;
+      this.getCategories();
+    }
+  }
+  first() {
+    this.currentPageNo = 0;
+    this.getCategories();
+  }
+  last() {
+    this.currentPageNo = this.totalPageCount - 1;
+    this.getCategories();
+  }
   selectedCategory: List_Category = {
     id: '',
     name: '',

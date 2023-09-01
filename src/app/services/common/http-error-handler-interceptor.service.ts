@@ -28,7 +28,7 @@ export class HttpErrorHandlerInterceptorService {
 
             break;
           default:
-            this.toastr.warning('Beklenmeyen bir hata meydana gelmiştir!', 'Hata!');
+            this.toastr.warning('Beklenmeyen bir hata meydana geldi!', 'Hata!');
 
             break;
         }

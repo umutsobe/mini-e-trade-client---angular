@@ -11,61 +11,47 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
 @Component({
   selector: 'app-order-list',
   template: `
-    <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
-    <h1 class="mt-2 text-center" id="title">Orders</h1>
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="orderCode">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>orderCode</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.orderCode }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="userName">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>userName</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.userName }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="totalPrice">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>totalPrice</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.totalPrice }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdDate">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>CreatedDate</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="completed">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Is Completed?</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <img *ngIf="element.completed" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="orderDetail">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>orderDetail</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#orderDetailModal" (click)="openOrderDetailDialog(element)" src="/assets/orderDetail.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="delete">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Delete</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <h1 class="mb-5 text-center" id="title">Orders</h1>
+    <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <table class="table table-striped table-responsive">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">orderCode</th>
+            <th scope="col">userName</th>
+            <th scope="col">totalPrice</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">completed</th>
+            <th scope="col">orderDetail</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.allOrders">
+          <tr *ngFor="let order of this.allOrders.orders" class="text-center">
+            <td>{{ order.orderCode }}</td>
+            <td>{{ order.userName }}</td>
+            <td>{{ order.totalPrice }}</td>
+            <td>{{ formatDate(order.createdDate.toString()) }}</td>
+            <td>
+              <img *ngIf="order.completed" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#orderDetailModal" (click)="openOrderDetailDialog(order)" src="/assets/orderDetail.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(order)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            </td>
+          </tr>
+        </tbody>
       </table>
 
-      <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
+      <div class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      </div>
     </div>
-    <div style="margin-bottom: 500px;" class="d-flex justify-content-end mt-2">
-      <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
-    </div>
-
     <!-- delete dialog -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -123,28 +109,53 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
         </div>
       </div>
     </div>
+    <div style="margin-bottom: 500px;"></div>
   `,
 })
 export class OrderListComponent {
   constructor(private orderService: OrderService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
 
-  displayedColumns: string[] = ['orderCode', 'userName', 'totalPrice', 'createdDate', 'completed', 'orderDetail', 'delete'];
-  dataSource: MatTableDataSource<List_Order> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  allOrders: { totalOrderCount: number; orders: List_Order[] };
+  currentPageNo: number = 0;
+  totalOrderCount: number;
+  totalPageCount: number;
+  pageSize: number = 8;
 
   async getOrders() {
     this.spinner.show();
     const allOrders: { totalOrderCount: number; orders: List_Order[] } = await this.orderService.read(
-      this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5,
+      this.currentPageNo,
+      this.pageSize,
       () => this.spinner.hide(),
       (errorMessage) => {
         this.toastr.warning(errorMessage);
         this.spinner.hide();
       }
     );
-    this.dataSource = new MatTableDataSource<List_Order>(allOrders.orders);
-    this.paginator.length = allOrders.totalOrderCount;
+
+    this.allOrders = allOrders;
+    this.totalOrderCount = allOrders.totalOrderCount;
+    this.totalPageCount = Math.ceil(this.totalOrderCount / this.pageSize);
+  }
+  prev() {
+    if (this.currentPageNo > 0) {
+      this.currentPageNo--;
+      this.getOrders();
+    }
+  }
+  next() {
+    if (this.currentPageNo != this.totalPageCount - 1) {
+      this.currentPageNo++;
+      this.getOrders();
+    }
+  }
+  first() {
+    this.currentPageNo = 0;
+    this.getOrders();
+  }
+  last() {
+    this.currentPageNo = this.totalPageCount - 1;
+    this.getOrders();
   }
   selectedOrder: List_Order;
   selectedSingleOrder: SingleOrder;

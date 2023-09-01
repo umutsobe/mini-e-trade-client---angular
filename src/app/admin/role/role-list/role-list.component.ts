@@ -1,43 +1,44 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { List_Role } from 'src/app/contracts/role/list_role';
-import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange-service';
+import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange.service';
 import { RoleService } from 'src/app/services/models/role.service';
 
 @Component({
   selector: 'app-role-list',
   template: `
-    <h1 class="mt-2 text-center" id="title">Roles</h1>
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef>Delete</th>
-          <td mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteRole" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <h1 class="mt-4 text-center" id="title">Roles</h1>
+    <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <table class="table table-striped table-responsive">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">orderCode</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.allRoles">
+          <tr *ngFor="let role of this.allRoles.datas" class="text-center">
+            <td>{{ role.name }}</td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(role)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            </td>
+          </tr>
+        </tbody>
       </table>
 
-      <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
-    </div>
-    <div class="d-flex justify-content-end mt-2">
-      <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
+      <div class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      </div>
     </div>
 
     <!-- delete dialog -->
 
-    <div class="modal fade" id="deleteRole" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -61,16 +62,18 @@ import { RoleService } from 'src/app/services/models/role.service';
 export class RoleListComponent {
   constructor(private roleService: RoleService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}
 
-  displayedColumns: string[] = ['name', 'delete'];
-  dataSource: MatTableDataSource<List_Role> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  allRoles: { totalCount: number; datas: List_Role[] };
+  currentPageNo: number = 0;
+  totalRoleCount: number;
+  totalPageCount: number;
+  pageSize: number = 8;
 
   async getRoles() {
     this.spinner.show();
 
-    const allRoles: { datas: List_Role[]; totalCount: number } = await this.roleService.getRoles(
-      this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5,
+    const allRoles: { totalCount: number; datas: List_Role[] } = await this.roleService.getRoles(
+      this.currentPageNo,
+      this.pageSize,
       () => {
         this.spinner.hide();
       },
@@ -79,10 +82,30 @@ export class RoleListComponent {
       }
     );
 
-    this.dataSource = new MatTableDataSource<List_Role>(allRoles.datas);
-    this.paginator.length = allRoles.totalCount;
+    this.allRoles = allRoles;
+    this.totalRoleCount = allRoles.totalCount;
+    this.totalPageCount = Math.ceil(this.totalRoleCount / this.pageSize);
   }
-
+  prev() {
+    if (this.currentPageNo > 0) {
+      this.currentPageNo--;
+      this.getRoles();
+    }
+  }
+  next() {
+    if (this.currentPageNo != this.totalPageCount - 1) {
+      this.currentPageNo++;
+      this.getRoles();
+    }
+  }
+  first() {
+    this.currentPageNo = 0;
+    this.getRoles();
+  }
+  last() {
+    this.currentPageNo = this.totalPageCount - 1;
+    this.getRoles();
+  }
   selectedRole: List_Role = {
     id: '',
     name: '',

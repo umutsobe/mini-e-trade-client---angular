@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClientService } from '../common/http-client.service';
 import { Observable, firstValueFrom } from 'rxjs';
+import { List_Role } from 'src/app/contracts/role/list_role';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +9,8 @@ import { Observable, firstValueFrom } from 'rxjs';
 export class RoleService {
   constructor(private httpClientService: HttpClientService) {}
 
-  async getRoles(page: number, size: number, successCallBack?: () => void, errorCallBack?: (error) => void) {
-    const observable: Observable<any> = this.httpClientService.get({
+  async getRoles(page: number, size: number, successCallBack?: () => void, errorCallBack?: (error) => void): Promise<{ totalCount: number; datas: List_Role[] }> {
+    const observable: Observable<{ totalCount: number; datas: List_Role[] }> = this.httpClientService.get({
       controller: 'roles',
       queryString: `page=${page}&size=${size}`,
     });

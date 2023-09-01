@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSelectionList } from '@angular/material/list';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { List_Role } from 'src/app/contracts/role/list_role';
@@ -14,40 +12,37 @@ import { UserService } from 'src/app/services/models/user.service';
   template: `
     <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
     <h1 class="mt-2 text-center" id="title">Users</h1>
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="userName">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>userName</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.userName }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="email">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>email</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.email }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="twoFactorEnabled">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>twoFactorEnabled</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <img *ngIf="element.twoFactorEnabled" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="assignRole">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>assignRole</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <button (click)="openRoleDialog(element)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <table class="table table-striped table-responsive">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">userName</th>
+            <th scope="col">email</th>
+            <th scope="col">twoFactorEnabled</th>
+            <th scope="col">assignRole</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.allUsers">
+          <tr *ngFor="let user of this.allUsers.users" class="text-center">
+            <td>{{ user.userName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <img *ngIf="user.twoFactorEnabled" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <button (click)="openRoleDialog(user)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
-      <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
-    </div>
-    <div style="margin-bottom: 500px;" class="d-flex justify-content-end mt-2">
-      <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
+      <div class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      </div>
     </div>
 
     <!-- action dialog -->
@@ -57,6 +52,7 @@ import { UserService } from 'src/app/services/models/user.service';
         <div class="modal-content">
           <div class="modal-header"></div>
           <div class="modal-body">
+            <div *ngIf="spinnerElement" class="spinner-border text-primary" role="status"></div>
             <mat-selection-list #rolesComponent>
               <mat-list-option *ngFor="let role of listRoles" selected="{{ role.selected }}">
                 {{ role.name }}
@@ -71,19 +67,39 @@ import { UserService } from 'src/app/services/models/user.service';
       </div>
     </div>
   `,
+  styles: [
+    `
+      /* mat selection list kullanan her yere yapıştır. dark theme'de sorun çıkıyor */
+
+      *:focus {
+        box-shadow: none !important;
+      }
+
+      ::ng-deep .mat-mdc-list-item-unscoped-content {
+        color: #8f8979 !important;
+      }
+      ::ng-deep .mdc-checkbox__background {
+        border-color: #8f8979 !important;
+      }
+    `,
+  ],
 })
 export class UserListComponent implements OnInit {
   constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private userService: UserService, private roleService: RoleService) {}
 
-  displayedColumns: string[] = ['userName', 'email', 'twoFactorEnabled', 'assignRole'];
-  dataSource: MatTableDataSource<List_User> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  allUsers: { totalUsersCount: number; users: List_User[] };
+  currentPageNo: number = 0;
+  totalUserCount: number;
+  totalPageCount: number;
+  pageSize: number = 8;
+
+  spinnerElement: boolean = true;
 
   async getUsers() {
     this.spinner.show();
 
     const allUsers: { totalUsersCount: number; users: List_User[] } = await this.userService
-      .getAllUsers(this.paginator ? this.paginator.pageIndex : 0, this.paginator ? this.paginator.pageSize : 5)
+      .getAllUsers(this.currentPageNo, this.pageSize)
       .catch((err) => {
         this.toastr.error(err);
         return { totalUsersCount: 0, users: null };
@@ -92,8 +108,30 @@ export class UserListComponent implements OnInit {
         this.spinner.hide();
       });
 
-    this.dataSource = new MatTableDataSource<List_User>(allUsers.users);
-    this.paginator.length = allUsers.totalUsersCount;
+    this.allUsers = allUsers;
+    this.totalUserCount = allUsers.totalUsersCount;
+    this.totalPageCount = Math.ceil(this.totalUserCount / this.pageSize);
+  }
+
+  prev() {
+    if (this.currentPageNo > 0) {
+      this.currentPageNo--;
+      this.getUsers();
+    }
+  }
+  next() {
+    if (this.currentPageNo != this.totalPageCount - 1) {
+      this.currentPageNo++;
+      this.getUsers();
+    }
+  }
+  first() {
+    this.currentPageNo = 0;
+    this.getUsers();
+  }
+  last() {
+    this.currentPageNo = this.totalPageCount - 1;
+    this.getUsers();
   }
 
   selectedUser: List_User = {
@@ -123,13 +161,12 @@ export class UserListComponent implements OnInit {
         selected: this.assignedRoles?.indexOf(r.name) > -1,
       };
     });
-    console.log(this.roles);
-    console.log(this.assignedRoles);
-    console.log(this.listRoles);
+    this.spinnerElement = false;
   }
 
   closeDialog() {
     this.listRoles = [];
+    this.spinnerElement = true;
   }
 
   assignRoles(rolesComponent: MatSelectionList) {

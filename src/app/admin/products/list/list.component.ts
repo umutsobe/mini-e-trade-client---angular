@@ -1,12 +1,10 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { List_Product } from 'src/app/contracts//product/list_product';
 import { ProductService } from 'src/app/services/models/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
-import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange-service';
+import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange.service';
 import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { MatSelectionList } from '@angular/material/list';
@@ -15,68 +13,49 @@ declare var $: any;
 @Component({
   selector: 'app-list',
   template: `
-    <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
     <h1 class="mt-2 text-center" id="title">Products</h1>
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Name</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="stock">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Stock</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.stock }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="price">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Price</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ element.price }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdDate">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>CreatedDate</th>
-          <td class="text-center" mat-cell *matCellDef="let element">{{ formatDate(element.createdDate) }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="category">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Assign Category</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(element)" class="btn btn-primary btn-sm">Select Category</button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="photo">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Photo</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(element)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
-            <!-- dialog -->
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="delete">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Delete</th>
-          <td class="text-center" mat-cell *matCellDef="let element">
-            <!-- <img (click)="delete(element.id)" src="/assets/delete.png" width="25" style="cursor:pointer;" /> -->
-            <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(element)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="edit">
-          <th class="text-center" mat-header-cell *matHeaderCellDef>Edit</th>
-          <td mat-cell *matCellDef="let element">
-            <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <table class="table table-striped table-responsive">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">Name</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Price</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Select Category</th>
+            <th scope="col">Photo</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.allProducts">
+          <tr *ngFor="let product of this.allProducts.products" class="text-center">
+            <td>{{ product.name }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ formatDate(product.createdDate.toString()) }}</td>
+            <td>
+              <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="btn btn-primary btn-sm">Category</button>
+            </td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+            </td>
+            <td>
+              <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
+            </td>
+          </tr>
+        </tbody>
       </table>
-
-      <mat-paginator (page)="pageChanged()" [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of periodic elements"> </mat-paginator>
-    </div>
-    <div class="d-flex justify-content-end mt-2">
-      <button (click)="refresh()" id="refresh" class="btn btn-primary">Refresh</button>
+      <div class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      </div>
     </div>
 
     <!-- ---------------------------------------------Dialogs---------------------------------------- -->
@@ -165,29 +144,71 @@ declare var $: any;
       </div>
     </div>
   `,
+  styles: [
+    `
+      /* mat selection list kullanan her yere yapıştır. dark theme'de sorun çıkıyor */
+
+      *:focus {
+        box-shadow: none !important;
+      }
+
+      ::ng-deep .mat-mdc-list-item-unscoped-content {
+        color: #8f8979 !important;
+      }
+      ::ng-deep .mdc-checkbox__background {
+        border-color: #8f8979 !important;
+      }
+      .page-item {
+        user-select: none;
+      }
+    `,
+  ],
 })
 export class ListComponent implements OnInit {
   constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService, private categoryService: CategoryService) {}
 
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'category', 'photo', 'delete', 'edit'];
-  dataSource: MatTableDataSource<List_Product> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  allProducts: { totalProductCount: number; products: List_Product[] };
+  currentPageNo: number = 0;
+  totalProductCount: number;
+  totalPageCount: number;
+  pageSize: number = 8;
 
   async getProducts() {
     this.spinner.show();
     const allProducts: { totalProductCount: number; products: List_Product[] } = await this.productService.read(
-      this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5,
+      this.currentPageNo,
+      this.pageSize,
       () => this.spinner.hide(),
       (errorMessage) => {
         this.toastr.warning(errorMessage);
         this.spinner.hide();
       }
     );
-    this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
-    this.paginator.length = allProducts.totalProductCount;
+    this.allProducts = allProducts;
+    this.totalProductCount = allProducts.totalProductCount;
+    this.totalPageCount = Math.ceil(this.totalProductCount / this.pageSize);
   }
 
+  prev() {
+    if (this.currentPageNo > 0) {
+      this.currentPageNo--;
+      this.getProducts();
+    }
+  }
+  next() {
+    if (this.currentPageNo != this.totalPageCount - 1) {
+      this.currentPageNo++;
+      this.getProducts();
+    }
+  }
+  first() {
+    this.currentPageNo = 0;
+    this.getProducts();
+  }
+  last() {
+    this.currentPageNo = this.totalPageCount - 1;
+    this.getProducts();
+  }
   //dialog penceresinde seçilen ürün
   selectedProduct: List_Product;
 
@@ -245,7 +266,9 @@ export class ListComponent implements OnInit {
 
   formatDate(dateString: string): string {
     // date daha güzel görünür
+
     const date = new Date(dateString);
+    if (window.innerWidth < 600) return formatDate(date, 'yyyy-MM-dd', 'en-US');
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
   }
 
@@ -268,8 +291,16 @@ export class ListComponent implements OnInit {
   }
 
   assignCategories(categoryComponent: MatSelectionList) {
+    this.spinner.show();
     const categories: string[] = categoryComponent.selectedOptions.selected.map((o) => o._elementRef.nativeElement.innerText);
-    this.productService.assignCategoriesToProduct(this.selectedProduct.id, categories);
+    this.productService
+      .assignCategoriesToProduct(this.selectedProduct.id, categories)
+      .then(() => {
+        this.toastr.success('Kategoriler Başarıyla Atandı');
+      })
+      .finally(() => {
+        this.spinner.hide();
+      });
   }
 
   closeCategoryDialog() {

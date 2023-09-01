@@ -7,6 +7,8 @@ import { AccountService } from 'src/app/services/models/account.service';
 @Component({
   selector: 'app-user-orders',
   template: `
+    <div *ngIf="spinnerElement" class="spinner-border text-primary" role="status"></div>
+
     <div *ngIf="orders == null ? false : orders.length > 0" style="margin-bottom: 500px;">
       <div *ngFor="let order of orders" class="mb-4 card">
         <div class="d-flex p-3 m-0 justify-content-between card-header">
@@ -31,15 +33,17 @@ import { AccountService } from 'src/app/services/models/account.service';
       </div>
     </div>
 
-    <div *ngIf="!(orders == null ? false : orders.length > 0)" class="alert alert-info" role="alert">Herhangi bir siparişiniz yok</div>
+    <div *ngIf="!(orders == null ? false : orders.length > 0) && !spinnerElement" class="alert alert-info" role="alert">Herhangi bir siparişiniz yok</div>
   `,
 })
 export class UserOrdersComponent implements OnInit {
-  constructor(private spinner: NgxSpinnerService, private accountService: AccountService, private authService: AuthService) {}
-
+  constructor(private accountService: AccountService, private authService: AuthService) {}
   orders: ListUserOrders[];
+
+  spinnerElement: boolean = true;
 
   async ngOnInit() {
     this.orders = await this.accountService.listUserOrders(this.authService.UserId);
+    this.spinnerElement = false;
   }
 }

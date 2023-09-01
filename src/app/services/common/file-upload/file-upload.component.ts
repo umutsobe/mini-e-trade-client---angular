@@ -4,7 +4,7 @@ import { HttpClientService } from '../http-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { IdExchangeService } from '../../data-exchange/id-exchange-service';
+import { IdExchangeService } from '../../data-exchange/id-exchange.service';
 
 @Component({
   selector: 'app-file-upload',

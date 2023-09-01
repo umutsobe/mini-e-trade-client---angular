@@ -7,16 +7,18 @@ import { RoleService } from 'src/app/services/models/role.service';
 @Component({
   selector: 'app-create-role',
   template: `
-    <div class="w-75 mx-auto">
-      <h1 class=" mt-2 text-center ">Create Role</h1>
-      <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" formControlName="name" />
-          <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
-        </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
-      </form>
+    <div class="w-50 mx-auto">
+      <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+        <h1 class=" mt-2 text-center ">Create Role</h1>
+        <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" />
+            <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+        </form>
+      </div>
     </div>
   `,
   styles: [

@@ -12,46 +12,48 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
   template: `
     <div class="w-50 mx-auto">
       <h1 class=" mt-2 text-center ">Create Product</h1>
-      <form [formGroup]="frm" class=" my-3">
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" formControlName="name" />
-          <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
-        </div>
-
-        <div class="d-flex justify-content-evenly">
+      <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+        <form [formGroup]="frm" class=" my-3">
           <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
-            <input class="form-control" id="price" rows="3" formControlName="price" />
-            <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">Fiyat girişi zorunludur</div>
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" />
+            <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
+          </div>
+
+          <div class="d-flex justify-content-evenly">
+            <div class="mb-3">
+              <label for="price" class="form-label">Price</label>
+              <input class="form-control" id="price" rows="3" formControlName="price" />
+              <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">Fiyat girişi zorunludur</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="stock" class="form-label">Stock</label>
+              <input class="form-control" id="stock" rows="3" formControlName="stock" />
+              <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">Stock girişi zorunludur</div>
+            </div>
           </div>
 
           <div class="mb-3">
-            <label for="stock" class="form-label">Stock</label>
-            <input class="form-control" id="stock" rows="3" formControlName="stock" />
-            <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">Stock girişi zorunludur</div>
+            <label for="name" class="form-label">Description</label>
+            <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+            <div class="my-2" style="font-size: 13px;">Description alanı zorunludur!</div>
           </div>
-        </div>
 
-        <div class="mb-3">
-          <label for="name" class="form-label">Description</label>
-          <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
-          <div class="my-2" style="font-size: 13px;">Description alanı zorunludur!</div>
-        </div>
-
-        <div class="mb-3">
-          <div class="form-check">
-            <label class="form-check-label" for="isActive"> Is Active </label>
-            <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive" value="" checked />
+          <div class="mb-3">
+            <div class="form-check">
+              <label class="form-check-label" for="isActive"> Is Active </label>
+              <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive" value="" checked />
+            </div>
           </div>
-        </div>
 
-        <button (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning mb-4 btn-sm" style="display: block;">Select Categories</button>
+          <button (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning mb-4 btn-sm" style="display: block;">Select Categories</button>
 
-        <div style="font-size: 15px;" *ngIf="selectedCategories.length > 0" class="d-flex align-items-center mb-3">Seçilen Kategoriler: {{ selectedCategories ? selectedCategories : '' }}</div>
+          <div style="font-size: 15px;" *ngIf="selectedCategories.length > 0" class="d-flex align-items-center mb-3">Seçilen Kategoriler: {{ selectedCategories ? selectedCategories : '' }}</div>
 
-        <button (click)="onSubmit()" type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
-      </form>
+          <button (click)="onSubmit()" type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+        </form>
+      </div>
     </div>
 
     <!-- category modal -->

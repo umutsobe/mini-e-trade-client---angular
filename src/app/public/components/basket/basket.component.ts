@@ -16,7 +16,7 @@ declare var $: any;
 @Component({
   selector: 'app-basket',
   template: `
-    <div class="mx-5 mt-5 row" style="margin-bottom: 700px;">
+    <div *ngIf="products.length > 0" class="mx-5 mt-5 row" style="margin-bottom: 700px;">
       <div class="col-8">
         <h1 class="">Sepetim</h1>
 
@@ -58,9 +58,15 @@ declare var $: any;
         <button (click)="completeShopping()" class="btn mt-3" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Alışverişi Tamamla</button>
       </div>
     </div>
+
+    <div *ngIf="!(products.length > 0)" class="container mt-5 w-50" style="margin-bottom: 800px;">
+      <div class="alert alert-info ">Sepetinizde ürün yok.</div>
+      <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
+    </div>
   `,
   styles: [
     `
+      /* number inputlardan arrow kaldırma */
       input[type='number']::-webkit-inner-spin-button,
       input[type='number']::-webkit-outer-spin-button {
         -webkit-appearance: none;
@@ -73,7 +79,7 @@ export class BasketComponent implements OnInit {
   faPlus = faPlus;
   faMinus = faMinus;
   faTrash = faTrash;
-  products: List_Basket_Item[];
+  products: List_Basket_Item[] = [];
   constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService) {}
   ngOnInit() {
     this.spinner.show();
@@ -90,24 +96,30 @@ export class BasketComponent implements OnInit {
   async minusQuantity(product: List_Basket_Item) {
     this.spinner.show();
 
-    let _product: List_Basket_Item = new List_Basket_Item();
-    _product.name = product.name;
-    _product.basketItemId = product.basketItemId;
-    _product.price = product.price;
-    _product.quantity = product.quantity - 1;
+    if (product.quantity == 1) {
+      await this.removeBasketItem(product.basketItemId);
+      return;
+    } else {
+      let _product: List_Basket_Item = new List_Basket_Item();
+      _product.name = product.name;
+      _product.basketItemId = product.basketItemId;
+      _product.price = product.price;
+      _product.quantity = product.quantity - 1;
 
-    await this.basketService
-      .updateQuantity(_product)
-      .then(() => {
-        this.basketService.get().subscribe((response) => {
-          this.totalPriceCalculate();
-          this.products = response;
+      await this.basketService
+        .updateQuantity(_product)
+        .then(() => {
+          this.basketService.get().subscribe((response) => {
+            this.totalPriceCalculate();
+            this.products = response;
+          });
+        })
+        .finally(() => {
+          this.spinner.hide();
         });
-      })
-      .finally(() => {
-        this.spinner.hide();
-      });
+    }
   }
+
   plusQuantity(product: List_Basket_Item) {
     this.spinner.show();
     let _product: List_Basket_Item = new List_Basket_Item();
@@ -133,7 +145,6 @@ export class BasketComponent implements OnInit {
     await this.basketService
       .remove(basketItemId)
       .then(() => {
-        this.toastr.success('Ürün Sepetten Kaldırıldı', 'Başarılı');
         this.basketService.get().subscribe((response) => {
           this.products = response;
         });
@@ -163,6 +174,16 @@ export class BasketComponent implements OnInit {
     await this.orderService
       .create(order)
       .then(() => {
+        this.basketService.get().subscribe(
+          //wdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa order verme sayfası yaptığında burayı sil
+          (response) => {
+            this.products = response;
+            this.spinner.hide();
+          },
+          () => {
+            this.spinner.hide();
+          }
+        );
         this.spinner.hide();
         this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
       })

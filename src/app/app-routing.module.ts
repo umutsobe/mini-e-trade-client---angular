@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { HomeComponent } from './public/components/home/home.component';
 import { AdminComponent } from './admin/admin.component';
-import { ProductsComponent } from './admin/products/products.component';
 import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
@@ -20,15 +19,8 @@ const routes: Routes = [
     canActivate: [AuthGuard, AdminPanelGuard],
     children: [
       { path: '', component: DashboardComponent, canActivate: [AuthGuard, AdminPanelGuard] },
-      {
-        path: 'products',
-        component: ProductsComponent,
-        canActivate: [AuthGuard, AdminPanelGuard],
-        children: [
-          { path: 'create', loadChildren: () => import('./admin/products/create/create.module').then((module) => module.CreateModule), canActivate: [AuthGuard, AdminPanelGuard] },
-          { path: 'list', loadChildren: () => import('./admin/products/list/list.module').then((module) => module.ListModule), canActivate: [AuthGuard, AdminPanelGuard] },
-        ],
-      },
+      { path: 'create-product', loadChildren: () => import('./admin/products/create/create.module').then((module) => module.CreateModule), canActivate: [AuthGuard, AdminPanelGuard] },
+      { path: 'list-product', loadChildren: () => import('./admin/products/list/list.module').then((module) => module.ListModule), canActivate: [AuthGuard, AdminPanelGuard] },
       {
         path: 'categories',
         loadChildren: () => import('./admin/categories/categories.module').then((module) => module.CategoriesModule),
@@ -85,13 +77,8 @@ const routes: Routes = [
     loadChildren: () => import('./public/components/basket/basket.module').then((module) => module.BasketModule),
     canActivate: [AuthGuard],
   },
-  {
-    path: 'products',
-    loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule),
-  },
-  { path: 'products/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
-  { path: 'products/category/:categoryName', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
-  { path: 'products/category/:categoryName/:pageNo', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
+
+  { path: 'search', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
 
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
 
