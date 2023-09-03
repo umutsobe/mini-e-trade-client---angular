@@ -19,12 +19,12 @@ import { ProductService } from 'src/app/services/models/product.service';
   template: `
     <div class="mt-5 px-4">
       <div class="d-flex">
-        <div class="col-2 m-0 px-3 d-flex justify-content-center d-none d-lg-block" style="height: 600px; width: 220px !important; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
-          <!-- filtre colonu -->
+        <!-- filtre colonu -->
+        <div class="col-2 m-0 px-3 d-flex justify-content-center d-none d-lg-block" style="width: 230px; height: 600px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
           <h1 class="text-center mt-4 mb-5">Filtreler</h1>
 
           <select class="form-select" (change)="categorySelected($event)">
-            <option selected>Kategori Seç</option>
+            <option selected>Kategori</option>
             <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
           </select>
 
@@ -33,20 +33,24 @@ import { ProductService } from 'src/app/services/models/product.service';
               <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
               <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
             </div>
-            <button class="btn btn-warning mt-5" style="width: 100%;">Sonuçları Filtrele</button>
+            <button class="btn btn-warning mt-5" style="width: 100%;">Filtrele</button>
           </form>
         </div>
-        <div>
-          <div class="px-2 d-flex flex-wrap justify-content-center">
-            <!-- products yoksa info -->
-            <div *ngIf="!(totalProductCount > 0) && !spinnerBootstrap" class="mx-5 px-5" style="width: 100%;">
-              <div class="alert alert-info ">Aradığınız kriterlere uygun ürün bulunamadı</div>
-            </div>
-            <!-- products colonu -->
+        <!-- products colonu -->
+        <div class="px-2" style="width: 100%;">
+          <!-- products yoksa info -->
+          <div *ngIf="!(totalProductCount > 0) && !spinnerBootstrap" class="d-flex justify-content-center">
+            <div class="alert alert-info ">Aradığınız kriterlere uygun ürün bulunamadı</div>
+          </div>
+          <!-- products list -->
+          <div class="m-0">
             <!-- spinner -->
-            <div *ngIf="spinnerBootstrap" class="spinner-border text-primary" role="status"></div>
+            <!-- <div class="text-center d-flex justify-content-center" style="width: 80%; position: absolute;">
+              <div *ngIf="spinnerBootstrap" class="spinner-border text-primary" role="status"></div>
+            </div> -->
+
             <!-- sort dropdown -->
-            <div *ngIf="totalProductCount > 12" class="dropdown pe-2 container mb-5 d-flex justify-content-end">
+            <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-5 ps-4" style="width: fit-content;">
               <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
               <ul class="dropdown-menu dropstart">
                 <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
@@ -55,15 +59,16 @@ import { ProductService } from 'src/app/services/models/product.service';
               </ul>
             </div>
             <!-- products -->
+            <div class="d-flex flex-wrap justify-content-center">
+              <div *ngFor="let product of products" class="card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
+                <img routerLink="/product/{{ product.url }}" *ngIf="!product.productImageFiles.length" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img routerLink="/product/{{ product.url }}" *ngIf="product.productImageFiles.length" src="{{ this.baseUrl.url }}/{{ product.imagePath }}" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
-            <div type="button" *ngFor="let product of products" class="card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-              <img *ngIf="!product.productImageFiles.length" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" />
-              <img *ngIf="product.productImageFiles.length" src="{{ this.baseUrl.url }}/{{ product.imagePath }}" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" />
-
-              <div class="card-body m-0">
-                <h5 class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
-                <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
-                <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Sepete Ekle</button>
+                <div class="card-body m-0">
+                  <h5 routerLink="/product/{{ product.url }}" type="button" class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
+                  <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
+                  <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Sepete Ekle</button>
+                </div>
               </div>
             </div>
           </div>
@@ -130,6 +135,7 @@ export class ProductListComponent {
 
   async ngOnInit() {
     this.activatedRoute.queryParams.subscribe(async (params) => {
+      this.spinner.show();
       this.queryStringBuilder(params);
       this.currentPageNo = +params['page'] || 0;
       this.baseUrl = await this.fileService.getBaseStorageUrl();
@@ -153,6 +159,7 @@ export class ProductListComponent {
           imagePath: p.productImageFiles.length ? p.productImageFiles.find((p) => p.showcase).path : '',
           name: p.name,
           price: p.price,
+          url: p.url,
           stock: p.stock,
           updatedDate: p.updatedDate,
           productImageFiles: p.productImageFiles,
@@ -172,6 +179,7 @@ export class ProductListComponent {
       }
 
       this.spinnerBootstrap = false;
+      this.spinner.hide();
     });
   }
 
@@ -270,16 +278,18 @@ export class ProductListComponent {
   }
 
   categorySelected(event) {
-    if (event.target.value != 'Kategori Seç') {
+    if (event.target.value != 'Kategori') {
       this.productFilter.categoryName = event.target.value;
-    } else if (event.target.value == 'Kategori Seç') this.productFilter.categoryName = undefined;
+    } else if (event.target.value == 'Kategori') this.productFilter.categoryName = undefined;
   }
+
   @ViewChild('frm', { static: true }) frm: NgForm;
 
   assignFilters(data: { min: number; max: number }) {
     if (data.max) this.productFilter.maxPrice = data.max;
     if (data.min) this.productFilter.minPrice = data.min;
 
+    this.productFilter.page = 0;
     this.navigateWithFilters();
   }
 

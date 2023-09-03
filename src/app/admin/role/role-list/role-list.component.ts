@@ -13,7 +13,7 @@ import { RoleService } from 'src/app/services/models/role.service';
       <table class="table table-striped table-responsive">
         <thead>
           <tr class="text-center">
-            <th scope="col">orderCode</th>
+            <th scope="col">name</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>

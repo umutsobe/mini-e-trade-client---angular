@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
   template: `
-    <div class="my-5">
+    <div class="my-5" style="margin-top: 400px;">
       <footer class="text-center text-lg-start text-white" style="background-color: #45526e">
         <div class="container p-4 pb-0">
           <section class="">

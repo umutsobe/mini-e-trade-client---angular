@@ -15,16 +15,17 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './public/components/auth/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
 import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
 import { environment } from 'src/environments/environment';
 import { CategoryComponent } from './common-components/category/category.component';
+import { FooterModule } from './common-components/footer/footer.module';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, LoginComponent, RegisterComponent, CategoryComponent],
+  declarations: [AppComponent, HeaderComponent, LoginComponent, RegisterComponent, CategoryComponent],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',
@@ -51,6 +52,7 @@ import { CategoryComponent } from './common-components/category/category.compone
     PublicModule,
     BrowserAnimationsModule,
     NgbModule,
+    FooterModule,
     FontAwesomeModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule,

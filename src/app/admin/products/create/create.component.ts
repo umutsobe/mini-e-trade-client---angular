@@ -13,7 +13,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
     <div class="w-50 mx-auto">
       <h1 class=" mt-2 text-center ">Create Product</h1>
       <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
-        <form [formGroup]="frm" class=" my-3">
+        <form [formGroup]="frm" (ngSubmit)="onSubmit()" class=" my-3">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" formControlName="name" />
@@ -47,11 +47,11 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
             </div>
           </div>
 
-          <button (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning mb-4 btn-sm" style="display: block;">Select Categories</button>
+          <button type="button" (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning mb-4 btn-sm" style="display: block;">Select Categories</button>
 
           <div style="font-size: 15px;" *ngIf="selectedCategories.length > 0" class="d-flex align-items-center mb-3">Seçilen Kategoriler: {{ selectedCategories ? selectedCategories : '' }}</div>
 
-          <button (click)="onSubmit()" type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
         </form>
       </div>
     </div>

@@ -9,19 +9,45 @@ import { List_Product_Image } from 'src/app/contracts/product/list_product_image
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { MatSelectionList } from '@angular/material/list';
 import { CategoryService } from 'src/app/services/models/category.service';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { ProductFilter } from 'src/app/contracts/product/filter_product';
+import { Subject, debounceTime } from 'rxjs';
+import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
+
 declare var $: any;
 @Component({
   selector: 'app-list',
   template: `
     <h1 class="mt-2 text-center" id="title">Products</h1>
     <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <div class="d-flex mb-2 align-items-center">
+        <!-- filters -->
+        <form class="d-flex" style="height: 40px">
+          <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" name="onemsiz" class="form-control me-2 " placeholder="İsme Göre Ara" />
+          <!-- <button type="button" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button> -->
+        </form>
+        <div class="dropdown ps-4" style="width: fit-content;">
+          <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+          <ul class="dropdown-menu dropstart">
+            <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
+            <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
+            <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
+            <li type="button" class="dropdown-item">Yeni eklenenler</li>
+          </ul>
+        </div>
+        <select *ngIf="categories" class="ms-2 form-select" (change)="categorySelected($event)" style="width: fit-content; border: 1px solid gray">
+          <option selected>Kategori</option>
+          <option type="button" *ngFor="let category of categories.categories">{{ category.name }}</option>
+        </select>
+      </div>
       <table class="table table-striped table-responsive">
         <thead>
           <tr class="text-center">
             <th scope="col">Name</th>
             <th scope="col">Stock</th>
             <th scope="col">Price</th>
-            <th scope="col">Created Date</th>
+            <th scope="col">Total Sales Count</th>
+            <th scope="col">Is Active</th>
             <th scope="col">Select Category</th>
             <th scope="col">Photo</th>
             <th scope="col">Delete</th>
@@ -33,7 +59,10 @@ declare var $: any;
             <td>{{ product.name }}</td>
             <td>{{ product.stock }}</td>
             <td>{{ product.price }}</td>
-            <td>{{ formatDate(product.createdDate.toString()) }}</td>
+            <td>{{ product.totalOrderNumber }}</td>
+            <td>
+              <img *ngIf="product.isActive" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+            </td>
             <td>
               <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="btn btn-primary btn-sm">Category</button>
             </td>
@@ -48,13 +77,14 @@ declare var $: any;
             </td>
           </tr>
         </tbody>
+        <div *ngIf="this.allProducts.products.length < 1 && !isLoading" class="my-2 alert alert-info">Product not found</div>
       </table>
-      <div class="mt-4 pagination d-flex justify-content-center">
-        <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
-        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="first()"><<</a></div>
-        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="prev()"><</a></div>
-        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="next()">></a></div>
-        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="last()">>></a></div>
+      <div *ngIf="!(this.allProducts.products.length < 1)" class="mt-4 pagination d-flex justify-content-center">
+        <div style="margin: 6px 8px 0 0;">{{ productFilter.page + 1 + '-' + totalPageCount }}</div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="firstPage()"><<</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="previousPage()"><</a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="nextPage()">></a></div>
+        <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="lastPage()">>></a></div>
       </div>
     </div>
 
@@ -165,49 +195,37 @@ declare var $: any;
   ],
 })
 export class ListComponent implements OnInit {
-  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService, private categoryService: CategoryService) {}
+  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService, private categoryService: CategoryService) {
+    this.inputChangeSubject.pipe(debounceTime(this.searchInputDelayTime)).subscribe(() => {
+      //search inputu gecikmeli arama
+      this.onSearchInputChange();
+    });
+  }
 
-  allProducts: { totalProductCount: number; products: List_Product[] };
-  currentPageNo: number = 0;
+  allProducts: { totalProductCount: number; products: List_Product_Admin[] } = {
+    totalProductCount: 0,
+    products: [],
+  };
   totalProductCount: number;
   totalPageCount: number;
-  pageSize: number = 8;
+  pageSize: number = 8; //backenddekiyle aynı olmalı
+  productFilter: ProductFilter = {
+    page: 0,
+    keyword: '',
+  };
+  faMagnifyingGlass = faMagnifyingGlass;
+  private inputChangeSubject = new Subject<string>();
+  searchInputDelayTime: number = 300;
+  isLoading: boolean = true;
 
   async getProducts() {
     this.spinner.show();
-    const allProducts: { totalProductCount: number; products: List_Product[] } = await this.productService.read(
-      this.currentPageNo,
-      this.pageSize,
-      () => this.spinner.hide(),
-      (errorMessage) => {
-        this.toastr.warning(errorMessage);
-        this.spinner.hide();
-      }
-    );
+    const allProducts: { totalProductCount: number; products: List_Product_Admin[] } = await this.productService.getProductsByFilterAdmin(this.queryStringBuilder());
     this.allProducts = allProducts;
     this.totalProductCount = allProducts.totalProductCount;
     this.totalPageCount = Math.ceil(this.totalProductCount / this.pageSize);
-  }
 
-  prev() {
-    if (this.currentPageNo > 0) {
-      this.currentPageNo--;
-      this.getProducts();
-    }
-  }
-  next() {
-    if (this.currentPageNo != this.totalPageCount - 1) {
-      this.currentPageNo++;
-      this.getProducts();
-    }
-  }
-  first() {
-    this.currentPageNo = 0;
-    this.getProducts();
-  }
-  last() {
-    this.currentPageNo = this.totalPageCount - 1;
-    this.getProducts();
+    this.spinner.hide();
   }
   //dialog penceresinde seçilen ürün
   selectedProduct: List_Product;
@@ -277,6 +295,7 @@ export class ListComponent implements OnInit {
   listCategories: { name: string; selected: boolean }[];
 
   async openCategoryDialog(element) {
+    this.spinner.show();
     this.selectedProduct = element;
     this.assignedCategories = await this.productService.getCategoriesByProductId(element.id);
 
@@ -288,6 +307,7 @@ export class ListComponent implements OnInit {
         selected: this.assignedCategories?.indexOf(r.name) > -1,
       };
     });
+    this.spinner.hide();
   }
 
   assignCategories(categoryComponent: MatSelectionList) {
@@ -307,8 +327,85 @@ export class ListComponent implements OnInit {
     this.listCategories = [];
   }
 
+  sortLowPrice() {
+    this.productFilter.sort = 'asc';
+    this.productFilter.page = 0;
+    this.getProducts();
+  }
+  sortHighPrice() {
+    this.productFilter.sort = 'desc';
+    this.productFilter.page = 0;
+    this.getProducts();
+  }
+  sortSaleNumber() {
+    this.productFilter.sort = 'sales';
+    this.productFilter.page = 0;
+    this.getProducts();
+  }
+
+  categorySelected(event) {
+    if (event.target.value != 'Kategori') {
+      this.productFilter.categoryName = event.target.value;
+    } else if (event.target.value == 'Kategori') this.productFilter.categoryName = undefined;
+
+    this.getProducts();
+  }
+
+  previousPage() {
+    if (this.productFilter.page > 0) {
+      this.productFilter.page--;
+      this.getProducts();
+    }
+  }
+  nextPage() {
+    if (this.productFilter.page != this.totalPageCount - 1) {
+      this.productFilter.page++;
+      this.getProducts();
+    }
+  }
+  firstPage() {
+    if (this.productFilter.page != 0) {
+      this.productFilter.page = 0;
+      this.getProducts();
+    }
+  }
+  lastPage() {
+    if (this.productFilter.page != this.totalPageCount - 1) {
+      this.productFilter.page = this.totalPageCount - 1;
+      this.getProducts();
+    }
+  }
+
+  queryStringBuilder(): string {
+    let queryString: string = 'size=8';
+
+    if (this.productFilter.categoryName) queryString += `&categoryName=${this.productFilter.categoryName}`;
+
+    if (this.productFilter.page) queryString += `&page=${this.productFilter.page}`;
+
+    if (this.productFilter.keyword) queryString += `&keyword=${this.productFilter.keyword}`;
+
+    if (this.productFilter.minPrice) queryString += `&minPrice=${this.productFilter.minPrice}`;
+
+    if (this.productFilter.maxPrice) queryString += `&maxPrice=${this.productFilter.maxPrice}`;
+
+    if (this.productFilter.sort) queryString += `&sort=${this.productFilter.sort}`;
+    return queryString;
+  }
+
+  onInputKeyup() {
+    // Ancak debounceTime ile 300 ms gecikmeli olarak onSearchInputChange'e olay gönderir.
+    this.inputChangeSubject.next(this.productFilter.keyword);
+  }
+
+  onSearchInputChange() {
+    this.getProducts();
+  }
+
   async ngOnInit() {
+    this.categories = await this.categoryService.getCategories(0, 100);
     await this.getProducts();
+    this.isLoading = false;
   }
   async pageChanged() {
     await this.getProducts();

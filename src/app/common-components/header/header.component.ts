@@ -21,7 +21,7 @@ declare var $: any;
         </div>
 
         <div class="d-none d-lg-block mx-auto">
-          <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px;">
+          <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-right: 12vw;">
             <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
             <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>
@@ -59,10 +59,10 @@ declare var $: any;
           </div>
         </div>
 
-        <div class="d-none d-lg-block">
+        <div class="d-none d-lg-block user-select-none">
           <div (click)="toggleTheme()" class="d-flex flex-column justify-content-center align-items-center">
             <fa-icon role="button" class="fs-5 m-0" [icon]="faCircleHalfStroke"></fa-icon>
-            <p role="button" class="m-0" style="font-size: 10px;color: white;">{{ toggleThemeString }}</p>
+            <p role="button" class="m-0" style="font-size: 10px;color: white;">Theme</p>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ export class HeaderComponent implements OnInit {
   faBasketShopping = faBasketShopping;
   faCircleHalfStroke = faCircleHalfStroke;
   faMagnifyingGlass = faMagnifyingGlass;
-  toggleThemeString: string;
+  toggleThemeString: string = 'Theme';
   name: string = '';
 
   frm: FormGroup;
@@ -99,13 +99,12 @@ export class HeaderComponent implements OnInit {
 
     if (!localStorage.getItem('theme')) {
       localStorage.setItem('theme', 'light');
+      this.toggleThemeString = 'Light Theme';
     } else {
       if (localStorage.getItem('theme') == 'light') {
         $('body').attr('data-bs-theme', 'light');
-        this.toggleThemeString = 'Dark Theme';
       } else {
         $('body').attr('data-bs-theme', 'dark');
-        this.toggleThemeString = 'Light Theme';
       }
     }
   }

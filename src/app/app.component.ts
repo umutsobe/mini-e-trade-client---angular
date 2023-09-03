@@ -1,20 +1,18 @@
-import { Component } from '@angular/core';
-import { ApplicationService } from './services/models/application.service';
-import { AuthService } from './services/common/auth/auth.service';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   template: `
+    <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
     <div>
       <app-header></app-header>
       <app-category></app-category>
-      <div>
+      <div style="margin-bottom: 300px;">
         <router-outlet></router-outlet>
       </div>
-      <div>
+      <div id="footer" class="d-none">
         <app-footer></app-footer>
       </div>
-      <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
     </div>
   `,
   styles: [
@@ -34,4 +32,11 @@ import { AuthService } from './services/common/auth/auth.service';
     `,
   ],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  //sayfayı yenilerken footer gözükmesin diye önlem
+  ngOnInit(): void {
+    setTimeout(() => {
+      document.getElementById('footer').classList.remove('d-none');
+    }, 1000);
+  }
+}

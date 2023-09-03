@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NoPreloading, PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { HomeComponent } from './public/components/home/home.component';
 import { AdminComponent } from './admin/admin.component';
@@ -80,6 +80,8 @@ const routes: Routes = [
 
   { path: 'search', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
 
+  { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule) },
+
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
 
   { path: 'login', loadChildren: () => import('./public/components/auth/login/login.module').then((m) => m.LoginModule), canActivate: [LoginAfterGuard] },
@@ -94,7 +96,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: NoPreloading,
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

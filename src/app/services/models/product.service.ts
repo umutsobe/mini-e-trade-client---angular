@@ -6,6 +6,8 @@ import { List_Product } from 'src/app/contracts/product/list_product';
 import { HttpErrorResponse } from '@angular/common/http';
 import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
 import { ProductFilter } from 'src/app/contracts/product/filter_product';
+import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
+import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 
 @Injectable({
   providedIn: 'root',
@@ -23,19 +25,6 @@ export class ProductService {
     );
 
     return await firstValueFrom(observable);
-  }
-
-  read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {
-    const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.http
-      .get<{ totalProductCount: number; products: List_Product[] }>({
-        controller: 'productControllers',
-        action: 'GetAllProducts',
-        queryString: `page=${page}&size=${size}`,
-      })
-      .toPromise();
-
-    promiseData.then((d) => successCallback()).catch((errorResponse: HttpErrorResponse) => errorCallback(errorResponse.message));
-    return promiseData;
   }
 
   delete(id: string): Observable<any> {
@@ -107,6 +96,27 @@ export class ProductService {
     const observable: Observable<{ totalProductCount: number; products: List_Product[] }> = this.http.get({
       controller: 'productControllers',
       action: 'GetProductsByFilter',
+      queryString: `${filterQueryString}`,
+    });
+
+    return await firstValueFrom(observable);
+  }
+
+  async getProductByUrlId(urlId: string): Promise<List_Product_Detail> {
+    const observable: Observable<List_Product_Detail> = this.http.get(
+      {
+        controller: 'productControllers',
+        action: 'GetProductByUrlIdRequest',
+      },
+      urlId
+    );
+    return await firstValueFrom(observable);
+  }
+
+  async getProductsByFilterAdmin(filterQueryString: string): Promise<{ totalProductCount: number; products: List_Product_Admin[] }> {
+    const observable: Observable<{ totalProductCount: number; products: List_Product_Admin[] }> = this.http.get({
+      controller: 'productControllers',
+      action: 'GetAllProductsAdmin',
       queryString: `${filterQueryString}`,
     });
 

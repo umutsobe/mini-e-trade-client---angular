@@ -16,9 +16,10 @@ declare var $: any;
 @Component({
   selector: 'app-basket',
   template: `
-    <div *ngIf="products.length > 0" class="mx-5 mt-5 row" style="margin-bottom: 700px;">
+    <div *ngIf="products.length > 0" class="mx-5 mt-5 row" style="margin-bottom: 800px;">
       <div class="col-8">
         <h1 class="">Sepetim</h1>
+        <div *ngIf="spinnerElement" class="ms-4 spinner-border text-primary" role="status"></div>
 
         <div *ngFor="let product of products" class="row my-2 py-2" style="border-top: 1px solid gray;">
           <!-- iterasyon burada olacak -->
@@ -59,10 +60,11 @@ declare var $: any;
       </div>
     </div>
 
-    <div *ngIf="!(products.length > 0)" class="container mt-5 w-50" style="margin-bottom: 800px;">
+    <div *ngIf="!(products == null ? false : products.length > 0) && !spinnerElement" class="container mt-5 w-50">
       <div class="alert alert-info ">Sepetinizde ürün yok.</div>
       <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
     </div>
+    <div style="margin-bottom: 800px;"></div>
   `,
   styles: [
     `
@@ -80,17 +82,16 @@ export class BasketComponent implements OnInit {
   faMinus = faMinus;
   faTrash = faTrash;
   products: List_Basket_Item[] = [];
+  spinnerElement: boolean = true;
+
   constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService) {}
   ngOnInit() {
-    this.spinner.show();
     this.basketService.get().subscribe(
       (response) => {
         this.products = response;
-        this.spinner.hide();
+        this.spinnerElement = false;
       },
-      () => {
-        this.spinner.hide();
-      }
+      () => {}
     );
   }
   async minusQuantity(product: List_Basket_Item) {
