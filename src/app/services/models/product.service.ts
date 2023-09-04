@@ -3,9 +3,7 @@ import { HttpClientService } from '../common/http-client.service';
 import { CreateProduct } from 'src/app/contracts/product/create_product';
 import { Observable, firstValueFrom } from 'rxjs';
 import { List_Product } from 'src/app/contracts/product/list_product';
-import { HttpErrorResponse } from '@angular/common/http';
 import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
-import { ProductFilter } from 'src/app/contracts/product/filter_product';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 
@@ -32,16 +30,6 @@ export class ProductService {
       {
         controller: 'ProductControllers',
         action: 'DeleteProductById',
-      },
-      id
-    );
-  }
-
-  readImages(id: string): Observable<List_Product_Image[]> {
-    return this.http.get<List_Product_Image[]>(
-      {
-        action: 'getproductimages',
-        controller: 'productcontrollers',
       },
       id
     );
@@ -121,5 +109,15 @@ export class ProductService {
     });
 
     return await firstValueFrom(observable);
+  }
+
+  readImages(id: string): Observable<List_Product_Image[]> {
+    return this.http.get<List_Product_Image[]>(
+      {
+        action: 'getproductimages',
+        controller: 'productcontrollers',
+      },
+      id
+    );
   }
 }

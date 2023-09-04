@@ -61,8 +61,8 @@ import { ProductService } from 'src/app/services/models/product.service';
             <!-- products -->
             <div class="d-flex flex-wrap justify-content-center">
               <div *ngFor="let product of products" class="card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-                <img routerLink="/product/{{ product.url }}" *ngIf="!product.productImageFiles.length" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
-                <img routerLink="/product/{{ product.url }}" *ngIf="product.productImageFiles.length" src="{{ this.baseUrl.url }}/{{ product.imagePath }}" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img routerLink="/product/{{ product.url }}" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img routerLink="/product/{{ product.url }}" *ngIf="product.productImageShowCasePath" src="{{ this.baseUrl.url }}/{{ product.productImageShowCasePath }}" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
                 <div class="card-body m-0">
                   <h5 routerLink="/product/{{ product.url }}" type="button" class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
@@ -156,13 +156,12 @@ export class ProductListComponent {
         const listProduct: List_Product = {
           id: p.id,
           createdDate: p.createdDate,
-          imagePath: p.productImageFiles.length ? p.productImageFiles.find((p) => p.showcase).path : '',
+          productImageShowCasePath: p.productImageShowCasePath,
           name: p.name,
           price: p.price,
           url: p.url,
           stock: p.stock,
           updatedDate: p.updatedDate,
-          productImageFiles: p.productImageFiles,
         };
 
         return listProduct;

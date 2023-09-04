@@ -20,8 +20,8 @@ declare var $: any;
   template: `
     <h1 class="mt-2 text-center" id="title">Products</h1>
     <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+      <!-- filters -->
       <div class="d-flex mb-2 align-items-center">
-        <!-- filters -->
         <form class="d-flex" style="height: 40px">
           <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" name="onemsiz" class="form-control me-2 " placeholder="İsme Göre Ara" />
           <!-- <button type="button" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button> -->
@@ -40,6 +40,7 @@ declare var $: any;
           <option type="button" *ngFor="let category of categories.categories">{{ category.name }}</option>
         </select>
       </div>
+      <!-- tablo -->
       <table class="table table-striped table-responsive">
         <thead>
           <tr class="text-center">
@@ -79,6 +80,7 @@ declare var $: any;
         </tbody>
         <div *ngIf="this.allProducts.products.length < 1 && !isLoading" class="my-2 alert alert-info">Product not found</div>
       </table>
+      <!-- pagination -->
       <div *ngIf="!(this.allProducts.products.length < 1)" class="mt-4 pagination d-flex justify-content-center">
         <div style="margin: 6px 8px 0 0;">{{ productFilter.page + 1 + '-' + totalPageCount }}</div>
         <div type="button" class="m-0 page-item"><a class="m-0 page-link" (click)="firstPage()"><<</a></div>
@@ -133,15 +135,15 @@ declare var $: any;
           <div class="list-images">
             <h4 class="text-center">Ürün Fotoğrafları</h4>
             <div class="d-flex flex-wrap justify-content-center">
-              <div *ngFor="let x of productImages" class="card m-1" style="width:11rem">
-                <span class="m-1 d-flex">
-                  Is Showcase?
-                  <input class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(x.id)" />
+              <div *ngFor="let productImage of productImages" class="card m-1" style="width:11rem">
+                <span class="my-1 d-flex justify-content-center">
+                  Showcase
+                  <input [checked]="productImage.isShowCase === true" class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(productImage.id)" />
                 </span>
 
-                <img src="{{ x.path }}" class="card-img-top" />
+                <img src="{{ productImage.path }}" class="card-img-top" />
                 <div class="card-body text-center">
-                  <button (click)="deleteImage(selectedProduct.id, x.id)" class="btn btn-danger">Delete</button>
+                  <button (click)="deleteImage(selectedProduct.id, productImage.id)" class="btn btn-danger">Delete</button>
                 </div>
               </div>
             </div>
