@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { ProductService } from 'src/app/services/models/product.service';
@@ -9,6 +9,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { BasketService } from 'src/app/services/models/basket.service';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { ToastrService } from 'ngx-toastr';
+import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
+import { BaseUrl } from 'src/app/contracts/base_url';
+import { FileService } from 'src/app/services/models/file.service';
+import { PhotoSliderObject } from 'src/app/contracts/product/photoSlider/photoSliderObject';
+import { NgImageSliderComponent } from 'ng-image-slider';
 
 @Component({
   selector: 'app-product-detail',
@@ -25,10 +30,11 @@ import { ToastrService } from 'ngx-toastr';
               <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-12 col-md-10 col-lg-12">
                   <div class="d-flex align-items-center border rounded-3 text-center p-3 h-80">
-                    <img [lazyLoad]="photoLinks[0]" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
+                    <img (click)="showcaseImageClick()" *ngIf="showCaseImagePath" [defaultImage]="defaultImage" [lazyLoad]="showCaseImagePath" type="button" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: cover;" />
+                    <img *ngIf="!showCaseImagePath" src="/assets/product.jpg" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
                   </div>
                   <div class="mt-2 col-12 d-flex justify-content-center">
-                    <ng-image-slider class="imageSlider" [slideImage]="2" [lazyLoading]="true" [animationSpeed]="0.4" [imageSize]="{ width: '75', height: '70', space: 2 }" style="height: 70px; width: 300px;" [images]="imageObject" #nav></ng-image-slider>
+                    <ng-image-slider *ngIf="imageObject.length > 1" class="imageSlider" [imagePopup]="true" [slideImage]="2" [lazyLoading]="false" [animationSpeed]="0.4" [imageSize]="{ width: '75', height: '70', space: 2 }" style="height: 70px; width: 300px;" [images]="imageObject" #imageSlider></ng-image-slider>
                   </div>
                 </div>
               </div>
@@ -118,12 +124,15 @@ export class ProductDetailComponent implements OnInit {
   urlId: string = '';
   isLoading: boolean = true;
   productQuantity: number = 1;
-  photoLinks: any;
   productNotFound: boolean;
+  photoLinks: string[] = [];
+  showCaseImagePath: string;
+  defaultImage: string = '/assets/preload.png';
+  baseUrl: string;
+  imageObject: Array<PhotoSliderObject> = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService) {
     this.urlId = router.url.split('/')[2];
-    this.photoLinks = ['/assets/product.jpg', '/assets/product2.jpg'];
   }
 
   product: List_Product_Detail | undefined = {
@@ -135,15 +144,42 @@ export class ProductDetailComponent implements OnInit {
     createdDate: undefined,
     url: '',
     updatedDate: undefined,
+    productImageFiles: [],
   };
 
   async ngOnInit() {
+    window.scrollTo(0, 0);
+
+    this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
     this.isLoading = true;
 
     try {
       const fetchedProduct = await this.productService.getProductByUrlId(this.urlId);
       if (fetchedProduct) {
         this.product = fetchedProduct;
+
+        for (let item of this.product.productImageFiles) {
+          if (item.showcase == true) this.showCaseImagePath = `${this.baseUrl}/${item.path}`;
+
+          let photoSliderObject: PhotoSliderObject = {
+            image: `${this.baseUrl}/${item.path}`,
+            thumbImage: `${this.baseUrl}/${item.path}`,
+            showcase: item.showcase,
+          };
+          this.imageObject.push(photoSliderObject);
+        }
+
+        this.imageObject.sort((a, b) => {
+          //imageObject true olan resim en başta olacak şekilde sıralama
+          if (a.showcase && !b.showcase) {
+            return -1; // a showcase ise, b değilse a önce gelir
+          } else if (!a.showcase && b.showcase) {
+            return 1; // b showcase ise, a değilse b önce gelir
+          } else {
+            return 0; // Her ikisi de aynı, sıralamada değişiklik yapma
+          }
+        });
+
         this.sanitizer.bypassSecurityTrustHtml(this.product.description as string);
       } else {
         //
@@ -153,6 +189,9 @@ export class ProductDetailComponent implements OnInit {
       this.toastr.clear();
     }
 
+    setTimeout(() => {
+      if (this.imageObject.length > 1) this.slider.prev();
+    }, 100);
     this.isLoading = false;
   }
   plusQuantity() {
@@ -224,26 +263,11 @@ export class ProductDetailComponent implements OnInit {
     ratingSection.classList.remove('d-none');
     section.scrollIntoView();
   }
-  // active rengi rgb(110, 168, 254)
-  imageObject: Array<object> = [
-    {
-      image: '/assets/product.jpg',
-      thumbImage: '/assets/product.jpg',
-    },
-    {
-      video: 'https://youtu.be/6pxRHBw-k8M',
-    },
-    {
-      image: '/assets/product.jpg',
-      thumbImage: '/assets/product.jpg',
-    },
-    {
-      image: '/assets/product.jpg',
-      thumbImage: '/assets/product.jpg',
-    },
-    {
-      image: '/assets/product.jpg',
-      thumbImage: '/assets/product.jpg',
-    },
-  ];
+
+  //image slider
+  @ViewChild('imageSlider') slider: NgImageSliderComponent;
+
+  showcaseImageClick() {
+    this.slider.imageOnClick(0);
+  }
 }

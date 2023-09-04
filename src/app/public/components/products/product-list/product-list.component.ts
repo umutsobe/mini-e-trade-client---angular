@@ -137,6 +137,7 @@ export class ProductListComponent {
   defaultImage: string = '/assets/preload.png';
 
   async ngOnInit() {
+    this.scrollToTop();
     this.activatedRoute.queryParams.subscribe(async (params) => {
       this.spinner.show();
       this.queryStringBuilder(params);

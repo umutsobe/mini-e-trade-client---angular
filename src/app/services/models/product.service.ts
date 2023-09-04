@@ -3,9 +3,9 @@ import { HttpClientService } from '../common/http-client.service';
 import { CreateProduct } from 'src/app/contracts/product/create_product';
 import { Observable, firstValueFrom } from 'rxjs';
 import { List_Product } from 'src/app/contracts/product/list_product';
-import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
+import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,6 @@
 export class List_Product_Image {
   path: string;
-  isShowCase: boolean;
+  showcase: boolean;
+  fileName: string;
   id: string;
 }

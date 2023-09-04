@@ -138,7 +138,7 @@ declare var $: any;
               <div *ngFor="let productImage of productImages" class="card m-1" style="width:11rem">
                 <span class="my-1 d-flex justify-content-center">
                   Showcase
-                  <input [checked]="productImage.isShowCase === true" class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(productImage.id)" />
+                  <input [checked]="productImage.showcase === true" class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(productImage.id)" />
                 </span>
 
                 <img src="{{ productImage.path }}" class="card-img-top" />

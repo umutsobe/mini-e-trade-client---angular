@@ -10,5 +10,4 @@ export class List_Product_Detail {
   url: string;
   updatedDate: Date;
   productImageFiles?: List_Product_Image[]; //null gelebilir
-  imagePath?: string;
 }
