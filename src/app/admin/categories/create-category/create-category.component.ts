@@ -7,16 +7,18 @@ import { CategoryService } from 'src/app/services/models/category.service';
 @Component({
   selector: 'app-create-category',
   template: `
-    <div class="w-75 mx-auto">
-      <h1 class=" mt-2 text-center ">Create Category</h1>
-      <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" formControlName="name" />
-          <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
-        </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
-      </form>
+    <div class="d-flex justify-content-center">
+      <div class="col-11 col-sm-7 col-md-6 col-lg-4">
+        <h1 class=" mt-2 text-center ">Create Category</h1>
+        <form [formGroup]="frm" (ngSubmit)="onSubmit()" class="create-product-form my-3">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" />
+            <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+        </form>
+      </div>
     </div>
   `,
   styles: [

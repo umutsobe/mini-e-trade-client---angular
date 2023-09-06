@@ -141,7 +141,7 @@ declare var $: any;
                   <input [checked]="productImage.showcase === true" class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(productImage.id)" />
                 </span>
 
-                <img src="{{ productImage.path }}" class="card-img-top" />
+                <img style="height: 20vh; object-fit: contain;" src="{{ productImage.path }}" class="card-img-top" />
                 <div class="card-body text-center">
                   <button (click)="deleteImage(selectedProduct.id, productImage.id)" class="btn btn-danger">Delete</button>
                 </div>
@@ -392,6 +392,7 @@ export class ListComponent implements OnInit {
     if (this.productFilter.maxPrice) queryString += `&maxPrice=${this.productFilter.maxPrice}`;
 
     if (this.productFilter.sort) queryString += `&sort=${this.productFilter.sort}`;
+
     return queryString;
   }
 

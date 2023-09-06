@@ -7,6 +7,7 @@ import { AfterViewChecked, Component, OnInit } from '@angular/core';
     <div>
       <app-header></app-header>
       <app-category></app-category>
+      <app-progress-bar style="height: 5px;"></app-progress-bar>
       <div style="margin-bottom: 300px;">
         <router-outlet></router-outlet>
       </div>

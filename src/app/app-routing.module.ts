@@ -80,7 +80,7 @@ const routes: Routes = [
 
   { path: 'search', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
 
-  { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule) },
+  { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule), pathMatch: 'full' },
 
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
 

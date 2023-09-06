@@ -9,11 +9,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { BasketService } from 'src/app/services/models/basket.service';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { ToastrService } from 'ngx-toastr';
-import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
-import { BaseUrl } from 'src/app/contracts/base_url';
 import { FileService } from 'src/app/services/models/file.service';
 import { PhotoSliderObject } from 'src/app/contracts/product/photoSlider/photoSliderObject';
 import { NgImageSliderComponent } from 'ng-image-slider';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/services/common/auth/auth.service';
+import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -30,11 +31,11 @@ import { NgImageSliderComponent } from 'ng-image-slider';
               <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-12 col-md-10 col-lg-12">
                   <div class="d-flex align-items-center border rounded-3 text-center p-3 h-80">
-                    <img (click)="showcaseImageClick()" *ngIf="showCaseImagePath" [defaultImage]="defaultImage" [lazyLoad]="showCaseImagePath" type="button" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: cover;" />
+                    <img (click)="showcaseImageClick()" *ngIf="showCaseImagePath" [defaultImage]="defaultImage" [lazyLoad]="showCaseImagePath" type="button" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
                     <img *ngIf="!showCaseImagePath" src="/assets/product.jpg" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
                   </div>
                   <div class="mt-2 col-12 d-flex justify-content-center">
-                    <ng-image-slider *ngIf="imageObject.length > 1" class="imageSlider" [imagePopup]="true" [slideImage]="2" [lazyLoading]="false" [animationSpeed]="0.4" [imageSize]="{ width: '75', height: '70', space: 2 }" style="height: 70px; width: 300px;" [images]="imageObject" #imageSlider></ng-image-slider>
+                    <ng-image-slider *ngIf="imageObject.length > 0" class="imageSlider" [imagePopup]="true" [slideImage]="2" [lazyLoading]="false" [animationSpeed]="0.4" [imageSize]="{ width: '75', height: '70', space: 2 }" style="height: 70px; width: 300px;" [images]="imageObject" #imageSlider></ng-image-slider>
                   </div>
                 </div>
               </div>
@@ -65,7 +66,7 @@ import { NgImageSliderComponent } from 'ng-image-slider';
 
       <section id="section" class="container-sm">
         <!-- height sonra sil -->
-        <div class="border rounded-3" style="height: 300px;">
+        <div class="border rounded-3">
           <div class="nav d-flex justify-content-center mb-3">
             <!-- nav-link classı varsa mavi oluyor -->
             <div id="descriptionButton" (click)="descriptionButtonClicked()" role="button" class="item nav-link border-bottom border-start rounded-start-2 p-2">
@@ -75,23 +76,26 @@ import { NgImageSliderComponent } from 'ng-image-slider';
               <h2 style="font-size: 17px; font-weight: 500;" class="m-0 user-select-none">Yorumlar</h2>
             </div>
           </div>
-          <div href="#description" id="description" class="px-2">
+          <!-- description -->
+          <div id="description" class="px-2">
             <div [innerHTML]="product.description"></div>
           </div>
+          <!-- rating -->
           <div id="rating" class="px-2 d-none">
-            <div>Ratings</div>
+            <div *ngIf="ratingComponentLoaded">
+              <!-- ProductDetailComponent yüklendiğinde ratings de yüklenmesin diye lazy loading gibi  -->
+              <app-product-rating></app-product-rating>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- product ile ilgili her şeyin sonu -->
+      <!-- product ile ilgili her şeyin sonu alttaki div -->
     </div>
     <div *ngIf="productNotFound && !isLoading" class="container mt-5 w-50">
       <div class="alert alert-info ">Böyle bir ürün yok.</div>
       <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
     </div>
-    <!-- <img [lazyLoad]="photoLinks[1]" class="w-25 rounded-3" style="height: 45vh; object-fit: contain;" /> -->
-    <!--  -->
   `,
   styles: [
     `
@@ -130,8 +134,9 @@ export class ProductDetailComponent implements OnInit {
   defaultImage: string = '/assets/preload.png';
   baseUrl: string;
   imageObject: Array<PhotoSliderObject> = [];
+  ratingComponentLoaded: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService) {
     this.urlId = router.url.split('/')[2];
   }
 
@@ -190,9 +195,10 @@ export class ProductDetailComponent implements OnInit {
     }
 
     setTimeout(() => {
-      if (this.imageObject.length > 1) this.slider.prev();
+      if (this.imageObject.length > 0) this.slider.prev();
     }, 100);
     this.isLoading = false;
+    this.spinner.hide();
   }
   plusQuantity() {
     this.productQuantity++;
@@ -211,14 +217,16 @@ export class ProductDetailComponent implements OnInit {
     return icons;
   }
   addToBasket() {
-    let basketItem: Create_Basket_Item = new Create_Basket_Item();
-    basketItem.basketId = this.basketService.getBasketId();
-    basketItem.productId = this.product.id;
-    basketItem.quantity = this.productQuantity;
+    if (this.authService.isAuthenticated) {
+      let basketItem: Create_Basket_Item = new Create_Basket_Item();
+      basketItem.basketId = this.basketService.getBasketId();
+      basketItem.productId = this.product.id;
+      basketItem.quantity = this.productQuantity;
 
-    this.basketService.add(basketItem).then(() => {
-      this.toastr.success('Ürün Başarıyla Sepete eklendi');
-    });
+      this.basketService.add(basketItem).then(() => {
+        this.toastr.success('Ürün Başarıyla Sepete eklendi');
+      });
+    } else this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
   }
 
   descriptionButtonClicked() {
@@ -248,6 +256,7 @@ export class ProductDetailComponent implements OnInit {
       descriptionSection.classList.add('d-none');
       descriptionButton.classList.remove('nav-link');
     }
+    this.ratingComponentLoaded = true;
   }
 
   goToRatings() {
@@ -262,6 +271,7 @@ export class ProductDetailComponent implements OnInit {
     ratingButton.classList.add('nav-link');
     ratingSection.classList.remove('d-none');
     section.scrollIntoView();
+    this.ratingComponentLoaded = true;
   }
 
   //image slider
@@ -270,4 +280,6 @@ export class ProductDetailComponent implements OnInit {
   showcaseImageClick() {
     this.slider.imageOnClick(0);
   }
+
+  //rating
 }

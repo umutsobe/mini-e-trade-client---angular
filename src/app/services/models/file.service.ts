@@ -15,6 +15,7 @@ export class FileService {
       controller: 'files',
       action: 'GetBaseStorageUrl',
     });
+
     return await firstValueFrom(getObservable);
   }
 }

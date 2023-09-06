@@ -95,7 +95,7 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
               <div class="col-3">{{ orderItem.price * orderItem.quantity | currency : '₺' }}</div>
             </div>
 
-            <div class="d-flex justify-content-end" style="margin-right: 90px;">Total: {{ selectedOrder.totalPrice | currency : '₺' }}</div>
+            <div class="mt-5 mb-3">Total Order Price: {{ selectedOrder.totalPrice | currency : '₺' }}</div>
             <div class="mb-3">CreatedDate: {{ formatDate(selectedSingleOrder.createdDate.toString()) }}</div>
             <div class="mb-3">Username: {{ selectedOrder.userName }}</div>
             <div class="mb-3">Adress: {{ selectedSingleOrder.address }}</div>

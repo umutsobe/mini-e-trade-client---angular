@@ -42,7 +42,7 @@ import { FooterModule } from './common-components/footer/footer.module';
         },
       } as SocialAuthServiceConfig,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerInterceptorService, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerInterceptorService, multi: true },
   ],
   bootstrap: [AppComponent],
   imports: [

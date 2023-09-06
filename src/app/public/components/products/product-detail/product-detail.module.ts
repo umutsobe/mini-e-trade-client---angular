@@ -4,11 +4,14 @@ import { ProductDetailComponent } from './product-detail.component';
 import { RouterModule } from '@angular/router';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ProductRatingComponent } from './product-rating/product-rating.component';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
-  declarations: [ProductDetailComponent],
-  imports: [CommonModule, LazyLoadImageModule, NgImageSliderModule, FormsModule, FontAwesomeModule, RouterModule.forChild([{ path: '', component: ProductDetailComponent }])],
+  declarations: [ProductDetailComponent, ProductRatingComponent],
+  imports: [CommonModule, LazyLoadImageModule, NgImageSliderModule, FormsModule, FontAwesomeModule, RouterModule.forChild([{ path: '', component: ProductDetailComponent }]), NgxSpinnerModule, RatingModule, ReactiveFormsModule],
 })
 export class ProductDetailModule {}

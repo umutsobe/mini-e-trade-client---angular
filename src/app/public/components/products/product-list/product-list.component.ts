@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Params, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { BaseUrl } from 'src/app/contracts/base_url';
@@ -45,9 +45,9 @@ import { ProductService } from 'src/app/services/models/product.service';
           <!-- products list -->
           <div class="m-0">
             <!-- spinner -->
-            <!-- <div class="text-center d-flex justify-content-center" style="width: 80%; position: absolute;">
+            <div class="text-center d-flex justify-content-center" style="width: 50%; position: absolute;">
               <div *ngIf="spinnerBootstrap" class="spinner-border text-primary" role="status"></div>
-            </div> -->
+            </div>
 
             <!-- sort dropdown -->
             <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-5 ps-4" style="width: fit-content;">
@@ -61,12 +61,12 @@ import { ProductService } from 'src/app/services/models/product.service';
             <!-- products -->
             <div class="d-flex flex-wrap justify-content-center">
               <div *ngFor="let product of products" class="card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-                <img routerLink="/product/{{ product.url }}" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
-                <img routerLink="/product/{{ product.url }}" *ngIf="product.productImageShowCasePath" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
+                <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
                 <div class="card-body m-0">
-                  <h5 routerLink="/product/{{ product.url }}" type="button" class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
+                  <h5 (click)="routeToProductDetail(product.url)" type="button" class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
                   <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
                   <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Sepete Ekle</button>
                 </div>
@@ -139,10 +139,10 @@ export class ProductListComponent {
   async ngOnInit() {
     this.scrollToTop();
     this.activatedRoute.queryParams.subscribe(async (params) => {
-      this.spinner.show();
       this.queryStringBuilder(params);
       this.currentPageNo = +params['page'] || 0;
       this.baseUrl = await this.fileService.getBaseStorageUrl();
+      this.spinnerBootstrap = true;
 
       let productData: { totalProductCount: number; products: List_Product[] };
       let categoryData: { categories: List_Category[]; totalCategoryCount: number };
@@ -182,7 +182,6 @@ export class ProductListComponent {
       }
 
       this.spinnerBootstrap = false;
-      this.spinner.hide();
     });
   }
 
@@ -276,7 +275,7 @@ export class ProductListComponent {
           this.spinner.hide();
         });
     } else {
-      this.toastr.warning('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
+      this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
     }
   }
 
@@ -299,4 +298,10 @@ export class ProductListComponent {
   scrollToTop() {
     window.scrollTo(0, 0);
   }
+
+  routeToProductDetail(url) {
+    this.spinner.show();
+    this.router.navigateByUrl(`/product/${url}`);
+  }
 }
+// routerLink="/product/{{ product.url }}"
