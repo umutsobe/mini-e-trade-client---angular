@@ -11,19 +11,25 @@ import { AccountService } from 'src/app/services/models/account.service';
 @Component({
   selector: 'app-addresess',
   template: `
-    <h1 class="ms-2">My Addresess</h1>
-    <button class="btn btn-warning ms-2 mb-2" data-bs-toggle="modal" data-bs-target="#roleModal">Create New Address</button>
-    <div class="d-flex flex-wrap" style="margin-bottom: 500px;">
-      <div *ngFor="let address of addresess" class="card m-2" style="width: 20rem;">
-        <div class="card-body">
-          <div class="d-flex justify-content-between mb-2">
-            <h5 class="card-title fs-5">{{ addresess == null ? '' : address.definition }}</h5>
-            <fa-icon role="button" class="fs-5 m-0" [icon]="faEllipsis" type="button" data-bs-toggle="dropdown" aria-expanded="false"></fa-icon>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" type="button" (click)="deleteAddress(address.id)">Sil</a></li>
-            </ul>
+    <div class="d-flex justify-content-center">
+      <div class="col-11 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="d-flex flex-column align-items-center mb-2">
+          <h1 class="ms-2">My Addresess</h1>
+          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#roleModal">Create New Address</button>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center mt-3" style="margin-bottom: 500px;">
+          <div *ngFor="let address of addresess" class="card me-1 mb-1" style="width: 16rem;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <h5 class="card-title fs-5">{{ addresess == null ? '' : address.definition }}</h5>
+                <fa-icon role="button" class="fs-5 m-0" [icon]="faEllipsis" type="button" data-bs-toggle="dropdown" aria-expanded="false"></fa-icon>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" type="button" (click)="deleteAddress(address.id)">Sil</a></li>
+                </ul>
+              </div>
+              <p class="card-text address-text">{{ addresess == null ? '' : address.address }}</p>
+            </div>
           </div>
-          <p class="card-text address-text">{{ addresess == null ? '' : address.address }}</p>
         </div>
       </div>
     </div>
@@ -31,25 +37,27 @@ import { AccountService } from 'src/app/services/models/account.service';
     <!-- create address dialog -->
 
     <div class="modal fade" id="roleModal" tabindex="-1" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title" id="exampleModalLabel">Create New Address</h2>
           </div>
           <div class="modal-body d-flex justify-content-center">
-            <form [formGroup]="frm" class="ms-5 w-50">
-              <div class="mb-3">
-                <label for="addressDefinition" class="form-label">Address Name</label>
-                <input type="text" class="form-control" id="addressDefinition" formControlName="addressDefinition" />
-                <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Adres Adı zorunludur.</div>
-              </div>
+            <div class="col-12  ">
+              <form [formGroup]="frm">
+                <div class="mb-3">
+                  <label for="addressDefinition" class="form-label">Address Name</label>
+                  <input type="text" class="form-control" id="addressDefinition" formControlName="addressDefinition" />
+                  <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Adres Adı zorunludur.</div>
+                </div>
 
-              <div class="mb-3">
-                <label for="fullAddress" class="form-label">Full Address</label>
-                <textarea rows="5" type="text" id="fullAddress" class="form-control" formControlName="fullAddress"></textarea>
-                <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Adres girişi zorunludur.</div>
-              </div>
-            </form>
+                <div class="mb-3">
+                  <label for="fullAddress" class="form-label">Full Address</label>
+                  <textarea rows="5" type="text" id="fullAddress" class="form-control" formControlName="fullAddress"></textarea>
+                  <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Adres girişi zorunludur.</div>
+                </div>
+              </form>
+            </div>
           </div>
           <div class="modal-footer">
             <button (click)="createAddress()" data-bs-dismiss="modal" [disabled]="!frm.valid" type="button" class="btn btn-primary">Create Address</button>

@@ -9,8 +9,8 @@ import { AccountService } from 'src/app/services/models/account.service';
 @Component({
   selector: 'app-password-change',
   template: `
-    <div class="row">
-      <form [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-bottom: 300px;" class=" ms-5 w-50">
+    <div class="d-flex justify-content-center" style="width: 100%;">
+      <form [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-bottom: 300px;" class="col-11 col-sm-6 col-md-5 col-lg-5 col-xl-4">
         <h1>Change Password</h1>
         <div class="mb-5">
           <label for="currentPassword" class="form-label">Mevcut Şifre</label>
@@ -33,6 +33,13 @@ import { AccountService } from 'src/app/services/models/account.service';
       </form>
     </div>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class PasswordChangeComponent implements OnInit {
   frm: FormGroup;

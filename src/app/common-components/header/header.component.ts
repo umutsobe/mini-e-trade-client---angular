@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -35,7 +35,7 @@ declare var $: any;
         <div *ngIf="authService.isAuthenticated" class="dropdown me-2 ms-auto">
           <div class="item btn dropdown-toggle text-white py-2" style="background-color: #322653;" data-bs-toggle="dropdown">Account</div>
 
-          <ul class="dropdown-menu dropstart" style="width: 70px;">
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
             <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
             <li><hr class="dropdown-divider" /></li>
 
@@ -58,20 +58,6 @@ declare var $: any;
             <a class="m-0 p-0 nav-link text-dark me-1">Sepet</a>
           </div>
         </div>
-
-        <!-- <div class="d-none d-lg-block">
-          <button *ngIf="authService.isAuthenticated" routerLink="basket" class="p-2 cursor-pointer" style="background-color: #7C73C0 !important;">
-            <div class="d-flex align-items-center" style="background-color: #7C73C0 !important;"></div>
-          </button>
-        </div> -->
-        <!-- <fa-icon class="fs-4 me-1" [icon]="faBasketShopping"></fa-icon>
-        <a class="nav-link text-white me-3">Basket</a> -->
-        <!-- <div class="d-none d-lg-block user-select-none">
-          <div (click)="toggleTheme()" class="d-flex flex-column justify-content-center align-items-center">
-            <fa-icon role="button" class="fs-5 m-0" [icon]="faCircleHalfStroke"></fa-icon>
-            <p role="button" class="m-0" style="font-size: 10px;color: white;">Theme</p>
-          </div>
-        </div> -->
       </div>
     </nav>
   `,
@@ -95,7 +81,7 @@ export class HeaderComponent implements OnInit {
   name: string = '';
 
   frm: FormGroup;
-  constructor(public authService: AuthService, private router: Router, private accountService: AccountService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute) {}
+  constructor(public authService: AuthService, private router: Router, private accountService: AccountService, private formBuilder: FormBuilder) {}
   ngOnInit(): void {
     this.authService.identityCheck();
 

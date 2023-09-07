@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/models/user.service';
   selector: 'app-login',
   template: `
     <div class="d-flex justify-content-center">
-      <form [formGroup]="frm" (ngSubmit)="onSubmit(emailOrUserName.value, password.value)" style="margin-top: 75px;" class="col-10 col-sm-8 col-md-7 col-lg-4 col-xl-2">
+      <form [formGroup]="frm" (ngSubmit)="onSubmit(emailOrUserName.value, password.value)" style="margin-top: 75px;" class="col-10 col-sm-6 col-md-5 col-lg-4 col-xl-3">
         <h1 class="mb-4">Giriş Yap</h1>
 
         <div class="mb-3">

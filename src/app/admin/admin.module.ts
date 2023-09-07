@@ -9,9 +9,10 @@ import { AuthorizeMenuModule } from './authorize-menu/authorize-menu.module';
 import { RoleModule } from './role/role.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [AdminComponent],
-  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), AuthorizeMenuModule, RoleModule, UsersModule, CategoriesModule],
+  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), AuthorizeMenuModule, RoleModule, UsersModule, CategoriesModule, FontAwesomeModule],
 })
 export class AdminModule {}

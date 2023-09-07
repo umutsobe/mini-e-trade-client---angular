@@ -61,7 +61,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
         </ul>
       </div> -->
       <div [routerLink]="['/search']" [queryParams]="{ page: 0 }" id="allProducts" class="list-group-item p-2 d-flex">
-        <fa-icon role="button" class="fs-5 m-0 me-2" [icon]="faBars"></fa-icon>
+        <!-- <fa-icon role="button" class="fs-5 m-0 me-2" [icon]="faBars"></fa-icon> -->
         <p class="m-0">Tüm Ürünler</p>
       </div>
 

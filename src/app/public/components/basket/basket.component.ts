@@ -16,55 +16,55 @@ declare var $: any;
 @Component({
   selector: 'app-basket',
   template: `
-    <div *ngIf="products.length > 0" class="mx-5 mt-5 row" style="margin-bottom: 800px;">
-      <div class="col-8">
-        <h1 class="">Sepetim</h1>
-        <div *ngIf="spinnerElement" class="ms-4 spinner-border text-primary" role="status"></div>
+    <div class="container-sm p-0">
+      <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0">
+        <div class="d-flex flex-column flex-md-row">
+          <div class="col-12 d-block col-md-7 col-lg-8 col-xl-8">
+            <h1 class="">Sepetim</h1>
+            <div *ngIf="spinnerElement" class="ms-4 spinner-border text-primary" role="status"></div>
 
-        <div *ngFor="let product of products" class="row my-2 py-2" style="border-top: 1px solid gray;">
-          <!-- iterasyon burada olacak -->
-          <div class="col-4 py-2 d-flex justify-content-center align-items-center">
-            <img width="175px" src="/assets/product.jpg" style="border-radius: 10px;" />
+            <div *ngFor="let product of products" class="d-flex my-2 py-2 border-top">
+              <div class="py-2">
+                <img style="height: 130px; object-fit: contain; border-radius: 10px;" src="/assets/product.jpg" />
+              </div>
+
+              <div class="ms-3 d-flex flex-column justify-content-between">
+                <div class="py-2">{{ product.name }}</div>
+                <h2 class="m-0 p-0">{{ product.price + ' TL' }}</h2>
+                <div class="d-flex justify-content-center align-items-center pb-2">
+                  <div class="d-flex justify-content-center align-items-center p-1 rounded-2 border me-2">
+                    <div type="button" (click)="minusQuantity(product)">
+                      <fa-icon style="font-size: 18px;" class="me-1" [icon]="faMinus"></fa-icon>
+                    </div>
+                    <input readonly="readonly" value="{{ product.quantity }}" type="number" class="me-1 form-control text-center border-0 p-0 m-0" style="width: 20px" />
+                    <div type="button" (click)="plusQuantity(product)">
+                      <fa-icon style="font-size: 18px;" class="me-1" [icon]="faPlus"></fa-icon>
+                    </div>
+                  </div>
+                  <div class="py-2 d-flex justify-content-center align-items-center" type="button" (click)="removeBasketItem(product.basketItemId)">
+                    <fa-icon style="font-size: 18px;" class="me-2" [icon]="faTrash"></fa-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-2 py-2 d-flex justify-content-center align-items-center">{{ product.name }}</div>
-          <div class="col-2 py-2 d-flex justify-content-center align-items-center">{{ product.price }}</div>
-          <div class="col-3 py-2 d-flex justify-content-center align-items-center">
-            <!-- quantity -->
-
-            <div type="button" (click)="minusQuantity(product)">
-              <fa-icon class="fs-5 me-2" [icon]="faMinus"></fa-icon>
+          <div class="ms-md-5 col-12 col-md-5 col-lg-4 col-xl-4 p-2 border mt-5" style="border-radius: 10px; height: fit-content;">
+            <div class="d-flex justify-content-center">
+              <h2 class="m-0 p-0">Ara Toplam:</h2>
+              <h2 class="m-0 p-0 ms-2">
+                {{ (totalPriceCalculate && products ? totalPriceCalculate() : '-') + ' TL' }}
+              </h2>
             </div>
-
-            <input readonly="readonly" value="{{ product.quantity }}" type="number" id="quantityInput" class="form-control w-25" style="box-shadow: none;width: max-content; " />
-            <div type="button" (click)="plusQuantity(product)">
-              <fa-icon class="fs-5 ms-2" [icon]="faPlus"></fa-icon>
-            </div>
-          </div>
-          <div class="col-1 py-2 d-flex justify-content-center align-items-center">
-            <!-- remove -->
-            <div type="button" (click)="removeBasketItem(product.basketItemId)">
-              <fa-icon class="fs-5 me-2" [icon]="faTrash"></fa-icon>
-            </div>
+            <button (click)="completeShopping()" class="btn mt-3 btn-lg" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Alışverişi Tamamla</button>
           </div>
         </div>
       </div>
-      <div class="col-3 ms-3 mt-4" style="border-radius: 10px; height: 500px;">
-        <!-- <h2 class="d-flex justify-content-center mt-2" style="font-weight: 500;">Checkout</h2> -->
-        <div style="" class="d-flex justify-content-center">
-          <h2>Ara Toplam:</h2>
-          <h2 class="ms-4">
-            {{ totalPriceCalculate && products ? totalPriceCalculate() : '-' }}
-          </h2>
-        </div>
-        <button (click)="completeShopping()" class="btn mt-3" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Alışverişi Tamamla</button>
+
+      <div *ngIf="!(products == null ? false : products.length > 0) && !spinnerElement" class="mt-4 d-flex flex-column align-items-center">
+        <div class="alert alert-info col-8">Sepetinizde ürün yok.</div>
+        <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
       </div>
     </div>
-
-    <div *ngIf="!(products == null ? false : products.length > 0) && !spinnerElement" class="container mt-5 w-50">
-      <div class="alert alert-info ">Sepetinizde ürün yok.</div>
-      <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
-    </div>
-    <div style="margin-bottom: 800px;"></div>
   `,
   styles: [
     `
@@ -73,6 +73,9 @@ declare var $: any;
       input[type='number']::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
+      }
+      *:focus {
+        box-shadow: none !important;
       }
     `,
   ],

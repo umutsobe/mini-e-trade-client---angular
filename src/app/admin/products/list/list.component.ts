@@ -23,63 +23,78 @@ declare var $: any;
       <!-- filters -->
       <div class="d-flex mb-2 align-items-center">
         <form class="d-flex" style="height: 40px">
-          <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" name="onemsiz" class="form-control me-2 " placeholder="İsme Göre Ara" />
+          <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" style="width: 120px;" name="onemsiz" class="form-control me-2 " placeholder="Ara" />
           <!-- <button type="button" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button> -->
         </form>
-        <div class="dropdown ps-4" style="width: fit-content;">
-          <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
-          <ul class="dropdown-menu dropstart">
-            <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
-            <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
-            <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
-            <li type="button" class="dropdown-item">Yeni eklenenler</li>
-          </ul>
+        <div class="d-block d-md-flex align-items-center justify-content-center">
+          <div class="dropdown me-1" style="width: fit-content;">
+            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+            <ul class="dropdown-menu dropstart">
+              <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
+              <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
+              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
+              <li type="button" class="dropdown-item">Yeni eklenenler</li>
+            </ul>
+          </div>
+          <select *ngIf="categories" class="mt-1 mt-sm-1 mt-sm-1 mt-md-0 form-select" (change)="categorySelected($event)" style="width: fit-content; border: 1px solid gray">
+            <option selected>Kategori</option>
+            <option type="button" *ngFor="let category of categories.categories">{{ category.name }}</option>
+          </select>
         </div>
-        <select *ngIf="categories" class="ms-2 form-select" (change)="categorySelected($event)" style="width: fit-content; border: 1px solid gray">
-          <option selected>Kategori</option>
-          <option type="button" *ngFor="let category of categories.categories">{{ category.name }}</option>
-        </select>
       </div>
       <!-- tablo -->
-      <table class="table table-striped table-responsive">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">Name</th>
-            <th scope="col">Stock</th>
-            <th scope="col">Price</th>
-            <th scope="col">Total Sales Count</th>
-            <th scope="col">Is Active</th>
-            <th scope="col">Select Category</th>
-            <th scope="col">Photo</th>
-            <th scope="col">Delete</th>
-            <th scope="col">Edit</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="this.allProducts">
-          <tr *ngFor="let product of this.allProducts.products" class="text-center">
-            <td>{{ product.name }}</td>
-            <td>{{ product.stock }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.totalOrderNumber }}</td>
-            <td>
-              <img *ngIf="product.isActive" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="btn btn-primary btn-sm">Category</button>
-            </td>
-            <td>
-              <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <img src="/assets/edit.png" width="25" style="cursor:pointer;" />
-            </td>
-          </tr>
-        </tbody>
-        <div *ngIf="this.allProducts.products.length < 1 && !isLoading" class="my-2 alert alert-info">Product not found</div>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">Name</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total Sales Count</th>
+              <th scope="col">Is Active</th>
+              <!-- <th scope="d-md-none">Select Category</th> -->
+              <th scope="col">Photo</th>
+              <!-- <th scope="col">Delete</th> -->
+              <th scope="col">Edit</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="this.allProducts">
+            <tr *ngFor="let product of this.allProducts.products" class="text-center">
+              <td>{{ product.name }}</td>
+              <td>{{ product.stock }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.totalOrderNumber }}</td>
+              <td>
+                <img *ngIf="product.isActive" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+              </td>
+              <!-- <td>
+                <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="btn btn-primary btn-sm">Category</button>
+              </td> -->
+              <td>
+                <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
+              </td>
+              <!-- <td>
+                <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+              </td> -->
+              <td>
+                <div class="dropdown">
+                  <img class="dropdown-toggle" src="/assets/edit.png" width="25" style="cursor:pointer;" data-bs-toggle="dropdown" />
+
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                    <li data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="dropdown-item text-truncate">Select Category</li>
+                    <li data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" role="button" class="dropdown-item">Select Photo</li>
+                    <li role="button" class="dropdown-item">Edit Product</li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" role="button" class="dropdown-item">!Delete</li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <div *ngIf="this.allProducts.products.length < 1 && !isLoading" class="my-2 alert alert-info">Product not found</div>
+        </table>
+      </div>
+
       <!-- pagination -->
       <div *ngIf="!(this.allProducts.products.length < 1)" class="mt-4 pagination d-flex justify-content-center">
         <div style="margin: 6px 8px 0 0;">{{ productFilter.page + 1 + '-' + totalPageCount }}</div>
@@ -192,6 +207,11 @@ declare var $: any;
       }
       .page-item {
         user-select: none;
+      }
+      td {
+        margin: 0;
+        padding-left: 3px;
+        padding-right: 3px;
       }
     `,
   ],

@@ -9,31 +9,42 @@ import { UserService } from 'src/app/services/models/user.service';
 @Component({
   selector: 'app-update-password',
   template: `
-    <div *ngIf="!state.state" class="alert alert-danger w-25 mx-auto" style="margin-top: 50px;">Geçersiz Link!!</div>
-
-    <form *ngIf="state.state" [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-top: 75px; margin-bottom: 300px;" class="w-25 mx-auto">
-      <h1>Change Password</h1>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" formControlName="password" />
-        <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi doğru formatta olmalıdır</div>
+    <div class="d-flex justify-content-center">
+      <div *ngIf="state" class="col-10 col-sm-8 col-md-7 col-lg-4 col-xl-2">
+        <div *ngIf="!state.state" class="alert alert-danger" style="margin-top: 50px;">Geçersiz Link!!</div>
       </div>
 
-      <div class="mb-3">
-        <label for="passwordRepeat" class="form-label">Password Repeat</label>
-        <input type="password" id="passwordRepeat" class="form-control" formControlName="passwordRepeat" />
-        <div *ngIf="!passwordRepeat.valid && (passwordRepeat.dirty || passwordRepeat.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur</div>
-      </div>
-      <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
-    </form>
+      <form *ngIf="state.state" [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-top: 75px; margin-bottom: 300px;" class="col-10 col-sm-8 col-md-7 col-lg-4 col-xl-3">
+        <h1>Change Password</h1>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" formControlName="password" />
+          <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi doğru formatta olmalıdır</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="passwordRepeat" class="form-label">Password Repeat</label>
+          <input type="password" id="passwordRepeat" class="form-control" formControlName="passwordRepeat" />
+          <div *ngIf="!passwordRepeat.valid && (passwordRepeat.dirty || passwordRepeat.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur</div>
+        </div>
+        <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+      </form>
+    </div>
   `,
+  styles: [
+    `
+      *:focus {
+        box-shadow: none !important;
+      }
+    `,
+  ],
 })
 export class UpdatePasswordComponent {
   frm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService, private activatedRoute: ActivatedRoute) {}
 
-  state: any;
+  state: any = false;
 
   async ngOnInit() {
     this.frm = this.formBuilder.group({
