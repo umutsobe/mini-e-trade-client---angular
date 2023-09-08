@@ -113,7 +113,9 @@ export class RegisterComponent {
   async onSubmit(user: User) {
     this.spinner.show();
 
-    const result: Create_User = await this.userService.create(user);
+    const result: Create_User = await this.userService.create(user).finally(() => {
+      this.spinner.hide();
+    });
 
     if (result.succeeded) {
       this.toastr.success('Kullanıcı Başarıyla Oluşturuldu');

@@ -92,10 +92,10 @@ export class LoginComponent {
     await this.userService
       .login(emailOrUserName, password)
       .then((response) => {
-        //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
         if (response.token) {
           localStorage.setItem('accessToken', response.token.accessToken);
 
+          //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
           this.router.navigate(['']).then(() => {
             window.location.reload();
           });

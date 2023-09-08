@@ -10,6 +10,7 @@ import { OrderService } from 'src/app/services/models/order.service';
 import { Create_Order } from 'src/app/contracts/order/create_order';
 import { UserService } from 'src/app/services/models/user.service';
 import { Create_Order_Item } from 'src/app/contracts/order/create_order_item';
+import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
 
 declare var $: any;
 
@@ -87,7 +88,7 @@ export class BasketComponent implements OnInit {
   products: List_Basket_Item[] = [];
   spinnerElement: boolean = true;
 
-  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService) {}
+  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, private exceptionMessageService: ExceptionMessageService) {}
   ngOnInit() {
     this.basketService.get().subscribe(
       (response) => {
@@ -140,6 +141,10 @@ export class BasketComponent implements OnInit {
           this.products = response;
         });
       })
+      .catch((err) => {
+        const message = this.exceptionMessageService.basketItemUpdateQuantity(err.error);
+        if (message.length > 0) this.toastr.error(message);
+      })
       .finally(() => {
         this.spinner.hide();
       });
@@ -190,6 +195,10 @@ export class BasketComponent implements OnInit {
         );
         this.spinner.hide();
         this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
+      })
+      .catch((err) => {
+        const message = this.exceptionMessageService.createOrderMessage(err.error);
+        if (message.length > 0) this.toastr.error(message);
       })
       .finally(() => {
         this.spinner.hide();

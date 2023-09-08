@@ -15,6 +15,7 @@ import { NgImageSliderComponent } from 'ng-image-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
+import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -41,6 +42,9 @@ import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.s
               </div>
             </div>
             <div class="product-right col-12 col-lg-6 pt-2">
+              <div *ngIf="product.stock <= 0">
+                <div class="alert alert-danger">Üzgünüz, istediğiniz ürün şu anda stoklarımızda bulunmamaktadır. Yakın gelecekte stoklarımıza yeniden girebileceğini kontrol etmek isterseniz bizi takip edin.</div>
+              </div>
               <h1 class="fs-2 mb-3">{{ product ? product.name : '' }}</h1>
               <!-- ratings -->
               <div class="mb-5 d-flex align-items-center">
@@ -50,14 +54,14 @@ import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.s
                 <a (click)="goToRatings()" type="button" class="ms-3 text-decoration-none user-select-none">Yorumları Gör (67)</a>
               </div>
               <h1 class="fs-3 mb-4">{{ product ? product.price : '' }} TL</h1>
-              <div class="d-flex align-items-center">
+              <div *ngIf="product.stock > 0" class="d-flex align-items-center">
                 <!-- sepet adet -->
                 <div class="col-3 py-2 d-flex align-items-center me-2" style="width: fit-content;">
                   <fa-icon (click)="minusQuantity()" class="me-1" style="font-size: 18px; cursor: pointer;" [icon]="faMinus"></fa-icon>
-                  <input readonly min="1" max="100" [(ngModel)]="productQuantity" type="number" class="form-control me-1" style="box-shadow: none; width: 60px; height: 40px;" />
+                  <input [disabled]="product.stock <= 0" readonly min="1" max="100" [(ngModel)]="productQuantity" type="number" class="form-control me-1" style="box-shadow: none; width: 60px; height: 40px;" />
                   <fa-icon (click)="plusQuantity()" class="me-1" style="font-size: 18px;cursor: pointer;" [icon]="faPlus"></fa-icon>
                 </div>
-                <button (click)="addToBasket()" class="btn btn-primary btn-lg">Sepete Ekle</button>
+                <button [disabled]="product.stock <= 0" (click)="addToBasket()" class="btn btn-primary btn-lg">Sepete Ekle</button>
               </div>
             </div>
           </div>
@@ -136,7 +140,7 @@ export class ProductDetailComponent implements OnInit {
   imageObject: Array<PhotoSliderObject> = [];
   ratingComponentLoaded: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService, private exceptionMessageService: ExceptionMessageService) {
     this.urlId = router.url.split('/')[2];
   }
 
@@ -223,9 +227,15 @@ export class ProductDetailComponent implements OnInit {
       basketItem.productId = this.product.id;
       basketItem.quantity = this.productQuantity;
 
-      this.basketService.add(basketItem).then(() => {
-        this.toastr.success('Ürün Başarıyla Sepete eklendi');
-      });
+      this.basketService
+        .add(basketItem)
+        .then(() => {
+          this.toastr.success('Ürün Başarıyla Sepete eklendi');
+        })
+        .catch((err) => {
+          const message = this.exceptionMessageService.addToBasket(err.error);
+          if (message.length > 0) this.toastr.error(message);
+        });
     } else this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
   }
 
