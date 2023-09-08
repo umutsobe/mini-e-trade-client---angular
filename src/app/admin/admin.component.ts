@@ -5,7 +5,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-layout',
   template: `
-    <div class="p-2 ps-3 pt-3 d-lg-none d-md-block" style="width: fit-content;" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminPanelOffCanvas"><fa-icon role="button" class="text-white fs-2" [icon]="faBars"></fa-icon></div>
+    <!-- lg ve altında responsive 992 ve altı -->
+    <div class="p-2 ps-3 pt-3 d-lg-none d-md-block" style="width: fit-content;" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminPanelOffCanvas"><fa-icon role="button" class="fs-2" [icon]="faBars"></fa-icon></div>
 
     <div class="row mx-1 mt-5">
       <div class="d-none d-lg-block col-lg-3 col-xl-2 left-panel">
@@ -31,7 +32,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
             </div>
             <div class="offcanvas-body">
               <h1 routerLink="/admin" role="button" data-bs-dismiss="offcanvas" class="text-center cursor-pointer w-100">Admin Panel</h1>
-              <div class="p-3">
+              <div class="pt-3">
                 <div routerLink="/admin" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Dashboard</div>
                 <div routerLink="list-product" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Products</div>
                 <div routerLink="create-product" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Create Product</div>

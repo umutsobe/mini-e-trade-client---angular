@@ -17,27 +17,66 @@ import { ProductService } from 'src/app/services/models/product.service';
 @Component({
   selector: 'app-product-list',
   template: `
-    <div class="mt-5 px-4">
-      <div class="d-flex">
-        <!-- filtre colonu -->
-        <div class="col-2 m-0 px-3 d-flex justify-content-center d-none d-lg-block" style="width: 230px; height: 600px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
-          <h1 class="text-center mt-4 mb-5">Filtreler</h1>
-
-          <select class="form-select" (change)="categorySelected($event)">
-            <option selected>Kategori</option>
-            <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
-          </select>
-
-          <form #frm="ngForm" (ngSubmit)="assignFilters(frm.value)" class=" px-1 mt-4">
-            <div class="d-flex">
-              <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
-              <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
+    <div class="mt-1 mt-lg-5 px-0 px-lg-4">
+      <div class="d-flex flex-column flex-lg-row">
+        <!-- sadece lg altında gözükecek -->
+        <div class="d-block d-lg-none d-flex justify-content-center mt-2 mb-- mb-lg-5">
+          <div *ngIf="totalProductCount > 0" class="dropdown me-2" style="width: fit-content;">
+            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+            <ul class="dropdown-menu dropstart">
+              <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
+              <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
+              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
+            </ul>
+          </div>
+          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">Filtreler</button>
+          <!-- filtre bottom offcanvas -->
+          <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasFilters" style="height: fit-content;">
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <button class="btn btn-warning mt-5" style="width: 100%;">Filtrele</button>
-          </form>
+            <div class="offcanvas-body d-flex justify-content-center">
+              <div class=" col-12 col-sm-8 col-md-6">
+                <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filtreler</h1>
+
+                <select class="form-select" (change)="categorySelected($event)">
+                  <option selected>Kategori</option>
+                  <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
+                </select>
+
+                <form #frm="ngForm" (ngSubmit)="assignFilters(frm.value)" class=" px-1 mt-4">
+                  <div class="d-flex">
+                    <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
+                    <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
+                  </div>
+                  <button class="btn btn-warning mt-5" style="width: 100%;" data-bs-dismiss="offcanvas">Filtrele</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- filtre colonu lg sonrası için-->
+        <div class="d-none d-lg-block d-flex justify-content-center">
+          <div class="m-0 px-3 pb-3 mb-3 mb-lg-0" style="width: 230px; height: fit-content; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
+            <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filtreler</h1>
+
+            <select class="form-select" (change)="categorySelected($event)">
+              <option selected>Kategori</option>
+              <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
+            </select>
+
+            <form #frm="ngForm" (ngSubmit)="assignFilters(frm.value)" class=" px-1 mt-4">
+              <div class="d-flex">
+                <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
+                <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
+              </div>
+              <button class="btn btn-warning mt-5" style="width: 100%;">Filtrele</button>
+            </form>
+          </div>
         </div>
         <!-- products colonu -->
-        <div class="px-2" style="width: 100%;">
+        <div class="px-2 p-0 mt-0" style="width: 100%;">
           <!-- products yoksa info -->
           <div *ngIf="!(totalProductCount > 0) && !spinnerBootstrap" class="d-flex justify-content-center">
             <div class="alert alert-info ">Aradığınız kriterlere uygun ürün bulunamadı</div>
@@ -48,10 +87,9 @@ import { ProductService } from 'src/app/services/models/product.service';
             <div class="text-center d-flex justify-content-center" style="width: 50%; position: absolute;">
               <div *ngIf="spinnerBootstrap" class="spinner-border text-primary" role="status"></div>
             </div>
-
-            <!-- sort dropdown -->
-            <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-5 ps-4" style="width: fit-content;">
-              <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+            <!-- sort dropdown  lg sonrası için-->
+            <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-4 mb-lg-5 ps-4" style="width: fit-content;">
+              <div class="d-none d-lg-block dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
               <ul class="dropdown-menu dropstart">
                 <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
                 <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
@@ -59,14 +97,14 @@ import { ProductService } from 'src/app/services/models/product.service';
               </ul>
             </div>
             <!-- products -->
-            <div class="d-flex flex-wrap justify-content-center">
-              <div *ngFor="let product of products" class="card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
+            <div class="d-flex flex-wrap justify-content-center product-cards">
+              <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
                 <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
                 <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
                 <div class="card-body m-0">
-                  <h5 (click)="routeToProductDetail(product.url)" type="button" class="card-header mt-0 p-0 text-truncate placeholder-glow " style="font-size: 18px;">{{ product.name }}</h5>
+                  <p (click)="routeToProductDetail(product.url)" type="button" class="product-name mt-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
                   <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
                   <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Sepete Ekle</button>
                 </div>
@@ -98,6 +136,9 @@ import { ProductService } from 'src/app/services/models/product.service';
         margin: 0;
         box-shadow: none;
       }
+      *:focus {
+        box-shadow: none !important;
+      }
       .page-link {
         box-shadow: none;
       }
@@ -115,6 +156,33 @@ import { ProductService } from 'src/app/services/models/product.service';
       input[type='number']::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
+      }
+      .product-name {
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 36px;
+      }
+
+      @media (max-width: 560px) {
+        .product-card {
+          width: 49% !important;
+          margin-right: 1px !important;
+          margin-bottom: 8px !important;
+        }
+        .product-cards {
+          margin: 0px !important;
+          padding: 0px !important;
+          flex: none;
+        }
+        .product-name {
+          font-size: 13px !important;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
       }
     `,
   ],
@@ -270,6 +338,11 @@ export class ProductListComponent {
         .then(() => {
           this.spinner.hide();
           this.toastr.success('Ürün sepete eklenmiştir', 'Başarılı');
+        })
+        .catch((error) => {
+          console.log(error);
+
+          // this.toastr.error();
         })
         .finally(() => {
           this.spinner.hide();

@@ -13,15 +13,15 @@ import { RoleService } from 'src/app/services/models/role.service';
 @Component({
   selector: 'app-authorize-menu',
   template: `
-    <div style="margin-bottom: 500px;">
+    <div class="p-0 m-0" style="margin-bottom: 500px;">
       <button (click)="updateEndpoints()" class="btn btn-primary ms-3 mb-3 btn-sm">UpdateMenusAndEndpoints</button>
 
-      <mat-tree class="bg-dark mb-1" [dataSource]="dataSource" [treeControl]="treeControl">
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-          <button mat-icon-button disabled></button>
-          <button class="btn btn-primary btn-sm mx-3" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
-          <div class="me-3">{{ node.name }}</div>
-          <div class="me-2" style="color: green;" *ngFor="let role of node.newAssignedRoles">({{ role }})</div>
+      <mat-tree class="bg-dark" [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="ps-0 ps-md-5 mb-1">
+          <!-- <button mat-icon-button disabled></button> -->
+          <button class="btn btn-primary btn-sm me-3 p-1 text-truncate" style="width: 66px;" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
+          <div class="me-1 text-truncate" style="width: fit-content;">{{ node.name }}</div>
+          <div class="me-1 text-truncate" style="color: green;" *ngFor="let role of node.newAssignedRoles">({{ role }})</div>
         </mat-tree-node>
 
         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>

@@ -54,7 +54,7 @@ import { Subject, debounceTime } from 'rxjs';
               <h3 class="m-0 p-0">{{ rating.userName }}</h3>
             </div>
             <p-rating class="d-block" [(ngModel)]="rating.star" [readonly]="true" [cancel]="false" style="pointer-events: none; width: 40px;"></p-rating>
-            <p>{{ formatDate(rating.createdDate) }} tarihinde değerlendirildi</p>
+            <p>{{ getRelativeDate(rating.createdDate) }} değerlendirildi</p>
             <p>
               {{ rating.comment }}
             </p>
@@ -304,10 +304,37 @@ export class ProductRatingComponent implements OnInit {
   get comment() {
     return this.frm.get('comment');
   }
+
   formatDate(dateString: string): string {
     // date daha güzel görünür
 
     const date = new Date(dateString);
     return formatDate(date, 'yyyy-MM-dd', 'en-US');
+  }
+
+  getRelativeDate(commentDateString: string): string {
+    const commentDate = new Date(commentDateString);
+    const today = new Date();
+    const commentDay = commentDate.getDate();
+    const commentMonth = commentDate.getMonth();
+    const commentYear = commentDate.getFullYear();
+    const todayDay = today.getDate();
+    const todayMonth = today.getMonth();
+    const todayYear = today.getFullYear();
+
+    if (commentDay === todayDay && commentMonth === todayMonth && commentYear === todayYear) {
+      return 'Bugün';
+    } else if (commentDay === todayDay - 1 && commentMonth === todayMonth && commentYear === todayYear) {
+      return 'Dün';
+    } else {
+      const diffTime = Math.abs(today.getTime() - commentDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 10) {
+        return `${diffDays} gün önce`;
+      } else {
+        return this.formatDate(commentDateString);
+      }
+    }
   }
 }

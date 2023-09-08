@@ -60,7 +60,7 @@ declare var $: any;
           </thead>
           <tbody *ngIf="this.allProducts">
             <tr *ngFor="let product of this.allProducts.products" class="text-center">
-              <td>{{ product.name }}</td>
+              <td class="item">{{ product.name }}</td>
               <td>{{ product.stock }}</td>
               <td>{{ product.price }}</td>
               <td>{{ product.totalOrderNumber }}</td>
@@ -212,6 +212,13 @@ declare var $: any;
         margin: 0;
         padding-left: 3px;
         padding-right: 3px;
+      }
+      .item {
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-height: 46px;
       }
     `,
   ],

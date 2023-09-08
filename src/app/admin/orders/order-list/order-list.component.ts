@@ -13,36 +13,38 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
   template: `
     <h1 class="mb-5 text-center" id="title">Orders</h1>
     <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
-      <table class="table table-striped table-responsive">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">orderCode</th>
-            <th scope="col">userName</th>
-            <th scope="col">totalPrice</th>
-            <th scope="col">Created Date</th>
-            <th scope="col">completed</th>
-            <th scope="col">orderDetail</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="this.allOrders">
-          <tr *ngFor="let order of this.allOrders.orders" class="text-center">
-            <td>{{ order.orderCode }}</td>
-            <td>{{ order.userName }}</td>
-            <td>{{ order.totalPrice }}</td>
-            <td>{{ formatDate(order.createdDate.toString()) }}</td>
-            <td>
-              <img *ngIf="order.completed" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <img type="button" data-bs-toggle="modal" data-bs-target="#orderDetailModal" (click)="openOrderDetailDialog(order)" src="/assets/orderDetail.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(order)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">orderCode</th>
+              <th scope="col">userName</th>
+              <th scope="col">totalPrice</th>
+              <th scope="col">Created Date</th>
+              <th scope="col">completed</th>
+              <th scope="col">orderDetail</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="this.allOrders">
+            <tr *ngFor="let order of this.allOrders.orders" class="text-center">
+              <td>{{ order.orderCode }}</td>
+              <td>{{ order.userName }}</td>
+              <td>{{ order.totalPrice }}</td>
+              <td>{{ formatDate(order.createdDate.toString()) }}</td>
+              <td>
+                <img *ngIf="order.completed" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+              </td>
+              <td>
+                <img type="button" data-bs-toggle="modal" data-bs-target="#orderDetailModal" (click)="openOrderDetailDialog(order)" src="/assets/orderDetail.png" width="25" style="cursor:pointer;" />
+              </td>
+              <td>
+                <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(order)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="mt-4 pagination d-flex justify-content-center">
         <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
@@ -203,7 +205,7 @@ export class OrderListComponent {
   formatDate(dateString: string): string {
     // date daha güzel görünür
     const date = new Date(dateString);
-    return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
+    return formatDate(date, 'yyyy-MM-dd', 'en-US');
   }
 
   async ngOnInit() {

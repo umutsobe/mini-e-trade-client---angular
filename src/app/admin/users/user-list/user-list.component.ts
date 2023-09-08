@@ -13,28 +13,30 @@ import { UserService } from 'src/app/services/models/user.service';
     <ngx-spinner size="medium" type="ball-spin-clockwise-fade">Loading...</ngx-spinner>
     <h1 class="mt-2 text-center" id="title">Users</h1>
     <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
-      <table class="table table-striped table-responsive">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">userName</th>
-            <th scope="col">email</th>
-            <th scope="col">twoFactorEnabled</th>
-            <th scope="col">assignRole</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="this.allUsers">
-          <tr *ngFor="let user of this.allUsers.users" class="text-center">
-            <td>{{ user.userName }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-              <img *ngIf="user.twoFactorEnabled" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
-            </td>
-            <td>
-              <button (click)="openRoleDialog(user)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">userName</th>
+              <th scope="col">email</th>
+              <th scope="col">twoFactorEnabled</th>
+              <th scope="col">assignRole</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="this.allUsers">
+            <tr *ngFor="let user of this.allUsers.users" class="text-center">
+              <td>{{ user.userName }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <img *ngIf="user.twoFactorEnabled" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
+              </td>
+              <td>
+                <button (click)="openRoleDialog(user)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="mt-4 pagination d-flex justify-content-center">
         <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
@@ -81,6 +83,12 @@ import { UserService } from 'src/app/services/models/user.service';
       ::ng-deep .mdc-checkbox__background {
         border-color: #8f8979 !important;
       }
+      /* .item {
+        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      } */
     `,
   ],
 })

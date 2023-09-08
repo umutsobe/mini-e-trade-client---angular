@@ -16,7 +16,7 @@ declare var $: any;
 @Component({
   selector: 'app-basket',
   template: `
-    <div class="container-sm p-0">
+    <div class="container-sm p-0" style="margin-bottom: 600px;">
       <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0">
         <div class="d-flex flex-column flex-md-row">
           <div class="col-12 d-block col-md-7 col-lg-8 col-xl-8">

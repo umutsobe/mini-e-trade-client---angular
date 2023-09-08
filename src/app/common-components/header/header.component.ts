@@ -20,8 +20,14 @@ declare var $: any;
           <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())">Admin Panel</a></div>
         </div>
 
-        <div class="d-none d-lg-block mx-auto">
+        <div *ngIf="authService.isAuthenticated" class="d-none d-lg-block mx-auto">
           <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-left: 2vw;">
+            <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
+            <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
+          </form>
+        </div>
+        <div *ngIf="!authService.isAuthenticated" class="d-none d-lg-block mx-auto">
+          <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-right: 12vw;">
             <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
             <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>

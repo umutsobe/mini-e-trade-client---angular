@@ -17,7 +17,7 @@ import { AccountService } from 'src/app/services/models/account.service';
           <h1 class="ms-2">My Addresess</h1>
           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#roleModal">Create New Address</button>
         </div>
-        <div class="d-flex flex-wrap justify-content-center mt-3" style="margin-bottom: 500px;">
+        <div class="d-flex flex-wrap justify-content-center mt-3 ms-md-2" style="margin-bottom: 500px;">
           <div *ngFor="let address of addresess" class="card me-1 mb-1" style="width: 16rem;">
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">

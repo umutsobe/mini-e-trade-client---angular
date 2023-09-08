@@ -19,7 +19,7 @@ import { AccountService } from 'src/app/services/models/account.service';
           <div class="d-flex justify-content-between">
             <input type="text" id="name" class="form-control" formControlName="name" [value]="userDetails.name" />
             <div>
-              <button (click)="updateName()" [disabled]="!name.valid" class="btn btn-primary ms-4">Save</button>
+              <button (click)="updateName()" [disabled]="!name.valid" class="btn btn-primary ms-2">Save</button>
             </div>
           </div>
           <div *ngIf="!name.valid && name.dirty" style="color:chocolate; font-size: 12px;">Ad soyad girişi zorunludur.</div>
@@ -30,7 +30,7 @@ import { AccountService } from 'src/app/services/models/account.service';
 
           <div class="d-flex justify-content-between p-0">
             <input type="text" class="form-control" id="email" formControlName="email" [value]="userDetails.email" />
-            <button (click)="updateEmail()" [disabled]="!email.valid" class="btn btn-primary ms-4">Save</button>
+            <button (click)="updateEmail()" [disabled]="!email.valid" class="btn btn-primary ms-2">Save</button>
           </div>
           <div *ngIf="!email.valid && email.dirty" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
         </div>
