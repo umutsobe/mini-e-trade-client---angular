@@ -48,13 +48,13 @@ import { AccountService } from 'src/app/services/models/account.service';
                 <div class="mb-3">
                   <label for="addressDefinition" class="form-label">Address Name</label>
                   <input type="text" class="form-control" id="addressDefinition" formControlName="addressDefinition" />
-                  <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Adres Adı zorunludur.</div>
+                  <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Address Name is required.</div>
                 </div>
 
                 <div class="mb-3">
                   <label for="fullAddress" class="form-label">Full Address</label>
                   <textarea rows="5" type="text" id="fullAddress" class="form-control" formControlName="fullAddress"></textarea>
-                  <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Adres girişi zorunludur.</div>
+                  <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Address is required.</div>
                 </div>
               </form>
             </div>
@@ -123,7 +123,7 @@ export class AddresessComponent implements OnInit {
     this.accountService
       .createUserAddress(addressModel)
       .then(() => {
-        this.toastr.success('Adres Başarıyla Eklendi');
+        this.toastr.success('Address Successfully Added');
         this.spinner.hide();
         this.getAddresess();
         this.addressDefinition.setValue('');

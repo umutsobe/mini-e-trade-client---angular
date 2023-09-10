@@ -18,27 +18,27 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
               <input type="text" class="form-control" id="name" formControlName="name" />
-              <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">İsim girişi zorunludur</div>
+              <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">The name field is required</div>
             </div>
 
             <div class="d-flex justify-content-evenly">
               <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
                 <input class="form-control" id="price" rows="3" formControlName="price" />
-                <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">Fiyat girişi zorunludur</div>
+                <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">The price field is required</div>
               </div>
 
               <div class="mb-3">
                 <label for="stock" class="form-label">Stock</label>
                 <input class="form-control" id="stock" rows="3" formControlName="stock" />
-                <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">Stock girişi zorunludur</div>
+                <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">The stock field is required</div>
               </div>
             </div>
 
             <div class="mb-3">
               <label for="name" class="form-label">Description</label>
               <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
-              <div class="my-2" style="font-size: 13px;">Description alanı zorunludur!</div>
+              <div class="my-2" style="font-size: 13px;">The description field is required!</div>
             </div>
 
             <div class="mb-3">
@@ -63,7 +63,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-body">
-            <h1 class="ms-2">Kategoriler</h1>
+            <h1 class="ms-2">Categories</h1>
             <mat-selection-list #categoryComponent>
               <mat-list-option *ngFor="let category of listCategories" selected="{{ category.selected }}">
                 {{ category.name }}
@@ -71,7 +71,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
             </mat-selection-list>
           </div>
           <div class="modal-footer">
-            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Kategorileri Ekle</button>
+            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Assign Categories</button>
             <button (click)="closeCategoryDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -159,7 +159,7 @@ export class CreateComponent {
       .create(product)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${product.name} adında ürün başarıyla oluşturuldu`);
+        this.toastr.success(`${product.name} successfully created`);
       })
       .catch((err) => {
         this.spinner.hide();

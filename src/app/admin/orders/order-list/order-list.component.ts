@@ -1,6 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
@@ -17,12 +15,12 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
         <table class="table table-striped">
           <thead>
             <tr class="text-center">
-              <th scope="col">orderCode</th>
-              <th scope="col">userName</th>
-              <th scope="col">totalPrice</th>
+              <th scope="col">Order Code</th>
+              <th scope="col">Username</th>
+              <th scope="col">Total Price</th>
               <th scope="col">Created Date</th>
-              <th scope="col">completed</th>
-              <th scope="col">orderDetail</th>
+              <th scope="col">Is Completed</th>
+              <th scope="col">Order Detail</th>
               <th scope="col">Delete</th>
             </tr>
           </thead>
@@ -59,11 +57,11 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Silme İşlemi</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Product deletion process</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger">Ürün silme işlemi geri alınamaz!!!</p>
+            <p class="text-danger">The product deletion process is irreversible!!!</p>
             <!-- null hatası almamak için kontrol -->
           </div>
           <div class="modal-footer">
@@ -183,7 +181,7 @@ export class OrderListComponent {
     this.orderService
       .completeOrder(this.selectedOrder.id)
       .then(() => {
-        this.toastr.success('Sipariş Başarıyla Onaylandı', 'Başarılı');
+        this.toastr.success('Order Successfully Confirmed', 'Başarılı');
         this.refresh();
       })
       .catch((err) => {

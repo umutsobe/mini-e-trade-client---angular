@@ -90,6 +90,8 @@ const routes: Routes = [
 
   { path: 'update-password/:userId/:resetToken', loadChildren: () => import('./public/components/auth/update-password/update-password.module').then((m) => m.UpdatePasswordModule), canActivate: [LoginAfterGuard] },
 
+  { path: 'email-confirm', loadChildren: () => import('./public/components/auth/email-confirm/email-confirm.module').then((m) => m.EmailConfirmModule), canActivate: [LoginAfterGuard] },
+
   { path: 'error', component: ErrorComponent },
 
   { path: '**', redirectTo: '/error' },

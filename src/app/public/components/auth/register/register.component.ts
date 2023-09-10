@@ -13,45 +13,49 @@ import { UserService } from 'src/app/services/models/user.service';
   selector: 'app-register',
   template: `
     <div class="d-flex justify-content-center">
-      <form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)" style="margin-top: 75px;" class="col-11 col-sm-7 col-md-6 col-lg-4">
+      <form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)" class="mt-2 mt-md-5 col-11 col-sm-6 col-md-5 col-lg-3">
         <h1 class="mb-4">Kayıt Ol</h1>
 
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="name" class="form-label">Ad Soyad</label>
           <input type="text" id="name" class="form-control" formControlName="name" />
           <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">Ad girişi zorunludur</div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="userName" class="form-label">Kullanıcı Adı</label>
           <input type="text" id="userName" class="form-control" formControlName="userName" />
           <div *ngIf="!userName.valid && (userName.dirty || userName.touched)" style="color:chocolate; font-size: 12px;">Kullanıcı Adı girişi zorunludur</div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="email" class="form-label">E-Mail</label>
           <input type="text" class="form-control" id="email" formControlName="email" />
           <div *ngIf="!email.valid && (email.dirty || email.touched)" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="password" class="form-label">Şifre</label>
           <input type="password" id="password" class="form-control" formControlName="password" />
           <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur. Ve en az 6 karakterli olmalıdır</div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="repeatPassword" class="form-label">Şifre Tekrar</label>
           <input type="password" id="repeatPassword" class="form-control" formControlName="repeatPassword" />
           <div *ngIf="!repeatPassword.valid && (repeatPassword.dirty || repeatPassword.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur</div>
         </div>
         <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="frm.invalid">Submit</button>
 
-        <div class="d-flex justify-content-center align-items-center w-100 bg-warning mb-3" style="padding: 10px; border-radius: 3px;">
-          <p class="mt-2" style="color: black;">Google ile Şifresiz Güvenli Kayıt Ol</p>
+        <div type="button" class=" d-flex justify-content-center align-items-center py-2" style="background-color: #dc2626;border-radius: 8px;">
+          <div class="d-block m-0 p-0 me-2" style="width: 30px;">
+            <svg viewBox="0 0 488 512"><path fill="white" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
+          </div>
+          <p style="color: white; font-weight: 500;" class="m-0 p-0">Sign in with Google</p>
         </div>
-        <div class="d-flex justify-content-center">
-          <asl-google-signin-button type="standard" size="large" theme="outline" style="border-radius: 5px;"></asl-google-signin-button>
+
+        <div class="">
+          <asl-google-signin-button width="280" size="large" type="standard" style="opacity: 0.0001; position: relative; top: -46px;"></asl-google-signin-button>
         </div>
 
         <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Üye Misiniz? Giriş Yapın </a>
@@ -65,6 +69,9 @@ import { UserService } from 'src/app/services/models/user.service';
     `
       *:focus {
         box-shadow: none !important;
+      }
+      .nsm7Bb-HzV7m-LgbsSe-BPrWId {
+        height: 40px;
       }
     `,
   ],
@@ -117,10 +124,13 @@ export class RegisterComponent {
       this.spinner.hide();
     });
 
-    if (result.succeeded) {
+    if (result.succeeded && result.userId.length > 5) {
+      localStorage.setItem('userId', result.userId);
+      this.router.navigateByUrl('/email-confirm');
+    } else if (result.succeeded) {
       this.toastr.success('Kullanıcı Başarıyla Oluşturuldu');
       this.spinner.hide();
-    } else {
+    } else if (!result.succeeded) {
       this.toastr.error(result.message, 'Hata');
       this.spinner.hide();
     }

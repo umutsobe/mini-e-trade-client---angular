@@ -22,30 +22,30 @@ import { Subject, debounceTime } from 'rxjs';
     </div>
 
     <div class="pb-3 border-bottom">
-      <h1>{{ product.name }} Yorumları</h1>
-      <button (click)="openRatingModel()" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">Yorum Yap</button>
+      <h1>{{ product.name }} Reviews</h1>
+      <button (click)="openRatingModel()" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">Write a customer review</button>
     </div>
 
     <div *ngIf="productRatings.ratings.length > 0 && !bootstrapSpinner">
       <!-- filters -->
       <div class="d-flex py-4 ps-2 border-bottom align-items-center">
         <div class="dropdown me-3" style="width: fit-content;">
-          <div class="dropdown-toggle user-select-none border" type="button" data-bs-toggle="dropdown" style="height: 40px; padding: 8px;border-radius: 5px; ">Sıralama</div>
+          <div class="dropdown-toggle user-select-none border" type="button" data-bs-toggle="dropdown" style="height: 40px; padding: 8px;border-radius: 5px; ">Sort By</div>
           <ul class="dropdown-menu dropstart">
-            <li (click)="sortNewDate()" type="button" class="dropdown-item">Yeni Yorumlar</li>
-            <li (click)="sortOldDate()" type="button" class="dropdown-item">Eski Yorumlar</li>
-            <li (click)="sortBest()" type="button" class="dropdown-item">Olumlu Yorumlar</li>
-            <li (click)="sortWorst()" type="button" class="dropdown-item">Olumsuz Yorumlar</li>
+            <li (click)="sortNewDate()" type="button" class="dropdown-item">New Ratings</li>
+            <li (click)="sortOldDate()" type="button" class="dropdown-item">Old Ratings</li>
+            <li (click)="sortBest()" type="button" class="dropdown-item">Positive Ratings</li>
+            <li (click)="sortWorst()" type="button" class="dropdown-item">Negative Ratings</li>
           </ul>
         </div>
         <form class="d-flex" style="height: 40px">
-          <input [(ngModel)]="productRatingsFilter.keyword" (input)="onInputKeyup()" name="onemsiz" class="form-control me-2 " placeholder="Yorumlarda Ara" />
+          <input [(ngModel)]="productRatingsFilter.keyword" (input)="onInputKeyup()" name="onemsiz" class="form-control me-2 " placeholder="Search in Reviews" />
           <!-- <button type="button" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button> -->
         </form>
       </div>
       <!-- ratings -->
       <div>
-        <p class="m-0 p-0 mt-2 fw-bold">Bu ürüne ait {{ productRatings.totalProductRatingCount }} adet yorum var.</p>
+        <p class="m-0 p-0 mt-2 fw-bold">{{ productRatings.totalProductRatingCount }} Ratings</p>
 
         <div class="p-3" *ngIf="productRatings.ratings">
           <div *ngFor="let rating of productRatings.ratings" class="border-bottom mt-3">
@@ -54,7 +54,7 @@ import { Subject, debounceTime } from 'rxjs';
               <h3 class="m-0 p-0">{{ rating.userName }}</h3>
             </div>
             <p-rating class="d-block" [(ngModel)]="rating.star" [readonly]="true" [cancel]="false" style="pointer-events: none; width: 40px;"></p-rating>
-            <p>{{ getRelativeDate(rating.createdDate) }} değerlendirildi</p>
+            <p>{{ getRelativeDate(rating.createdDate) }}</p>
             <p>
               {{ rating.comment }}
             </p>
@@ -84,11 +84,11 @@ import { Subject, debounceTime } from 'rxjs';
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">{{ product.name }} Değerlendirme</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Rate {{ product.name }}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div *ngIf="ratingStatus" class="modal-body">
-            <div *ngIf="ratingStatus.state == 'NotBuyed'" class="alert alert-warning" role="alert">Yorum yapmak için ürünü satın almış olmalısınız.</div>
+            <div *ngIf="ratingStatus.state == 'NotBuyed'" class="alert alert-warning" role="alert">You must have purchased the product to leave a review.</div>
             <div *ngIf="ratingStatus.state == 'noLogin'" class="alert alert-warning" role="alert">Yorum yapmak için giriş yapmalısınız</div>
             <div *ngIf="ratingStatus.state == 'BuyedAndHasRating'" class="alert alert-warning" role="alert">Ürüne daha önce yorum yaptınız. Yorumlarınıza Hesabım bölümünden erişebilirsiniz</div>
 
@@ -323,17 +323,17 @@ export class ProductRatingComponent implements OnInit {
     const todayYear = today.getFullYear();
 
     if (commentDay === todayDay && commentMonth === todayMonth && commentYear === todayYear) {
-      return 'Bugün';
+      return 'Reviewed today';
     } else if (commentDay === todayDay - 1 && commentMonth === todayMonth && commentYear === todayYear) {
-      return 'Dün';
+      return 'Reviewed yesterday';
     } else {
       const diffTime = Math.abs(today.getTime() - commentDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       if (diffDays <= 10) {
-        return `${diffDays} gün önce`;
+        return `${diffDays} days ago reviewed`;
       } else {
-        return this.formatDate(commentDateString);
+        return 'Reviewed on ' + this.formatDate(commentDateString);
       }
     }
   }

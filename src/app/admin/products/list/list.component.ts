@@ -23,21 +23,21 @@ declare var $: any;
       <!-- filters -->
       <div class="d-flex mb-2 align-items-center">
         <form class="d-flex" style="height: 40px">
-          <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" style="width: 120px;" name="onemsiz" class="form-control me-2 " placeholder="Ara" />
+          <input [(ngModel)]="productFilter.keyword" (input)="onInputKeyup()" style="width: 120px;" name="onemsiz" class="form-control me-2 " placeholder="Search" />
           <!-- <button type="button" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button> -->
         </form>
         <div class="d-block d-md-flex align-items-center justify-content-center">
           <div class="dropdown me-1" style="width: fit-content;">
-            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sort By</div>
             <ul class="dropdown-menu dropstart">
-              <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
-              <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
-              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
-              <li type="button" class="dropdown-item">Yeni eklenenler</li>
+              <li (click)="sortLowPrice()" type="button" class="dropdown-item">Lowest Price</li>
+              <li (click)="sortHighPrice()" type="button" class="dropdown-item">Highest Price</li>
+              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Bestsellers</li>
+              <li type="button" class="dropdown-item">Newly products</li>
             </ul>
           </div>
           <select *ngIf="categories" class="mt-1 mt-sm-1 mt-sm-1 mt-md-0 form-select" (change)="categorySelected($event)" style="width: fit-content; border: 1px solid gray">
-            <option selected>Kategori</option>
+            <option selected>Category</option>
             <option type="button" *ngFor="let category of categories.categories">{{ category.name }}</option>
           </select>
         </div>
@@ -113,13 +113,12 @@ declare var $: any;
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Silme İşlemi</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Product Deletion Process</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger">Ürün silme işlemi geri alınamaz!!!</p>
-            <p>Silinecek Ürün: {{ selectedProduct ? selectedProduct.name : '' }}</p>
-            <!-- null hatası almamak için kontrol -->
+            <p class="text-danger">Product deletion process is irreversible!!!</p>
+            <p>Product to be deleted: {{ selectedProduct ? selectedProduct.name : '' }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -135,20 +134,20 @@ declare var $: any;
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Fotoğraf Ekleme</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product Photo</h1>
             <div>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
           </div>
-          <p class="ms-3 mt-2">Ürün Id: {{ selectedProduct ? selectedProduct.id : '' }}</p>
-          <p class="ms-3 mt-2">Ürün İsmi {{ selectedProduct ? selectedProduct.name : '' }}</p>
+          <p class="ms-3 mt-2">Product Id: {{ selectedProduct ? selectedProduct.id : '' }}</p>
+          <p class="ms-3 mt-2">Product Name: {{ selectedProduct ? selectedProduct.name : '' }}</p>
           <div class="modal-body">
-            <h4 class="text-center">Ürüne Fotoğraf Ekle</h4>
+            <h4 class="text-center">Add Photo to Product</h4>
             <app-file-upload></app-file-upload>
             <!-- appfilecomponent child componenttir bu componentte göre -->
           </div>
           <div class="list-images">
-            <h4 class="text-center">Ürün Fotoğrafları</h4>
+            <h4 class="text-center">Product Photos</h4>
             <div class="d-flex flex-wrap justify-content-center">
               <div *ngFor="let productImage of productImages" class="card m-1" style="width:11rem">
                 <span class="my-1 d-flex justify-content-center">
@@ -184,7 +183,7 @@ declare var $: any;
             </mat-selection-list>
           </div>
           <div class="modal-footer">
-            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Kategorileri Ata</button>
+            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Assign Categories</button>
             <button (click)="closeCategoryDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -266,7 +265,7 @@ export class ListComponent implements OnInit {
     this.spinner.show();
     this.productService.delete(this.selectedProduct.id).subscribe(() => {
       this.spinner.hide();
-      this.toastr.success('Ürün Başarıyla Silindi');
+      this.toastr.success('Product Successfully Deleted');
       this.getProducts();
     });
   }
@@ -292,7 +291,7 @@ export class ListComponent implements OnInit {
     );
   }
   deleteImage(productId: string, imageId: string) {
-    this.spinner.show('Resim Siliniyor...');
+    this.spinner.show();
     this.productService.deleteImage(productId, imageId).subscribe(
       () => {
         this.spinner.hide();
@@ -345,7 +344,7 @@ export class ListComponent implements OnInit {
     this.productService
       .assignCategoriesToProduct(this.selectedProduct.id, categories)
       .then(() => {
-        this.toastr.success('Kategoriler Başarıyla Atandı');
+        this.toastr.success('Categories Successfully Assigned');
       })
       .finally(() => {
         this.spinner.hide();

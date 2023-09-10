@@ -13,21 +13,21 @@ import { AccountService } from 'src/app/services/models/account.service';
       <form [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-bottom: 300px;" class="col-11 col-sm-6 col-md-5 col-lg-5 col-xl-4">
         <h1>Change Password</h1>
         <div class="mb-5">
-          <label for="currentPassword" class="form-label">Mevcut Şifre</label>
+          <label for="currentPassword" class="form-label">Current Password</label>
           <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword" />
-          <div *ngIf="!currentPassword.valid && (currentPassword.dirty || currentPassword.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+          <div *ngIf="!currentPassword.valid && (currentPassword.dirty || currentPassword.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
         </div>
 
         <div class="mb-3">
-          <label for="newPassword" class="form-label">Yeni Şifre</label>
+          <label for="newPassword" class="form-label">New Password</label>
           <input type="password" class="form-control" id="newPassword" formControlName="newPassword" />
-          <div *ngIf="!newPassword.valid && (newPassword.dirty || newPassword.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+          <div *ngIf="!newPassword.valid && (newPassword.dirty || newPassword.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
         </div>
 
         <div class="mb-3">
-          <label for="newPasswordRepeat" class="form-label">Yeni Şifre Tekrar</label>
+          <label for="newPasswordRepeat" class="form-label">New Password Repeat</label>
           <input type="password" id="newPasswordRepeat" class="form-control" formControlName="newPasswordRepeat" />
-          <div *ngIf="!newPasswordRepeat.valid && (newPasswordRepeat.dirty || newPasswordRepeat.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur.</div>
+          <div *ngIf="!newPasswordRepeat.valid && (newPasswordRepeat.dirty || newPasswordRepeat.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
         </div>
         <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
       </form>
@@ -66,7 +66,7 @@ export class PasswordChangeComponent implements OnInit {
         localStorage.setItem('accessToken', response.accessToken);
 
         this.spinner.hide();
-        this.toastr.success('Şifre Başarıyla Değiştirildi');
+        this.toastr.success('Password Successfully Changed.');
       })
       .catch((err) => {
         this.spinner.hide();

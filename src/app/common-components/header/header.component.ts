@@ -45,23 +45,23 @@ declare var $: any;
             <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
             <li><hr class="dropdown-divider" /></li>
 
-            <li routerLink="account" role="button" class="dropdown-item">Hesabım</li>
+            <li routerLink="account" role="button" class="dropdown-item">Account Details</li>
 
-            <li routerLink="account/orders" role="button" class="dropdown-item">Siparişlerim</li>
-            <li routerLink="/basket" role="button" class="dropdown-item">Sepetim<fa-icon class="fs-5 ms-2" [icon]="faShoppingCart"></fa-icon></li>
+            <li routerLink="account/orders" role="button" class="dropdown-item">Orders</li>
+            <li routerLink="/basket" role="button" class="dropdown-item">Basket<fa-icon class="fs-5 ms-2" [icon]="faShoppingCart"></fa-icon></li>
 
             <li><hr class="dropdown-divider" /></li>
             <li *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())" routerLink="admin" role="button" class="dropdown-item">Admin Panel</li>
 
             <li (click)="toggleTheme()" role="button" class="dropdown-item">{{ toggleThemeString }} <fa-icon role="button" class="fs-5 m-0 ms-2 align-content-center" [icon]="faCircleHalfStroke"></fa-icon></li>
-            <li><a role="button" class="dropdown-item text-danger" (click)="signOut()">Çıkış Yap</a></li>
+            <li><a role="button" class="dropdown-item text-danger" (click)="signOut()">Logout</a></li>
           </ul>
         </div>
 
         <div *ngIf="authService.isAuthenticated" routerLink="basket" class="d-none d-sm-block">
           <div role="button" class="m-0 p-0 p-1 btn btn-warning d-flex justify-content-center align-items-center" style="height: 40px; width: 98px; background-color: #fbc524;">
             <fa-icon class="m-0 p-0 fs-5 me-1" [icon]="faShoppingCart"></fa-icon>
-            <a class="m-0 p-0 nav-link text-dark me-1">Sepet</a>
+            <a class="m-0 p-0 nav-link text-dark me-1">Basket</a>
           </div>
         </div>
       </div>

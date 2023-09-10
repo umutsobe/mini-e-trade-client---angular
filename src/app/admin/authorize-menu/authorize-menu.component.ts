@@ -19,7 +19,7 @@ import { RoleService } from 'src/app/services/models/role.service';
       <mat-tree class="bg-dark" [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="ps-0 ps-md-5 mb-1">
           <!-- <button mat-icon-button disabled></button> -->
-          <button class="btn btn-primary btn-sm me-3 p-1 text-truncate" style="width: 66px;" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
+          <button class="btn btn-primary btn-sm me-3 p-1 text-truncate" style="width: 66px;" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal">Assign Role</button>
           <div class="me-1 text-truncate" style="width: fit-content;">{{ node.name }}</div>
           <div class="me-1 text-truncate" style="color: green;" *ngFor="let role of node.newAssignedRoles">({{ role }})</div>
         </mat-tree-node>
@@ -53,7 +53,7 @@ import { RoleService } from 'src/app/services/models/role.service';
             </mat-selection-list>
           </div>
           <div class="modal-footer">
-            <button (click)="assignRoles(rolesComponent)" type="button" class="btn btn-primary">Rolleri Ata</button>
+            <button (click)="assignRoles(rolesComponent)" type="button" class="btn btn-primary">Assign Roles</button>
             <button (click)="closeDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -126,7 +126,7 @@ export class AuthorizeMenuComponent implements OnInit {
       .assignRoleEndpoint(roles, this.selectedAction.code, this.selectedAction.menuName)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success('Başarılı');
+        this.toastr.success('Success');
       })
       .catch((err) => {
         this.spinner.hide();

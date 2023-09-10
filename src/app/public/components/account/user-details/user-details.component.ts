@@ -11,10 +11,10 @@ import { AccountService } from 'src/app/services/models/account.service';
   template: `
     <div class="d-flex justify-content-center">
       <form style="margin-bottom: 500px;" [formGroup]="frm" class="col-10 col-sm-8 col-md-7 col-lg-6 col-xl-5">
-        <h1 class="mx-auto">Kullanıcı bilgilerim</h1>
+        <h1 class="mx-auto">User Information</h1>
 
         <div style="width: 100%;" class="mb-3">
-          <label for="name" class="form-label">Ad Soyad</label>
+          <label for="name" class="form-label">Full name</label>
 
           <div class="d-flex justify-content-between">
             <input type="text" id="name" class="form-control" formControlName="name" [value]="userDetails.name" />
@@ -22,7 +22,7 @@ import { AccountService } from 'src/app/services/models/account.service';
               <button (click)="updateName()" [disabled]="!name.valid" class="btn btn-primary ms-2">Save</button>
             </div>
           </div>
-          <div *ngIf="!name.valid && name.dirty" style="color:chocolate; font-size: 12px;">Ad soyad girişi zorunludur.</div>
+          <div *ngIf="!name.valid && name.dirty" style="color:chocolate; font-size: 12px;">Full name entry is required</div>
         </div>
 
         <div style="width: 100%;" class="mb-3">
@@ -32,7 +32,7 @@ import { AccountService } from 'src/app/services/models/account.service';
             <input type="text" class="form-control" id="email" formControlName="email" [value]="userDetails.email" />
             <button (click)="updateEmail()" [disabled]="!email.valid" class="btn btn-primary ms-2">Save</button>
           </div>
-          <div *ngIf="!email.valid && email.dirty" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
+          <div *ngIf="!email.valid && email.dirty" style="color:chocolate; font-size: 12px;">Email entry must be in the correct format</div>
         </div>
       </form>
     </div>
@@ -76,7 +76,7 @@ export class UserDetailsComponent implements OnInit {
       .updateUserName(this.authService.UserId, this.name.value)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success('Ad Soyad Başarıyla Değiştirildi', 'Başarılı');
+        this.toastr.success('Full Name Successfully Changed.', 'Success');
       })
       .catch((err) => {
         this.spinner.hide();
@@ -87,7 +87,7 @@ export class UserDetailsComponent implements OnInit {
     await this.accountService
       .updateUserEmail(this.authService.UserId, this.email.value)
       .then(() => {
-        this.toastr.success('Email Başarıyla Değiştirildi', 'Başarılı');
+        this.toastr.success('Email Successfully Changed.', 'Success');
         this.spinner.hide();
       })
       .catch((err) => {

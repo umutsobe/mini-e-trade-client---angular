@@ -21,7 +21,7 @@ declare var $: any;
       <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0">
         <div class="d-flex flex-column flex-md-row">
           <div class="col-12 d-block col-md-7 col-lg-8 col-xl-8">
-            <h1 class="">Sepetim</h1>
+            <h1 class="">Card</h1>
             <div *ngIf="spinnerElement" class="ms-4 spinner-border text-primary" role="status"></div>
 
             <div *ngFor="let product of products" class="d-flex my-2 py-2 border-top">
@@ -30,8 +30,8 @@ declare var $: any;
               </div>
 
               <div class="ms-3 d-flex flex-column justify-content-between">
-                <div class="py-2">{{ product.name }}</div>
-                <h2 class="m-0 p-0">{{ product.price + ' TL' }}</h2>
+                <h4 class="p-0 m-0 py-2">{{ product.name }}</h4>
+                <h2 class="m-0 p-0">{{ product.price | currency : 'USD' }}</h2>
                 <div class="d-flex justify-content-center align-items-center pb-2">
                   <div class="d-flex justify-content-center align-items-center p-1 rounded-2 border me-2">
                     <div type="button" (click)="minusQuantity(product)">
@@ -51,19 +51,19 @@ declare var $: any;
           </div>
           <div class="ms-md-5 col-12 col-md-5 col-lg-4 col-xl-4 p-2 border mt-5" style="border-radius: 10px; height: fit-content;">
             <div class="d-flex justify-content-center">
-              <h2 class="m-0 p-0">Ara Toplam:</h2>
+              <h2 class="m-0 p-0">Subtotal:</h2>
               <h2 class="m-0 p-0 ms-2">
                 {{ (totalPriceCalculate && products ? totalPriceCalculate() : '-') + ' TL' }}
               </h2>
             </div>
-            <button (click)="completeShopping()" class="btn mt-3 btn-lg" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Alışverişi Tamamla</button>
+            <button (click)="completeShopping()" class="btn mt-3 btn-lg" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Complete Shopping</button>
           </div>
         </div>
       </div>
 
       <div *ngIf="!(products == null ? false : products.length > 0) && !spinnerElement" class="mt-4 d-flex flex-column align-items-center">
-        <div class="alert alert-info col-8">Sepetinizde ürün yok.</div>
-        <button routerLink="/search" class="btn btn-success mt-2">Alışverişe devam edin</button>
+        <div class="alert alert-info col-8">Your card is empty.</div>
+        <button routerLink="/search" class="btn btn-success mt-2">"Continue shopping</button>
       </div>
     </div>
   `,

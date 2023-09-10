@@ -23,14 +23,14 @@ import { ProductService } from 'src/app/services/models/product.service';
         <!-- sadece lg altında gözükecek -->
         <div class="d-block d-lg-none d-flex justify-content-center mt-2 mb-- mb-lg-5">
           <div *ngIf="totalProductCount > 0" class="dropdown me-2" style="width: fit-content;">
-            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+            <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sort By</div>
             <ul class="dropdown-menu dropstart">
-              <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
-              <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
-              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
+              <li (click)="sortLowPrice()" type="button" class="dropdown-item">Lowest price</li>
+              <li (click)="sortHighPrice()" type="button" class="dropdown-item">Highest price</li>
+              <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Bestsellers</li>
             </ul>
           </div>
-          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">Filtreler</button>
+          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">Filters</button>
           <!-- filtre bottom offcanvas -->
           <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasFilters" style="height: fit-content;">
             <div class="offcanvas-header">
@@ -38,10 +38,10 @@ import { ProductService } from 'src/app/services/models/product.service';
             </div>
             <div class="offcanvas-body d-flex justify-content-center">
               <div class=" col-12 col-sm-8 col-md-6">
-                <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filtreler</h1>
+                <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
 
                 <select class="form-select" (change)="categorySelected($event)">
-                  <option selected>Kategori</option>
+                  <option selected>Category</option>
                   <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
                 </select>
 
@@ -50,7 +50,7 @@ import { ProductService } from 'src/app/services/models/product.service';
                     <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
                     <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
                   </div>
-                  <button class="btn btn-warning mt-5" style="width: 100%;" data-bs-dismiss="offcanvas">Filtrele</button>
+                  <button class="btn btn-warning mt-5" style="width: 100%;" data-bs-dismiss="offcanvas">Filter</button>
                 </form>
               </div>
             </div>
@@ -60,10 +60,10 @@ import { ProductService } from 'src/app/services/models/product.service';
         <!-- filtre colonu lg sonrası için-->
         <div class="d-none d-lg-block d-flex justify-content-center">
           <div class="m-0 px-3 pb-3 mb-3 mb-lg-0" style="width: 230px; height: 500px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
-            <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filtreler</h1>
+            <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
 
             <select class="form-select" (change)="categorySelected($event)">
-              <option selected>Kategori</option>
+              <option selected>Category</option>
               <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
             </select>
 
@@ -72,7 +72,7 @@ import { ProductService } from 'src/app/services/models/product.service';
                 <input [(ngModel)]="this.productFilter.minPrice" name="min" ngModel type="number" class="form-control m-0 p-1 input me-2" placeholder="Min ₺" />
                 <input [(ngModel)]="this.productFilter.maxPrice" name="max" ngModel type="number" class="form-control m-0 p-1 input" placeholder="Max ₺" />
               </div>
-              <button class="btn btn-warning mt-5" style="width: 100%;">Filtrele</button>
+              <button class="btn btn-warning mt-5" style="width: 100%;">Filter</button>
             </form>
           </div>
         </div>
@@ -80,7 +80,7 @@ import { ProductService } from 'src/app/services/models/product.service';
         <div class="px-2 p-0 mt-0" style="width: 100%;">
           <!-- products yoksa info -->
           <div *ngIf="!(totalProductCount > 0) && !spinnerBootstrap" class="d-flex justify-content-center">
-            <div class="alert alert-info ">Aradığınız kriterlere uygun ürün bulunamadı</div>
+            <div class="alert alert-info ">No Results. Try checking your spelling or use more general terms.</div>
           </div>
           <!-- products list -->
           <div class="m-0">
@@ -90,11 +90,11 @@ import { ProductService } from 'src/app/services/models/product.service';
             </div>
             <!-- sort dropdown  lg sonrası için-->
             <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-4 mb-lg-5 ps-4" style="width: fit-content;">
-              <div class="d-none d-lg-block dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sıralama</div>
+              <div class="d-none d-lg-block dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sort By</div>
               <ul class="dropdown-menu dropstart">
-                <li (click)="sortLowPrice()" type="button" class="dropdown-item">En düşük fiyat</li>
-                <li (click)="sortHighPrice()" type="button" class="dropdown-item">En yüksek fiyat</li>
-                <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Çok satanlar</li>
+                <li (click)="sortLowPrice()" type="button" class="dropdown-item">Lowest price</li>
+                <li (click)="sortHighPrice()" type="button" class="dropdown-item">Highest price</li>
+                <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Bestsellers</li>
               </ul>
             </div>
             <!-- products -->
@@ -107,7 +107,7 @@ import { ProductService } from 'src/app/services/models/product.service';
                 <div class="card-body m-0">
                   <p (click)="routeToProductDetail(product.url)" type="button" class="product-name mt-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
                   <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
-                  <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Sepete Ekle</button>
+                  <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Add to cart</button>
                 </div>
               </div>
             </div>
@@ -340,7 +340,7 @@ export class ProductListComponent {
         .add(_basketItem)
         .then(() => {
           this.spinner.hide();
-          this.toastr.success('Ürün sepete eklenmiştir', 'Başarılı');
+          this.toastr.success('Added to Car');
         })
         .catch((err) => {
           const message = this.exceptionMessageService.addToBasket(err.error);
@@ -350,14 +350,14 @@ export class ProductListComponent {
           this.spinner.hide();
         });
     } else {
-      this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
+      this.toastr.info('You must log in to perform this action', 'Hata');
     }
   }
 
   categorySelected(event) {
-    if (event.target.value != 'Kategori') {
+    if (event.target.value != 'Category') {
       this.productFilter.categoryName = event.target.value;
-    } else if (event.target.value == 'Kategori') this.productFilter.categoryName = undefined;
+    } else if (event.target.value == 'Category') this.productFilter.categoryName = undefined;
   }
 
   @ViewChild('frm', { static: true }) frm: NgForm;

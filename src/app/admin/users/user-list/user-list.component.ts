@@ -17,10 +17,10 @@ import { UserService } from 'src/app/services/models/user.service';
         <table class="table table-striped">
           <thead>
             <tr class="text-center">
-              <th scope="col">userName</th>
-              <th scope="col">email</th>
-              <th scope="col">twoFactorEnabled</th>
-              <th scope="col">assignRole</th>
+              <th scope="col">Username</th>
+              <th scope="col">Email</th>
+              <th scope="col">TwoFactorEnabled</th>
+              <th scope="col">Assign Role</th>
             </tr>
           </thead>
           <tbody *ngIf="this.allUsers">
@@ -31,7 +31,7 @@ import { UserService } from 'src/app/services/models/user.service';
                 <img *ngIf="user.twoFactorEnabled" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
               </td>
               <td>
-                <button (click)="openRoleDialog(user)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Rol Ata</button>
+                <button (click)="openRoleDialog(user)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">Assign Role</button>
               </td>
             </tr>
           </tbody>
@@ -62,7 +62,7 @@ import { UserService } from 'src/app/services/models/user.service';
             </mat-selection-list>
           </div>
           <div class="modal-footer">
-            <button (click)="assignRoles(rolesComponent)" type="button" class="btn btn-primary">Rolleri Ata</button>
+            <button (click)="assignRoles(rolesComponent)" type="button" class="btn btn-primary">Assign Roles</button>
             <button (click)="closeDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>

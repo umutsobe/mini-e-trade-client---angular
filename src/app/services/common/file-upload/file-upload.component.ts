@@ -13,14 +13,14 @@ import { IdExchangeService } from '../../data-exchange/id-exchange.service';
       <ngx-file-drop dropZoneLabel="Drop files here" [accept]="fileFormats" (onFileDrop)="selectedFiles($event)">
         <!-- accept = seçilecek dosya tipini belirtir -->
         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-          <button class="btn btn-primary" type="button" (click)="openFileSelector()">Dosya Seç</button>
+          <button class="btn btn-primary" type="button" (click)="openFileSelector()">Select file</button>
         </ng-template>
       </ngx-file-drop>
       <div class="upload-table" *ngIf="files.length > 0">
         <table class="table">
           <thead>
             <tr>
-              <th>Seçilenler</th>
+              <th>Selected Items</th>
             </tr>
           </thead>
           <tbody class="upload-name-style">
@@ -71,12 +71,12 @@ export class FileUploadComponent {
         .subscribe(
           (data) => {
             //success
-            this.toastr.success('Dosya başarıyla eklenmiştir');
+            this.toastr.success('File has been successfully added.');
             this.spinner.hide();
           },
           (error: HttpErrorResponse) => {
             //error
-            this.toastr.error('Dosyalar yüklenirken hata oluştu');
+            this.toastr.error('An error occurred while uploading files.');
             this.spinner.hide();
           }
         );
@@ -84,11 +84,3 @@ export class FileUploadComponent {
     this.files = [];
   }
 }
-
-// export class FileUploadOptions {
-//   controller?: string;
-//   action?: string;
-//   queryString?: string;
-//   explanation?: string;
-//   fileType?: string;
-// }

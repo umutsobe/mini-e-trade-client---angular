@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { ProductService } from 'src/app/services/models/product.service';
@@ -24,10 +24,10 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
     <div *ngIf="isLoading" style="height: 100vh;"></div>
     <!-- all component -->
     <div *ngIf="!productNotFound && !isLoading">
-      <section *ngIf="product && !isLoading" class="py-0 mt-3">
+      <section *ngIf="product && !isLoading" class="py-0 mt-2 mt-md-5">
         <div class="container-sm">
-          <nav class="mb-3">Elektronik > Telefon > {{ product ? product.name : '' }}</nav>
-          <div class="row mb-5 mb-lg-8">
+          <!-- <nav class="mb-3">Electronics > Cell Phones > {{ product ? product.name : '' }}</nav> -->
+          <div class="row  mb-5 mb-lg-8">
             <div class="col-12 col-lg-6">
               <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-12 col-md-10 col-lg-12">
@@ -43,7 +43,7 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
             </div>
             <div class="product-right col-12 col-lg-6 pt-2">
               <div *ngIf="product.stock <= 0">
-                <div class="alert alert-danger">Üzgünüz, istediğiniz ürün şu anda stoklarımızda bulunmamaktadır. Yakın gelecekte stoklarımıza yeniden girebileceğini kontrol etmek isterseniz bizi takip edin.</div>
+                <div class="alert alert-danger">We're sorry, the product you're looking for is currently out of stock. If you'd like to check if it will be available in the near future, please follow us</div>
               </div>
               <h1 class="fs-2 mb-3">{{ product ? product.name : '' }}</h1>
               <!-- ratings -->
@@ -51,9 +51,9 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
                 <div>
                   <fa-icon style="color: #ffa41c;" *ngFor="let icon of getStarIcons(5)" [icon]="icon"></fa-icon>
                 </div>
-                <a (click)="goToRatings()" type="button" class="ms-3 text-decoration-none user-select-none">Yorumları Gör (67)</a>
+                <a (click)="goToRatings()" type="button" class="ms-3 text-decoration-none user-select-none">View Reviews (67)</a>
               </div>
-              <h1 class="fs-3 mb-4">{{ product ? product.price : '' }} TL</h1>
+              <h1 class="fs-3 mb-4">{{ product ? (product.price | currency : 'USD') : '' }}</h1>
               <div *ngIf="product.stock > 0" class="d-flex align-items-center">
                 <!-- sepet adet -->
                 <div class="col-3 py-2 d-flex align-items-center me-2" style="width: fit-content;">
@@ -61,7 +61,7 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
                   <input [disabled]="product.stock <= 0" readonly min="1" max="100" [(ngModel)]="productQuantity" type="number" class="form-control me-1" style="box-shadow: none; width: 60px; height: 40px;" />
                   <fa-icon (click)="plusQuantity()" class="me-1" style="font-size: 18px;cursor: pointer;" [icon]="faPlus"></fa-icon>
                 </div>
-                <button [disabled]="product.stock <= 0" (click)="addToBasket()" class="btn btn-primary btn-lg">Sepete Ekle</button>
+                <button [disabled]="product.stock <= 0" (click)="addToBasket()" class="btn btn-primary btn-lg">Add to Cart</button>
               </div>
             </div>
           </div>
@@ -74,10 +74,10 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
           <div class="nav d-flex justify-content-center mb-3">
             <!-- nav-link classı varsa mavi oluyor -->
             <div id="descriptionButton" (click)="descriptionButtonClicked()" role="button" class="item nav-link border-bottom border-start rounded-start-2 p-2">
-              <h2 style="font-size: 17px; font-weight: 500;" class="m-0 user-select-none">Ürün Bilgileri</h2>
+              <h2 style="font-size: 17px; font-weight: 500;" class="m-0 user-select-none">Product Information</h2>
             </div>
             <div id="ratingButton" (click)="ratingButtonClicked()" role="button" class="item border-bottom border-start border-end rounded-end-2 p-2">
-              <h2 style="font-size: 17px; font-weight: 500;" class="m-0 user-select-none">Yorumlar</h2>
+              <h2 style="font-size: 17px; font-weight: 500;" class="m-0 user-select-none">Reviews</h2>
             </div>
           </div>
           <!-- description -->

@@ -28,15 +28,15 @@ import { AccountService } from 'src/app/services/models/account.service';
                 <img width="120px" src="/assets/product.jpg" style="border-radius: 10px;" />
                 <div class="ms-2 mt-1">
                   <p class="m-0">{{ orders == null ? '' : orderItem.name }}</p>
-                  <p class="m-0">Sipariş Fiyatı: {{ orders == null ? '' : (orderItem.price | currency : '₺') }}</p>
-                  <p class="m-0">Adet: {{ orders == null ? '' : orderItem.quantity }}</p>
+                  <p class="m-0">Order Price: {{ orders == null ? '' : (orderItem.price | currency : '₺') }}</p>
+                  <p class="m-0">Quantity: {{ orders == null ? '' : orderItem.quantity }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="!(orders == null ? false : orders.length > 0) && !spinnerElement" class="alert alert-info" role="alert">Herhangi bir siparişiniz yok</div>
+        <div *ngIf="!(orders == null ? false : orders.length > 0) && !spinnerElement" class="alert alert-info" role="alert">You don't have any orders.</div>
       </div>
     </div>
   `,
@@ -53,8 +53,6 @@ export class UserOrdersComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    // date daha güzel görünür
-
     const date = new Date(dateString);
     return formatDate(date, 'yyyy-MM-dd', 'en-US');
   }

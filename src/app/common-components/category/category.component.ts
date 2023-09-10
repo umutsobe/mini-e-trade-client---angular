@@ -62,7 +62,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
       </div> -->
       <div [routerLink]="['/search']" [queryParams]="{ page: 0 }" id="allProducts" class="list-group-item p-2 d-flex">
         <!-- <fa-icon role="button" class="fs-5 m-0 me-2" [icon]="faBars"></fa-icon> -->
-        <p class="m-0">Tüm Ürünler</p>
+        <p class="m-0">All Products</p>
       </div>
 
       <div [routerLink]="['/search']" [queryParams]="{ categoryName: category.name }" *ngFor="let category of categories" class="list-group-item p-2">{{ category.name }}</div>
