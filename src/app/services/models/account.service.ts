@@ -7,6 +7,9 @@ import { ListUserOrders } from 'src/app/contracts/account/ListUserOrders';
 import { UpdateUserPassword } from 'src/app/contracts/account/UpdateUserPassword';
 import { ListUserAddresess } from 'src/app/contracts/account/Address/ListUserAddresess';
 import { CreateUserAddress } from 'src/app/contracts/account/Address/CreateUserAddress';
+import { UpdateEmailStep1 } from 'src/app/contracts/account/Email/UpdateEmailStep1';
+import { UpdateEmailStep2 } from 'src/app/contracts/account/Email/UpdateEmailStep2';
+import { TwoFactorResult } from 'src/app/contracts/two-factor-auth/TwoFactorResult';
 
 @Injectable({
   providedIn: 'root',
@@ -21,18 +24,6 @@ export class AccountService {
         action: 'GetUserDetails',
       },
       this.authService.UserId
-    );
-
-    return await firstValueFrom(observable);
-  }
-
-  async updateUserEmail(userId: string, email: string): Promise<any> {
-    const observable: Observable<any> = this.http.post(
-      {
-        controller: 'account',
-        action: 'UpdateUserEmail',
-      },
-      { userId: userId, email: email }
     );
 
     return await firstValueFrom(observable);
@@ -107,5 +98,29 @@ export class AccountService {
     );
 
     return await firstValueFrom(observable);
+  }
+
+  async updateEmailStep1(model: UpdateEmailStep1): Promise<TwoFactorResult> {
+    const observable: Observable<TwoFactorResult | any> = this.http.post(
+      {
+        controller: 'account',
+        action: 'UpdateEmailStep1',
+      },
+      model
+    );
+
+    return (await firstValueFrom(observable)) as TwoFactorResult;
+  }
+
+  async updateEmailStep2(model: UpdateEmailStep2): Promise<TwoFactorResult> {
+    const observable: Observable<TwoFactorResult | any> = this.http.post(
+      {
+        controller: 'account',
+        action: 'UpdateEmailStep2',
+      },
+      model
+    );
+
+    return (await firstValueFrom(observable)) as TwoFactorResult;
   }
 }

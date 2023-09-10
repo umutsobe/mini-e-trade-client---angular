@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { UpdateEmailStep1 } from 'src/app/contracts/account/Email/UpdateEmailStep1';
+import { UpdateEmailStep2 } from 'src/app/contracts/account/Email/UpdateEmailStep2';
 import { ListUserDetails } from 'src/app/contracts/account/ListUserDetails';
+import { TwoFactorResult } from 'src/app/contracts/two-factor-auth/TwoFactorResult';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { AccountService } from 'src/app/services/models/account.service';
 
@@ -29,12 +32,53 @@ import { AccountService } from 'src/app/services/models/account.service';
           <label for="email" class="form-label">E-Mail</label>
 
           <div class="d-flex justify-content-between p-0">
-            <input type="text" class="form-control" id="email" formControlName="email" [value]="userDetails.email" />
-            <button (click)="updateEmail()" [disabled]="!email.valid" class="btn btn-primary ms-2">Save</button>
+            <input readonly type="text" class="form-control" id="email" formControlName="email" [value]="userDetails.email" />
           </div>
+          <button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-primary  mt-2 w-100">Email Change</button>
           <div *ngIf="!email.valid && email.dirty" style="color:chocolate; font-size: 12px;">Email entry must be in the correct format</div>
         </div>
       </form>
+    </div>
+
+    <!-- email change modal -->
+
+    <div class="modal fade modal" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Email Change</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="frmModal">
+              <div class="mb-3">
+                <label for="newEmail" class="form-label">New Email</label>
+                <input type="text" class="form-control" id="newEmail" formControlName="newEmail" autocomplete="off" />
+                <div *ngIf="!newEmail.valid && (newEmail.dirty || newEmail.touched)" style="color:chocolate; font-size: 12px;">Email entry must be in the correct format</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" formControlName="password" autocomplete="new-password" />
+                <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Password filed is required.</div>
+              </div>
+              <button [disabled]="!frmModal.valid" (click)="updateEmailStep1()" class="btn btn-primary">{{ isUpdateMailCodeSend == true ? 'Send code again' : 'Send verification code' }}</button>
+
+              <div *ngIf="isUpdateMailCodeSend" class="mt-3">
+                <div class="mb-3">
+                  <label for="code" class="form-label">Code</label>
+                  <input maxlength="6" type="text" id="code" class="form-control" formControlName="code" autocomplete="off" />
+                </div>
+                <button (click)="updateEmailStep2()" class="btn btn-success">Submit</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn" data-bs-dismiss="modal">Delete</button> -->
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [
@@ -46,14 +90,27 @@ import { AccountService } from 'src/app/services/models/account.service';
   ],
 })
 export class UserDetailsComponent implements OnInit {
-  constructor(private accountService: AccountService, private spinner: NgxSpinnerService, private formBuilder: FormBuilder, private authService: AuthService, private toastr: ToastrService) {}
+  constructor(private accountService: AccountService, private spinner: NgxSpinnerService, private formBuilder: FormBuilder, private authService: AuthService, private toastr: ToastrService) {
+    this.frm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+    });
+
+    this.frmModal = this.formBuilder.group({
+      newEmail: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
+      password: ['', [Validators.required, Validators.maxLength(100)]],
+      code: [''],
+    });
+  }
 
   frm: FormGroup;
+  frmModal: FormGroup;
   userDetails: ListUserDetails = { name: '', email: '' };
+  isUpdateMailCodeSend: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.spinner.show();
-    this.accountService
+    await this.accountService
       .getUserDetails()
       .then((response) => {
         this.spinner.hide();
@@ -64,10 +121,7 @@ export class UserDetailsComponent implements OnInit {
         this.spinner.hide();
       });
 
-    this.frm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-    });
+    this.isUpdateMailCodeSend = localStorage.getItem('isUpdateMailCodeSend') == 'true' ? true : false;
   }
 
   async updateName() {
@@ -82,17 +136,51 @@ export class UserDetailsComponent implements OnInit {
         this.spinner.hide();
       });
   }
-  async updateEmail() {
+
+  async updateEmailStep1() {
     this.spinner.show();
-    await this.accountService
-      .updateUserEmail(this.authService.UserId, this.email.value)
-      .then(() => {
-        this.toastr.success('Email Successfully Changed.', 'Success');
-        this.spinner.hide();
-      })
-      .catch((err) => {
-        this.spinner.hide();
-      });
+    let result: TwoFactorResult = {
+      message: '',
+      succeeded: false,
+    };
+
+    let model: UpdateEmailStep1 = {
+      newEmail: this.newEmail.value,
+      password: this.password.value,
+      userId: this.authService.UserId,
+    };
+
+    result = await this.accountService.updateEmailStep1(model).finally(() => this.spinner.hide());
+
+    if (result.succeeded) {
+      this.toastr.success('Kod başarıyla gönderildi');
+      localStorage.setItem('isUpdateMailCodeSend', 'true');
+      this.isUpdateMailCodeSend = true;
+    } else {
+      this.toastr.error(result.message);
+    }
+  }
+  async updateEmailStep2() {
+    this.spinner.show();
+    let result: TwoFactorResult = {
+      message: '',
+      succeeded: false,
+    };
+
+    let model: UpdateEmailStep2 = {
+      code: this.code.value,
+      userId: this.authService.UserId,
+    };
+
+    result = await this.accountService.updateEmailStep2(model).finally(() => this.spinner.hide());
+
+    if (result.succeeded) {
+      this.toastr.success(result.message);
+      localStorage.removeItem('isUpdateMailCodeSend');
+      this.ngOnInit();
+    } else {
+      this.toastr.error(result.message);
+    }
   }
 
   get email() {
@@ -100,5 +188,15 @@ export class UserDetailsComponent implements OnInit {
   }
   get name() {
     return this.frm.get('name');
+  }
+
+  get newEmail() {
+    return this.frmModal.get('newEmail');
+  }
+  get password() {
+    return this.frmModal.get('password');
+  }
+  get code() {
+    return this.frmModal.get('code');
   }
 }
