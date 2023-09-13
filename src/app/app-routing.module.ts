@@ -9,6 +9,7 @@ import { LoginAfterGuard } from './guards/common/login-after.guard';
 import { AdminPanelGuard } from './guards/admin-panel/admin-panel.guard';
 import { AccountComponent } from './public/components/account/account.component';
 import { UserDetailsComponent } from './public/components/account/user-details/user-details.component';
+import { LoginBeforeGuard } from './guards/common/login-before.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -78,9 +79,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
+  { path: 'checkout', loadChildren: () => import('./public/components/checkout/checkout.module').then((m) => m.CheckoutModule), canActivate: [LoginBeforeGuard] },
+
   { path: 'search', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
 
-  { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule), pathMatch: 'full' },
+  { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule) },
 
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule), canActivate: [LoginAfterGuard] },
 
@@ -98,11 +101,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      preloadingStrategy: NoPreloading,
-    }),
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

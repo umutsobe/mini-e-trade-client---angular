@@ -96,12 +96,12 @@ export class UserListComponent implements OnInit {
   constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private userService: UserService, private roleService: RoleService) {}
 
   allUsers: { totalUsersCount: number; users: List_User[] };
-  currentPageNo: number = 0;
+  currentPageNo = 0;
   totalUserCount: number;
   totalPageCount: number;
-  pageSize: number = 8;
+  pageSize = 8;
 
-  spinnerElement: boolean = true;
+  spinnerElement = true;
 
   async getUsers() {
     this.spinner.show();

@@ -59,8 +59,8 @@ import { ProductService } from 'src/app/services/models/product.service';
 
         <!-- filtre colonu lg sonrası için-->
         <div class="d-none d-lg-block d-flex justify-content-center">
-          <div class="m-0 px-3 pb-3 mb-3 mb-lg-0" style="width: 230px; height: 500px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
-            <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
+          <div class="px-3 pb-3 mb-3 mb-lg-0" style="width: 230px; height: 500px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
+            <h1 class="text-center pt-2 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
 
             <select class="form-select" (change)="categorySelected($event)">
               <option selected>Category</option>
@@ -104,8 +104,13 @@ import { ProductService } from 'src/app/services/models/product.service';
 
                 <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
-                <div class="card-body m-0">
-                  <p (click)="routeToProductDetail(product.url)" type="button" class="product-name mt-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
+                <div class="card-body m-0 p-2">
+                  <p (click)="routeToProductDetail(product.url)" type="button" class="product-name m-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
+                  <div style="height: 24px;" class="mt-1">
+                    <div *ngIf="product.totalRatingNumber > 0" class="m-0 p-0 d-flex align-content-center">
+                      <p-rating class="m-0 p-0" [(ngModel)]="product.averageStar" [readonly]="true" [cancel]="false" style="pointer-events: none; position: relative;"></p-rating> <span class="ms-1 ">{{ product.totalRatingNumber }}</span>
+                    </div>
+                  </div>
                   <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
                   <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Add to cart</button>
                 </div>
@@ -161,6 +166,7 @@ import { ProductService } from 'src/app/services/models/product.service';
         margin: 0;
       }
       .product-name {
+        font-weight: 500 !important;
         -webkit-line-clamp: 2;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -180,12 +186,24 @@ import { ProductService } from 'src/app/services/models/product.service';
           flex: none;
         }
         .product-name {
-          font-size: 13px !important;
+          font-size: 15px !important;
+          font-weight: 500 !important;
           -webkit-line-clamp: 2;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+      }
+      ::ng-deep .p-rating-icon:not(.p-rating-cancel) {
+        color: #ffa41c !important;
+      }
+      /* starlar arası margin */
+      ::ng-deep .p-rating {
+        gap: 2px;
+      }
+      /* star size */
+      ::ng-deep .p-icon-wrapper {
+        width: 14px !important;
       }
     `,
   ],
@@ -199,13 +217,13 @@ export class ProductListComponent {
   currentPageNo: number;
   totalProductCount: number;
   totalPageCount: number;
-  pageSize: number = 12; // GetProductsByFilterDTO'daki ile aynı olmalı
+  pageSize = 12; // GetProductsByFilterDTO'daki ile aynı olmalı
   pageList: number[] = [];
   baseUrl: BaseUrl;
   productFilter: ProductFilter;
-  spinnerBootstrap: boolean = true;
+  spinnerBootstrap = true;
 
-  defaultImage: string = '/assets/preload.png';
+  defaultImage = '/assets/preload.png';
 
   async ngOnInit() {
     this.scrollToTop();
@@ -237,6 +255,8 @@ export class ProductListComponent {
           url: p.url,
           stock: p.stock,
           updatedDate: p.updatedDate,
+          averageStar: p.averageStar,
+          totalRatingNumber: p.totalRatingNumber,
         };
 
         return listProduct;
@@ -329,7 +349,7 @@ export class ProductListComponent {
 
   async addToBasket(product: List_Product) {
     if (this.authService.isAuthenticated) {
-      let _basketItem: Create_Basket_Item = new Create_Basket_Item();
+      const _basketItem: Create_Basket_Item = new Create_Basket_Item();
       _basketItem.productId = product.id;
       _basketItem.quantity = 1;
       _basketItem.basketId = this.basketService.getBasketId();

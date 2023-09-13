@@ -105,7 +105,7 @@ export class UserService {
     await firstValueFrom(observable);
   }
 
-  async getAllUsers(page: number = 0, size: number = 5): Promise<{ totalUsersCount: number; users: List_User[] }> {
+  async getAllUsers(page = 0, size = 5): Promise<{ totalUsersCount: number; users: List_User[] }> {
     const observable: Observable<{ totalUsersCount: number; users: List_User[] }> = this.http.get({
       controller: 'users',
       queryString: `page=${page}&size=${size}`,

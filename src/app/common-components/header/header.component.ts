@@ -7,7 +7,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { AccountService } from 'src/app/services/models/account.service';
 
-declare var $: any;
+declare let $: any;
 
 @Component({
   selector: 'app-header',
@@ -26,12 +26,12 @@ declare var $: any;
             <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>
         </div>
-        <div *ngIf="!authService.isAuthenticated" class="d-none d-lg-block mx-auto">
+        <!-- <div *ngIf="!authService.isAuthenticated" class="d-none d-lg-block mx-auto">
           <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-right: 12vw;">
             <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
             <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>
-        </div>
+        </div> -->
 
         <div class="d-flex">
           <!-- <a routerLink="register" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Register</button></a> -->
@@ -42,8 +42,8 @@ declare var $: any;
           <div class="item btn dropdown-toggle text-white py-2" style="background-color: #322653;" data-bs-toggle="dropdown">Account</div>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-            <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
-            <li><hr class="dropdown-divider" /></li>
+            <!-- <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
+            <li><hr class="dropdown-divider" /></li> -->
 
             <li routerLink="account" role="button" class="dropdown-item">Account Details</li>
 
@@ -61,7 +61,7 @@ declare var $: any;
         <div *ngIf="authService.isAuthenticated" routerLink="basket" class="d-none d-sm-block">
           <div role="button" class="m-0 p-0 p-1 btn btn-warning d-flex justify-content-center align-items-center" style="height: 40px; width: 98px; background-color: #fbc524;">
             <fa-icon class="m-0 p-0 fs-5 me-1" [icon]="faShoppingCart"></fa-icon>
-            <a class="m-0 p-0 nav-link text-dark me-1">Basket</a>
+            <a class="m-0 p-0 nav-link text-dark me-1">Cart</a>
           </div>
         </div>
       </div>
@@ -83,22 +83,16 @@ export class HeaderComponent implements OnInit {
   faShoppingCart = faShoppingCart;
   faCircleHalfStroke = faCircleHalfStroke;
   faMagnifyingGlass = faMagnifyingGlass;
-  toggleThemeString: string = 'Theme';
-  name: string = '';
+  toggleThemeString = 'Theme';
 
   frm: FormGroup;
   constructor(public authService: AuthService, private router: Router, private accountService: AccountService, private formBuilder: FormBuilder) {}
-  ngOnInit(): void {
+  async ngOnInit() {
     this.authService.identityCheck();
 
     this.frm = this.formBuilder.group({
       keyword: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     });
-
-    if (_isAuthenticated)
-      this.accountService.getUserDetails().then((response) => {
-        this.name = response.name;
-      });
 
     if (!localStorage.getItem('theme')) {
       localStorage.setItem('theme', 'light');
@@ -113,7 +107,7 @@ export class HeaderComponent implements OnInit {
   }
 
   search() {
-    let searchValue: string = this.keyword.value;
+    const searchValue: string = this.keyword.value;
     const resultString: string = searchValue.replace('?', '');
 
     this.router.navigate(['/search'], { queryParams: { keyword: resultString } });

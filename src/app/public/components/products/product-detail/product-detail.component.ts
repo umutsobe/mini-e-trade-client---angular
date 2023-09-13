@@ -45,13 +45,17 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
               <div *ngIf="product.stock <= 0">
                 <div class="alert alert-danger">We're sorry, the product you're looking for is currently out of stock. If you'd like to check if it will be available in the near future, please follow us</div>
               </div>
-              <h1 class="fs-2 mb-3">{{ product ? product.name : '' }}</h1>
+              <div class="product-name d-flex">
+                <h1 class="fs-2 mb-3">{{ product ? product.name : '' }}</h1>
+              </div>
               <!-- ratings -->
               <div class="mb-5 d-flex align-items-center">
-                <div>
-                  <fa-icon style="color: #ffa41c;" *ngFor="let icon of getStarIcons(5)" [icon]="icon"></fa-icon>
+                <div *ngIf="product.totalRatingNumber > 0" class="d-flex">
+                  <!-- <fa-icon style="color: #ffa41c;" *ngFor="let icon of getStarIcons(5)" [icon]="icon"></fa-icon> -->
+                  <p-rating [(ngModel)]="product.averageStar" [readonly]="true" [cancel]="false" style="pointer-events: none; position: relative;"></p-rating>
+                  <span *ngIf="product.totalRatingNumber > 0" class="ms-1">{{ product.averageStar + '/5' }}</span>
+                  <a *ngIf="product.totalRatingNumber > 0" (click)="goToRatings()" type="button" class="ms-3 text-decoration-none user-select-none">View Reviews ({{ product.totalRatingNumber }})</a>
                 </div>
-                <a (click)="goToRatings()" type="button" class="ms-3 text-decoration-none user-select-none">View Reviews (67)</a>
               </div>
               <h1 class="fs-3 mb-4">{{ product ? (product.price | currency : 'USD') : '' }}</h1>
               <div *ngIf="product.stock > 0" class="d-flex align-items-center">
@@ -104,9 +108,9 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
   styles: [
     `
       @media only screen and (max-width: 450px) {
-        .showcaseImage {
+        /* .showcaseImage {
           height: 30vh !important;
-        }
+        } */
         .imageSlider {
           width: 200px !important;
         }
@@ -121,6 +125,20 @@ import { ExceptionMessageService } from 'src/app/exceptions/exception-message.se
         background-color: #016a70;
         color: white;
       }
+      ::ng-deep .p-rating-icon:not(.p-rating-cancel) {
+        color: #ffa41c !important;
+      }
+      /* starlar arası margin */
+      ::ng-deep .p-rating {
+        gap: 2px;
+      }
+      .product-name {
+        font-weight: 500 !important;
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     `,
   ],
 })
@@ -129,16 +147,16 @@ export class ProductDetailComponent implements OnInit {
   faPlus = faPlus;
   faMinus = faMinus;
   faStar = faStar;
-  urlId: string = '';
-  isLoading: boolean = true;
-  productQuantity: number = 1;
+  urlId = '';
+  isLoading = true;
+  productQuantity = 1;
   productNotFound: boolean;
   photoLinks: string[] = [];
   showCaseImagePath: string;
-  defaultImage: string = '/assets/preload.png';
+  defaultImage = '/assets/preload.png';
   baseUrl: string;
   imageObject: Array<PhotoSliderObject> = [];
-  ratingComponentLoaded: boolean = false;
+  ratingComponentLoaded = false;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService, private exceptionMessageService: ExceptionMessageService) {
     this.urlId = router.url.split('/')[2];
@@ -154,10 +172,12 @@ export class ProductDetailComponent implements OnInit {
     url: '',
     updatedDate: undefined,
     productImageFiles: [],
+    averageStar: 0,
+    totalRatingNumber: 0,
   };
 
   async ngOnInit() {
-    window.scrollTo(0, 0);
+    if (typeof window !== null) window.scrollTo(0, 0);
 
     this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
     this.isLoading = true;
@@ -167,10 +187,10 @@ export class ProductDetailComponent implements OnInit {
       if (fetchedProduct) {
         this.product = fetchedProduct;
 
-        for (let item of this.product.productImageFiles) {
+        for (const item of this.product.productImageFiles) {
           if (item.showcase == true) this.showCaseImagePath = `${this.baseUrl}/${item.path}`;
 
-          let photoSliderObject: PhotoSliderObject = {
+          const photoSliderObject: PhotoSliderObject = {
             image: `${this.baseUrl}/${item.path}`,
             thumbImage: `${this.baseUrl}/${item.path}`,
             showcase: item.showcase,
@@ -210,19 +230,19 @@ export class ProductDetailComponent implements OnInit {
   minusQuantity() {
     if (this.productQuantity != 1) this.productQuantity--;
   }
-  getStarIcons(starCount: number): any[] {
-    const filledStar = faStar;
+  // getStarIcons(starCount: number): any[] {
+  //   const filledStar = faStar;
 
-    const icons = [];
-    for (let i = 0; i < starCount; i++) {
-      if (i < starCount) icons.push(filledStar);
-    }
+  //   const icons = [];
+  //   for (let i = 0; i < starCount; i++) {
+  //     if (i < starCount) icons.push(filledStar);
+  //   }
 
-    return icons;
-  }
+  //   return icons;
+  // }
   addToBasket() {
     if (this.authService.isAuthenticated) {
-      let basketItem: Create_Basket_Item = new Create_Basket_Item();
+      const basketItem: Create_Basket_Item = new Create_Basket_Item();
       basketItem.basketId = this.basketService.getBasketId();
       basketItem.productId = this.product.id;
       basketItem.quantity = this.productQuantity;

@@ -21,7 +21,7 @@ export class OrderService {
 
     await firstValueFrom(observable);
   }
-  async read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalOrderCount: number; orders: List_Order[] }> {
+  async read(page = 0, size = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalOrderCount: number; orders: List_Order[] }> {
     const observable: Observable<{ totalOrderCount: number; orders: List_Order[] }> = this.httpCLientService.get({
       controller: 'order',
       queryString: `page=${page}&size=${size}`,

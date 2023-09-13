@@ -72,10 +72,10 @@ export class ListCategoryComponent {
   constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private categoryService: CategoryService) {}
 
   allCategories: { totalCategoryCount: number; categories: List_Category[] };
-  currentPageNo: number = 0;
+  currentPageNo = 0;
   totalCategoryCount: number;
   totalPageCount: number;
-  pageSize: number = 8;
+  pageSize = 8;
 
   async getCategories() {
     this.spinner.show();

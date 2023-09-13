@@ -52,9 +52,9 @@ export class EmailConfirmComponent implements OnInit {
   constructor(private twoFactorAuthService: TwoFactorAuthService, private accountService: AccountService, private router: Router, private toastr: ToastrService, private spinner: NgxSpinnerService) {
     this.userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '';
   }
-  isCodeSend: boolean = false;
-  userId: string = '';
-  code: string = '';
+  isCodeSend = false;
+  userId = '';
+  code = '';
   result: TwoFactorResult = {
     message: '',
     succeeded: false,

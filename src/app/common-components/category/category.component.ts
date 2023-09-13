@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { CategoryService } from 'src/app/services/models/category.service';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-category',
@@ -71,14 +72,16 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['category.component.css'],
 })
 export class CategoryComponent implements OnInit {
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, @Inject(PLATFORM_ID) private platformId: object) {}
 
   faBars = faBars;
   categories: List_Category[] = [];
 
   ngOnInit(): void {
-    this.categoryService.getCategories(0, 3).then((response) => {
-      this.categories = response.categories;
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.categoryService.getCategories(0, 3).then((response) => {
+        this.categories = response.categories;
+      });
+    }
   }
 }

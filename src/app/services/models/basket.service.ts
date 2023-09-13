@@ -20,15 +20,24 @@ export class BasketService {
     return basketId;
   }
 
-  get(): Observable<List_Basket_Item[]> {
-    let BasketId = this.getBasketId();
+  async get(): Promise<List_Basket_Item[]> {
+    const BasketId = this.getBasketId();
 
-    return this.httpClientService.get<List_Basket_Item[]>(
+    const observable: Observable<List_Basket_Item[]> = this.httpClientService.get(
       {
         controller: 'baskets',
       },
       BasketId
     );
+
+    return await firstValueFrom(observable);
+
+    // return this.httpClientService.get<List_Basket_Item[]>(
+    //   {
+    //     controller: 'baskets',
+    //   },
+    //   BasketId
+    // );
   }
 
   async add(basketItem: Create_Basket_Item): Promise<void> {

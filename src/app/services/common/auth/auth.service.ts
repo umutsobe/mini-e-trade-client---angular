@@ -6,7 +6,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
   constructor(private jwtHelper: JwtHelperService) {}
-  isExpired: boolean = false;
+  isExpired = false;
 
   get Token(): string {
     if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
@@ -27,13 +27,14 @@ export class AuthService {
     return '';
   }
 
-  identityCheck() {
-    const token = localStorage.getItem('accessToken'); //token aldık
+  async identityCheck() {
+    let token;
+    if (typeof localStorage !== 'undefined') token = localStorage.getItem('accessToken'); //token aldık
 
     let isExpired: boolean;
 
     try {
-      isExpired = this.jwtHelper.isTokenExpired(token); //süresi geçmiş mi onu öğrendik
+      isExpired = await this.jwtHelper.isTokenExpired(token); //süresi geçmiş mi onu öğrendik
     } catch {
       isExpired = true;
     }

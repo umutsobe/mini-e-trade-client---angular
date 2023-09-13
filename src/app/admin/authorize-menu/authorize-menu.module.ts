@@ -5,10 +5,9 @@ import { RouterModule } from '@angular/router';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 @NgModule({
   declarations: [AuthorizeMenuComponent],
-  imports: [CommonModule, RouterModule.forChild([{ path: '', component: AuthorizeMenuComponent }]), MatTreeModule, MatIconModule, NgxSpinnerModule, MatButtonModule, MatListModule],
+  imports: [CommonModule, RouterModule.forChild([{ path: '', component: AuthorizeMenuComponent }]), MatTreeModule, MatIconModule, NgxSpinnerModule, MatListModule],
 })
 export class AuthorizeMenuModule {}

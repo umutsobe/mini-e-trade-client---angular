@@ -45,7 +45,7 @@ export class UserOrdersComponent implements OnInit {
   constructor(private accountService: AccountService, private authService: AuthService) {}
   orders: ListUserOrders[];
 
-  spinnerElement: boolean = true;
+  spinnerElement = true;
 
   async ngOnInit() {
     this.orders = await this.accountService.listUserOrders(this.authService.UserId);

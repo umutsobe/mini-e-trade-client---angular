@@ -65,6 +65,7 @@ import { AccountService } from 'src/app/services/models/account.service';
               <button [disabled]="!frmModal.valid" (click)="updateEmailStep1()" class="btn btn-primary">{{ isUpdateMailCodeSend == true ? 'Send code again' : 'Send verification code' }}</button>
 
               <div *ngIf="isUpdateMailCodeSend" class="mt-3">
+                <div class="mb-3">Email adresinize doğrulama kodu gönderildi. Eğer maili <span style="color: red;">göremiyorsanız</span> spam klasörüne bakın.</div>
                 <div class="mb-3">
                   <label for="code" class="form-label">Code</label>
                   <input maxlength="6" type="text" id="code" class="form-control" formControlName="code" autocomplete="off" />
@@ -106,7 +107,7 @@ export class UserDetailsComponent implements OnInit {
   frm: FormGroup;
   frmModal: FormGroup;
   userDetails: ListUserDetails = { name: '', email: '' };
-  isUpdateMailCodeSend: boolean = false;
+  isUpdateMailCodeSend = false;
 
   async ngOnInit() {
     this.spinner.show();
@@ -144,7 +145,7 @@ export class UserDetailsComponent implements OnInit {
       succeeded: false,
     };
 
-    let model: UpdateEmailStep1 = {
+    const model: UpdateEmailStep1 = {
       newEmail: this.newEmail.value,
       password: this.password.value,
       userId: this.authService.UserId,
@@ -167,7 +168,7 @@ export class UserDetailsComponent implements OnInit {
       succeeded: false,
     };
 
-    let model: UpdateEmailStep2 = {
+    const model: UpdateEmailStep2 = {
       code: this.code.value,
       userId: this.authService.UserId,
     };

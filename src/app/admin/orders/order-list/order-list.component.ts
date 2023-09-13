@@ -116,10 +116,10 @@ export class OrderListComponent {
   constructor(private orderService: OrderService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
 
   allOrders: { totalOrderCount: number; orders: List_Order[] };
-  currentPageNo: number = 0;
+  currentPageNo = 0;
   totalOrderCount: number;
   totalPageCount: number;
-  pageSize: number = 8;
+  pageSize = 8;
 
   async getOrders() {
     this.spinner.show();

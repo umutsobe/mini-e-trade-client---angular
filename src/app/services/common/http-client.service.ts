@@ -16,7 +16,7 @@ export class HttpClientService {
   }
 
   get<T>(requestParameter: Partial<RequestParameters>, id?: string): Observable<T> {
-    let url: string = '';
+    let url = '';
     if (requestParameter.fullEndPoint) {
       url = requestParameter.fullEndPoint;
     } else {
@@ -25,7 +25,7 @@ export class HttpClientService {
     return this.http.get<T>(url);
   }
   post<T>(requestParameter: Partial<RequestParameters>, body: Partial<T>): Observable<T> {
-    let url: string = '';
+    let url = '';
     if (requestParameter.fullEndPoint) {
       url = requestParameter.fullEndPoint;
     } else {

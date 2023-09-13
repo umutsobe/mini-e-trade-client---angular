@@ -9,6 +9,5 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 @NgModule({
   declarations: [CreateComponent],
   imports: [CommonModule, RouterModule.forChild([{ path: '', component: CreateComponent }]), ReactiveFormsModule, MatListModule, AngularEditorModule],
-  exports: [CreateComponent],
 })
 export class CreateModule {}

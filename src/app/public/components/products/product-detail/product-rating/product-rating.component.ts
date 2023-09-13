@@ -22,7 +22,7 @@ import { Subject, debounceTime } from 'rxjs';
     </div>
 
     <div class="pb-3 border-bottom">
-      <h1>{{ product.name }} Reviews</h1>
+      <h1 class="product-name"><span class="fs-5">Reviews of </span>{{ product.name }}</h1>
       <button (click)="openRatingModel()" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">Write a customer review</button>
     </div>
 
@@ -88,11 +88,11 @@ import { Subject, debounceTime } from 'rxjs';
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div *ngIf="ratingStatus" class="modal-body">
-            <div *ngIf="ratingStatus.state == 'NotBuyed'" class="alert alert-warning" role="alert">You must have purchased the product to leave a review.</div>
-            <div *ngIf="ratingStatus.state == 'noLogin'" class="alert alert-warning" role="alert">Yorum yapmak için giriş yapmalısınız</div>
-            <div *ngIf="ratingStatus.state == 'BuyedAndHasRating'" class="alert alert-warning" role="alert">Ürüne daha önce yorum yaptınız. Yorumlarınıza Hesabım bölümünden erişebilirsiniz</div>
+            <div *ngIf="ratingStatus.state === 'NotBuyed'" class="alert alert-warning" role="alert">You must have purchased the product to leave a review.</div>
+            <div *ngIf="ratingStatus.state === 'noLogin'" class="alert alert-warning" role="alert">Yorum yapmak için giriş yapmalısınız</div>
+            <div *ngIf="ratingStatus.state === 'BuyedAndHasRating'" class="alert alert-warning" role="alert">Ürüne daha önce yorum yaptınız. Yorumlarınıza Hesabım bölümünden erişebilirsiniz</div>
 
-            <div *ngIf="ratingStatus.state == 'BuyedAndNotRating'">
+            <div *ngIf="ratingStatus.state === 'BuyedAndNotRating'">
               <form [formGroup]="frm" class="">
                 <!-- star -->
 
@@ -111,7 +111,7 @@ import { Subject, debounceTime } from 'rxjs';
             </div>
           </div>
           <div class="modal-footer">
-            <button *ngIf="ratingStatus.state == 'BuyedAndNotRating'" (click)="rateProduct()" type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="!frm.valid">Yorum Yap</button>
+            <button *ngIf="ratingStatus.state === 'BuyedAndNotRating'" (click)="rateProduct()" type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="!frm.valid">Yorum Yap</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -127,6 +127,13 @@ import { Subject, debounceTime } from 'rxjs';
       *:focus {
         box-shadow: none !important;
       }
+      .product-name {
+        font-weight: 500 !important;
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     `,
   ],
 })
@@ -134,9 +141,9 @@ export class ProductRatingComponent implements OnInit {
   frm: FormGroup;
   urlId: string;
   faUser = faUser;
-  bootstrapSpinner: boolean = true;
+  bootstrapSpinner = true;
   private inputChangeSubject = new Subject<string>();
-  searchInputDelayTime: number = 300;
+  searchInputDelayTime = 300;
 
   constructor(private ratingService: ProuductRatingService, private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private formBuilder: FormBuilder, private spinner: NgxSpinnerService, private toastr: ToastrService) {
     activatedRoute.params.subscribe((params) => {
@@ -163,6 +170,8 @@ export class ProductRatingComponent implements OnInit {
     url: '',
     updatedDate: undefined,
     productImageFiles: [],
+    averageStar: 0,
+    totalRatingNumber: 0,
   };
   productRatings: ListProductRatings = {
     totalProductRatingCount: 0,
@@ -229,7 +238,7 @@ export class ProductRatingComponent implements OnInit {
   }
 
   queryStringBuilder(): string {
-    let queryString: string = `size=${this.productRatingsFilter.size}`;
+    let queryString = `size=${this.productRatingsFilter.size}`;
 
     if (this.productRatingsFilter.page) queryString += `&page=${this.productRatingsFilter.page}`;
 

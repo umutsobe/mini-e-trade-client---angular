@@ -143,7 +143,7 @@ export class CreateComponent {
   onSubmit() {
     // this.spinner.show();
 
-    let product: CreateProduct = {
+    const product: CreateProduct = {
       name: this.name.value,
       price: parseInt(this.price.value),
       stock: parseFloat(this.stock.value),

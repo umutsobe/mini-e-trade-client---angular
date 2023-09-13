@@ -14,7 +14,7 @@ import { ProductFilter } from 'src/app/contracts/product/filter_product';
 import { Subject, debounceTime } from 'rxjs';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 
-declare var $: any;
+declare let $: any;
 @Component({
   selector: 'app-list',
   template: `
@@ -236,15 +236,15 @@ export class ListComponent implements OnInit {
   };
   totalProductCount: number;
   totalPageCount: number;
-  pageSize: number = 8; //backenddekiyle aynı olmalı
+  pageSize = 8; //backenddekiyle aynı olmalı
   productFilter: ProductFilter = {
     page: 0,
     keyword: '',
   };
   faMagnifyingGlass = faMagnifyingGlass;
   private inputChangeSubject = new Subject<string>();
-  searchInputDelayTime: number = 300;
-  isLoading: boolean = true;
+  searchInputDelayTime = 300;
+  isLoading = true;
 
   async getProducts() {
     this.spinner.show();
@@ -372,9 +372,9 @@ export class ListComponent implements OnInit {
   }
 
   categorySelected(event) {
-    if (event.target.value != 'Kategori') {
+    if (event.target.value != 'Category') {
       this.productFilter.categoryName = event.target.value;
-    } else if (event.target.value == 'Kategori') this.productFilter.categoryName = undefined;
+    } else if (event.target.value == 'Category') this.productFilter.categoryName = undefined;
 
     this.getProducts();
   }
@@ -405,7 +405,7 @@ export class ListComponent implements OnInit {
   }
 
   queryStringBuilder(): string {
-    let queryString: string = 'size=8';
+    let queryString = 'size=8';
 
     if (this.productFilter.categoryName) queryString += `&categoryName=${this.productFilter.categoryName}`;
 

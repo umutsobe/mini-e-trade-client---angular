@@ -15,4 +15,7 @@ export class List_Product_Admin {
   description: string;
   totalBasketAdded: number;
   totalOrderNumber: number;
+
+  averageStar: number;
+  totalRatingNumber: number;
 }

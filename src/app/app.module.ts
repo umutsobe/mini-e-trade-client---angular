@@ -1,31 +1,26 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HeaderComponent } from './common-components/header/header.component';
-import { FooterComponent } from './common-components/footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PublicModule } from './public/public.module';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './public/components/auth/login/login.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
-import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
 import { environment } from 'src/environments/environment';
-import { CategoryComponent } from './common-components/category/category.component';
-import { FooterModule } from './common-components/footer/footer.module';
+import { CommonComponentsModule } from './common-components/common-components.module';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, LoginComponent, RegisterComponent, CategoryComponent],
+  declarations: [AppComponent, LoginComponent, RegisterComponent],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',
@@ -46,13 +41,13 @@ import { FooterModule } from './common-components/footer/footer.module';
   ],
   bootstrap: [AppComponent],
   imports: [
-    BrowserModule,
+    // BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     AdminModule,
     PublicModule,
+    CommonComponentsModule,
     BrowserAnimationsModule,
     NgbModule,
-    FooterModule,
     FontAwesomeModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule,

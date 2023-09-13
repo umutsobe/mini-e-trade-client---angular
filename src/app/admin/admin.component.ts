@@ -14,10 +14,10 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
           <h1 routerLink="/admin" role="button" class="text-center cursor-pointer w-100">Admin Panel</h1>
           <div class="p-3" style="height: 500px ;border-radius: 10px;">
             <div routerLink="/admin" role="button" class="item cursor-pointer">Dashboard</div>
-            <div routerLink="list-product" role="button" class="item cursor-pointer">Products</div>
-            <div routerLink="create-product" role="button" class="item cursor-pointer">Create Product</div>
-            <div routerLink="categories" role="button" class="item cursor-pointer">Categories</div>
-            <div routerLink="orders" role="button" class="item cursor-pointer">Orders</div>
+            <div routerLink="/admin/list-product" role="button" class="item cursor-pointer">Products</div>
+            <div routerLink="/admin/create-product" role="button" class="item cursor-pointer">Create Product</div>
+            <div routerLink="/admin/categories" role="button" class="item cursor-pointer">Categories</div>
+            <div routerLink="/admin/orders" role="button" class="item cursor-pointer">Orders</div>
             <div *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
             <div *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="item cursor-pointer">Roles</div>
             <div *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="item cursor-pointer">Users</div>

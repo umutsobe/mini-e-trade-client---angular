@@ -63,10 +63,10 @@ export class RoleListComponent {
   constructor(private roleService: RoleService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService) {}
 
   allRoles: { totalCount: number; datas: List_Role[] };
-  currentPageNo: number = 0;
+  currentPageNo = 0;
   totalRoleCount: number;
   totalPageCount: number;
-  pageSize: number = 8;
+  pageSize = 8;
 
   async getRoles() {
     this.spinner.show();

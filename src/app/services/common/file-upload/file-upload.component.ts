@@ -42,7 +42,7 @@ export class FileUploadComponent {
 
   // @Input() options: Partial<FileUploadOptions>; //böyle daha modülerdi ama ben amele versiyonu yapacağım
 
-  fileFormats: string = '.png, .jpg, .jpeg';
+  fileFormats = '.png, .jpg, .jpeg';
 
   public selectedFiles(files: NgxFileDropEntry[]) {
     this.files = files;

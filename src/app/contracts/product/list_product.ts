@@ -7,4 +7,6 @@ export class List_Product {
   url: string;
   updatedDate: Date;
   productImageShowCasePath?: string;
+  averageStar: number;
+  totalRatingNumber: number;
 }

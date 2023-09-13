@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/models/user.service';
 import { Create_Order_Item } from 'src/app/contracts/order/create_order_item';
 import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
 
-declare var $: any;
+declare let $: any;
 
 @Component({
   selector: 'app-basket',
@@ -63,7 +63,7 @@ declare var $: any;
 
       <div *ngIf="!(products == null ? false : products.length > 0) && !spinnerElement" class="mt-4 d-flex flex-column align-items-center">
         <div class="alert alert-info col-8">Your card is empty.</div>
-        <button routerLink="/search" class="btn btn-success mt-2">"Continue shopping</button>
+        <button routerLink="/search" class="btn btn-success mt-2">Continue shopping</button>
       </div>
     </div>
   `,
@@ -86,17 +86,13 @@ export class BasketComponent implements OnInit {
   faMinus = faMinus;
   faTrash = faTrash;
   products: List_Basket_Item[] = [];
-  spinnerElement: boolean = true;
+  spinnerElement = true;
 
   constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, private exceptionMessageService: ExceptionMessageService) {}
-  ngOnInit() {
-    this.basketService.get().subscribe(
-      (response) => {
-        this.products = response;
-        this.spinnerElement = false;
-      },
-      () => {}
-    );
+  async ngOnInit() {
+    this.products = await this.basketService.get().finally(() => {
+      this.spinnerElement = false;
+    });
   }
   async minusQuantity(product: List_Basket_Item) {
     this.spinner.show();
@@ -105,7 +101,7 @@ export class BasketComponent implements OnInit {
       await this.removeBasketItem(product.basketItemId);
       return;
     } else {
-      let _product: List_Basket_Item = new List_Basket_Item();
+      const _product: List_Basket_Item = new List_Basket_Item();
       _product.name = product.name;
       _product.basketItemId = product.basketItemId;
       _product.price = product.price;
@@ -113,11 +109,8 @@ export class BasketComponent implements OnInit {
 
       await this.basketService
         .updateQuantity(_product)
-        .then(() => {
-          this.basketService.get().subscribe((response) => {
-            this.totalPriceCalculate();
-            this.products = response;
-          });
+        .then(async () => {
+          this.products = await this.basketService.get();
         })
         .finally(() => {
           this.spinner.hide();
@@ -127,7 +120,7 @@ export class BasketComponent implements OnInit {
 
   plusQuantity(product: List_Basket_Item) {
     this.spinner.show();
-    let _product: List_Basket_Item = new List_Basket_Item();
+    const _product: List_Basket_Item = new List_Basket_Item();
 
     _product.name = product.name;
     _product.basketItemId = product.basketItemId;
@@ -136,10 +129,8 @@ export class BasketComponent implements OnInit {
 
     this.basketService
       .updateQuantity(_product)
-      .then(() => {
-        this.basketService.get().subscribe((response) => {
-          this.products = response;
-        });
+      .then(async () => {
+        this.products = await this.basketService.get();
       })
       .catch((err) => {
         const message = this.exceptionMessageService.basketItemUpdateQuantity(err.error);
@@ -153,10 +144,8 @@ export class BasketComponent implements OnInit {
     this.spinner.show();
     await this.basketService
       .remove(basketItemId)
-      .then(() => {
-        this.basketService.get().subscribe((response) => {
-          this.products = response;
-        });
+      .then(async () => {
+        this.products = await this.basketService.get();
       })
       .finally(() => {
         this.spinner.hide();
@@ -164,7 +153,7 @@ export class BasketComponent implements OnInit {
   }
 
   totalPriceCalculate() {
-    let totalPrice: number = 0;
+    let totalPrice = 0;
     for (let i = 0; i < this.products.length; i++) {
       totalPrice = totalPrice + this.products[i].price * this.products[i].quantity;
     }
@@ -173,7 +162,7 @@ export class BasketComponent implements OnInit {
 
   async completeShopping() {
     this.spinner.show();
-    let order: Create_Order = new Create_Order();
+    const order: Create_Order = new Create_Order();
 
     order.address = 'ankara kızılay';
     order.description = '....';
@@ -182,17 +171,9 @@ export class BasketComponent implements OnInit {
 
     await this.orderService
       .create(order)
-      .then(() => {
-        this.basketService.get().subscribe(
-          //wdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa order verme sayfası yaptığında burayı sil
-          (response) => {
-            this.products = response;
-            this.spinner.hide();
-          },
-          () => {
-            this.spinner.hide();
-          }
-        );
+      .then(async () => {
+        this.products = await this.basketService.get();
+
         this.spinner.hide();
         this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
       })

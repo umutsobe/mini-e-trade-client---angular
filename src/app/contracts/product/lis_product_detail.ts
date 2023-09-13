@@ -9,5 +9,7 @@ export class List_Product_Detail {
   createdDate: Date;
   url: string;
   updatedDate: Date;
+  averageStar: number;
+  totalRatingNumber: number;
   productImageFiles?: List_Product_Image[]; //null gelebilir
 }

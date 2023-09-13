@@ -13,6 +13,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [AdminComponent],
-  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), AuthorizeMenuModule, RoleModule, UsersModule, CategoriesModule, FontAwesomeModule],
+  imports: [CommonModule, RouterModule, ProductsModule, DashboardModule, OrdersModule, AuthorizeMenuModule, RoleModule, UsersModule, CategoriesModule, RouterModule.forChild([{ path: '', component: AdminComponent }]), FontAwesomeModule],
 })
 export class AdminModule {}
