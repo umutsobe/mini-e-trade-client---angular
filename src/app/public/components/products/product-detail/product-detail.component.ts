@@ -15,7 +15,7 @@ import { NgImageSliderComponent } from 'ng-image-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
-import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
+import { Error_DTO } from 'src/app/contracts/error_dto';
 
 @Component({
   selector: 'app-product-detail',
@@ -158,7 +158,7 @@ export class ProductDetailComponent implements OnInit {
   imageObject: Array<PhotoSliderObject> = [];
   ratingComponentLoaded = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService, private exceptionMessageService: ExceptionMessageService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService) {
     this.urlId = router.url.split('/')[2];
   }
 
@@ -249,12 +249,15 @@ export class ProductDetailComponent implements OnInit {
 
       this.basketService
         .add(basketItem)
-        .then(() => {
-          this.toastr.success('Ürün Başarıyla Sepete eklendi');
+        .then((response: Error_DTO) => {
+          if (response.succeeded == false) {
+            this.toastr.error(response.message);
+          } else {
+            this.toastr.success('Ürün Başarıyla Sepete eklendi');
+          }
         })
-        .catch((err) => {
-          const message = this.exceptionMessageService.addToBasket(err.error);
-          if (message.length > 0) this.toastr.error(message);
+        .catch(() => {
+          this.spinner.hide();
         });
     } else this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
   }

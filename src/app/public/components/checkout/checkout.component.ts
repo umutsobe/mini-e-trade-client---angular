@@ -9,7 +9,6 @@ import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { AccountService } from 'src/app/services/models/account.service';
 import { BasketService } from 'src/app/services/models/basket.service';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
-import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
 import { Create_Order } from 'src/app/contracts/order/create_order';
 import { OrderService } from 'src/app/services/models/order.service';
 import { Create_Order_Item } from 'src/app/contracts/order/create_order_item';
@@ -18,6 +17,7 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CreateOrderResponse } from 'src/app/contracts/order/create-order-response';
 import { Router } from '@angular/router';
+import { Error_DTO } from 'src/app/contracts/error_dto';
 
 @Component({
   selector: 'app-checkout',
@@ -244,7 +244,7 @@ export class CheckoutComponent implements OnInit {
   faTrash = faTrash;
 
   faEllipsis = faEllipsis;
-  constructor(private basketService: BasketService, private formBuilder: FormBuilder, private accountService: AccountService, private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private exceptionMessageService: ExceptionMessageService, private orderService: OrderService, private router: Router) {
+  constructor(private basketService: BasketService, private formBuilder: FormBuilder, private accountService: AccountService, private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private orderService: OrderService, private router: Router) {
     this.createAddressFrm = this.formBuilder.group({
       addressDefinition: ['', [Validators.required, Validators.maxLength(50)]],
       fullAddress: ['', [Validators.required, Validators.maxLength(400)]],
@@ -309,12 +309,10 @@ export class CheckoutComponent implements OnInit {
 
     this.basketService
       .updateQuantity(_product)
-      .then(async () => {
-        this.products = await this.basketService.get();
-      })
-      .catch((err) => {
-        const message = this.exceptionMessageService.basketItemUpdateQuantity(err.error);
-        if (message.length > 0) this.toastr.error(message);
+      .then(async (response: Error_DTO) => {
+        if (response.succeeded == false) {
+          this.toastr.error(response.message);
+        } else this.products = await this.basketService.get();
       })
       .finally(() => {
         this.spinner.hide();
@@ -366,17 +364,14 @@ export class CheckoutComponent implements OnInit {
 
     await this.orderService
       .create(order)
-      .then((response) => {
-        const order: CreateOrderResponse = response;
-        this.router.navigateByUrl(`success-order/${order.orderCode}`);
-        // this.products = await this.basketService.get();
+      .then((response: CreateOrderResponse) => {
+        if (response.succeeded == false) {
+          this.toastr.error(response.message);
+        } else {
+          this.router.navigateByUrl(`success-order/${response.orderCode}`);
+        }
 
         this.spinner.hide();
-        // this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
-      })
-      .catch((err) => {
-        const message = this.exceptionMessageService.createOrderMessage(err.error);
-        if (message.length > 0) this.toastr.error(message);
       })
       .finally(() => {
         this.spinner.hide();

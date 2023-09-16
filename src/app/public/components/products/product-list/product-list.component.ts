@@ -6,9 +6,9 @@ import { ToastrService } from 'ngx-toastr';
 import { BaseUrl } from 'src/app/contracts/base_url';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { List_Category } from 'src/app/contracts/category/list_category';
+import { Error_DTO } from 'src/app/contracts/error_dto';
 import { ProductFilter } from 'src/app/contracts/product/filter_product';
 import { List_Product } from 'src/app/contracts/product/list_product';
-import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { BasketService } from 'src/app/services/models/basket.service';
 import { CategoryService } from 'src/app/services/models/category.service';
@@ -209,7 +209,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   ],
 })
 export class ProductListComponent {
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService, private exceptionMessageService: ExceptionMessageService) {}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService) {}
 
   products: List_Product[] = [];
   categories: List_Category[] = [];
@@ -358,13 +358,13 @@ export class ProductListComponent {
 
       await this.basketService
         .add(_basketItem)
-        .then(() => {
+        .then((response: Error_DTO) => {
+          if (response.succeeded == false) {
+            this.toastr.error(response.message);
+          } else {
+            this.toastr.success('Added to Cart');
+          }
           this.spinner.hide();
-          this.toastr.success('Added to Car');
-        })
-        .catch((err) => {
-          const message = this.exceptionMessageService.addToBasket(err.error);
-          if (message.length > 0) this.toastr.error(message);
         })
         .finally(() => {
           this.spinner.hide();

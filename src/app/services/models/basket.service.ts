@@ -5,6 +5,7 @@ import { List_Basket_Item } from 'src/app/contracts/basket/list_basket_item';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { Update_Basket_Item } from 'src/app/contracts/basket/update_basket_item';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Error_DTO } from 'src/app/contracts/error_dto';
 
 @Injectable({
   providedIn: 'root',
@@ -31,35 +32,28 @@ export class BasketService {
     );
 
     return await firstValueFrom(observable);
-
-    // return this.httpClientService.get<List_Basket_Item[]>(
-    //   {
-    //     controller: 'baskets',
-    //   },
-    //   BasketId
-    // );
   }
 
-  async add(basketItem: Create_Basket_Item): Promise<void> {
-    const observable: Observable<any> = this.httpClientService.post(
+  async add(basketItem: Create_Basket_Item): Promise<Error_DTO> {
+    const observable: Observable<Error_DTO | any> = this.httpClientService.post(
       {
         controller: 'baskets',
       },
       basketItem
     );
 
-    await firstValueFrom(observable);
+    return await firstValueFrom(observable);
   }
 
-  async updateQuantity(basketItem: Update_Basket_Item): Promise<void> {
-    const observable: Observable<any> = this.httpClientService.put(
+  async updateQuantity(basketItem: Update_Basket_Item): Promise<Error_DTO> {
+    const observable: Observable<Error_DTO | any> = this.httpClientService.put(
       {
         controller: 'baskets',
       },
       basketItem
     );
 
-    await firstValueFrom(observable);
+    return await firstValueFrom(observable);
   }
 
   async remove(basketItemId: string) {

@@ -7,10 +7,8 @@ import { BasketService } from 'src/app/services/models/basket.service';
 import { List_Basket_Item } from 'src/app/contracts/basket/list_basket_item';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/services/models/order.service';
-import { Create_Order } from 'src/app/contracts/order/create_order';
 import { UserService } from 'src/app/services/models/user.service';
-import { Create_Order_Item } from 'src/app/contracts/order/create_order_item';
-import { ExceptionMessageService } from 'src/app/exceptions/exception-message.service';
+import { Error_DTO } from 'src/app/contracts/error_dto';
 
 declare let $: any;
 
@@ -88,7 +86,7 @@ export class BasketComponent implements OnInit {
   products: List_Basket_Item[] = [];
   spinnerElement = true;
 
-  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, private exceptionMessageService: ExceptionMessageService) {}
+  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService) {}
   async ngOnInit() {
     this.getProducts();
   }
@@ -133,12 +131,10 @@ export class BasketComponent implements OnInit {
 
     this.basketService
       .updateQuantity(_product)
-      .then(async () => {
-        this.products = await this.basketService.get();
-      })
-      .catch((err) => {
-        const message = this.exceptionMessageService.basketItemUpdateQuantity(err.error);
-        if (message.length > 0) this.toastr.error(message);
+      .then(async (response: Error_DTO) => {
+        if (response.succeeded == false) {
+          this.toastr.error(response.message);
+        } else this.products = await this.basketService.get();
       })
       .finally(() => {
         this.spinner.hide();
@@ -163,46 +159,4 @@ export class BasketComponent implements OnInit {
     }
     return totalPrice;
   }
-
-  // async completeShopping() {
-  //   this.spinner.show();
-  //   const order: Create_Order = new Create_Order();
-
-  //   order.address = 'ankara kızılay';
-  //   order.description = '....';
-  //   order.userId = this.userService.getUserId();
-  //   order.orderItems = this.convertBasketItemsToOrderItems(this.products);
-
-  //   await this.orderService
-  //     .create(order)
-  //     .then(async () => {
-  //       this.products = await this.basketService.get();
-
-  //       this.spinner.hide();
-  //       this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
-  //     })
-  //     .catch((err) => {
-  //       const message = this.exceptionMessageService.createOrderMessage(err.error);
-  //       if (message.length > 0) this.toastr.error(message);
-  //     })
-  //     .finally(() => {
-  //       this.spinner.hide();
-  //     });
-  // }
-
-  // convertBasketItemsToOrderItems(basketItems: List_Basket_Item[]): Create_Order_Item[] {
-  //   const orderItems: Create_Order_Item[] = [];
-
-  //   for (const basketItem of basketItems) {
-  //     const orderItem: Create_Order_Item = {
-  //       productId: basketItem.productId,
-  //       quantity: basketItem.quantity,
-  //       price: basketItem.price,
-  //     };
-
-  //     orderItems.push(orderItem);
-  //   }
-
-  //   return orderItems;
-  // }
 }

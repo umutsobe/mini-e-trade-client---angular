@@ -1,4 +1,6 @@
 export class CreateOrderResponse {
-  orderId: string;
-  orderCode: string;
+  succeeded: boolean;
+  message?: string;
+  orderId?: string;
+  orderCode?: string;
 }
