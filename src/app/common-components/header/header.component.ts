@@ -1,5 +1,4 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
@@ -21,20 +20,13 @@ declare let $: any;
         </div>
 
         <div *ngIf="authService.isAuthenticated" class="d-none d-lg-block mx-auto">
-          <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-left: 2vw;">
-            <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
-            <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
+          <form class="d-flex mx-auto" style="height: 40px; padding-left: 2vw;">
+            <input [(ngModel)]="keyword" name="keyword" class="input form-control me-2" placeholder="Ara" />
+            <button (click)="search()" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>
         </div>
-        <!-- <div *ngIf="!authService.isAuthenticated" class="d-none d-lg-block mx-auto">
-          <form [formGroup]="frm" (ngSubmit)="search()" class="d-flex mx-auto" style="height: 40px; padding-right: 12vw;">
-            <input formControlName="keyword" class="input form-control me-2" placeholder="Ara" />
-            <button [disabled]="!frm.valid" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
-          </form>
-        </div> -->
 
         <div class="d-flex">
-          <!-- <a routerLink="register" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Register</button></a> -->
           <a routerLink="login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Login</button></a>
         </div>
 
@@ -42,9 +34,6 @@ declare let $: any;
           <div class="item btn dropdown-toggle text-white py-2" style="background-color: #322653;" data-bs-toggle="dropdown">Account</div>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-            <!-- <li *ngIf="this.name.length > 0" class="dropdown-item text-truncate">{{ this.name.length > 0 ? this.name : '' }}</li>
-            <li><hr class="dropdown-divider" /></li> -->
-
             <li routerLink="account" role="button" class="dropdown-item">Account Details</li>
 
             <li routerLink="account/orders" role="button" class="dropdown-item">Orders</li>
@@ -85,14 +74,9 @@ export class HeaderComponent implements OnInit {
   faMagnifyingGlass = faMagnifyingGlass;
   toggleThemeString = 'Theme';
 
-  frm: FormGroup;
-  constructor(public authService: AuthService, private router: Router, private accountService: AccountService, private formBuilder: FormBuilder) {}
+  constructor(public authService: AuthService, private router: Router, private accountService: AccountService) {}
   async ngOnInit() {
     this.authService.identityCheck();
-
-    this.frm = this.formBuilder.group({
-      keyword: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    });
 
     if (!localStorage.getItem('theme')) {
       localStorage.setItem('theme', 'light');
@@ -106,8 +90,11 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  keyword: string;
   search() {
-    const searchValue: string = this.keyword.value;
+    if (this.keyword.length < 1) return;
+
+    const searchValue: string = this.keyword;
     const resultString: string = searchValue.replace('?', '');
 
     this.router.navigate(['/search'], { queryParams: { keyword: resultString } });
@@ -131,9 +118,4 @@ export class HeaderComponent implements OnInit {
       this.toggleThemeString = 'Light Theme';
     }
   }
-
-  get keyword() {
-    return this.frm.get('keyword');
-  }
 }
-// <a routerLink="">Home</a>| <a routerLink="products">Products</a>| <a routerLink="basket">Basket</a>|

@@ -18,7 +18,6 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CreateOrderResponse } from 'src/app/contracts/order/create-order-response';
 import { Router } from '@angular/router';
-declare let $: any;
 
 @Component({
   selector: 'app-checkout',
@@ -58,6 +57,7 @@ declare let $: any;
 
               <div class="d-flex p-3 border rounded-3 justify-content-center mt-2">
                 <form [formGroup]="paymentFrm" class="col-11 col-md-8 col-lg-5">
+                  <!-- card number -->
                   <div class="mb-3">
                     <label for="cardNumber" class="form-label">Card Number</label>
                     <input (keyup)="cardInputChange($event)" type="text" class="form-control" id="cardNumber" formControlName="cardNumber" placeholder="**** **** **** ****" />
@@ -65,7 +65,7 @@ declare let $: any;
                       <div *ngIf="cardNumber.hasError('required')" class="inputError">Card Number is required</div>
                     </div>
                   </div>
-
+                  <!-- name -->
                   <div class="mb-3">
                     <label for="cardName" class="form-label">Full name on the card</label>
                     <input type="text" class="form-control" id="cardName" formControlName="cardName" />
@@ -76,12 +76,14 @@ declare let $: any;
 
                   <div class="mb-3 d-flex justify-content-between">
                     <div class="d-flex">
+                      <!-- month -->
                       <div class="me-1" style="width: 55px;">
                         <input (input)="formatMonth($event)" type="number" class="form-control" id="expirationMonth" formControlName="expirationMonth" placeholder="MM" />
                         <div *ngIf="submitted">
                           <div *ngIf="expirationMonth.hasError('required')" class="inputError">Month is required</div>
                         </div>
                       </div>
+                      <!-- year -->
                       <div class="m-0 p-0 mt-2 me-1 fs-4">/</div>
                       <div class="me-1" style="width: 55px;">
                         <input (input)="formatYear($event)" type="number" class="form-control" id="expirationYear" formControlName="expirationYear" placeholder="YY" />
@@ -90,7 +92,7 @@ declare let $: any;
                         </div>
                       </div>
                     </div>
-
+                    <!-- security code -->
                     <div style="width: 70px;">
                       <input (input)="formatSecurityCode($event)" type="number" class="form-control" id="securityCode" formControlName="securityCode" placeholder="CVC" />
                       <div *ngIf="submitted">
@@ -181,19 +183,25 @@ declare let $: any;
                 <div class="mb-3">
                   <label for="addressDefinition" class="form-label">Address Name</label>
                   <input type="text" class="form-control" id="addressDefinition" formControlName="addressDefinition" />
-                  <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Address Name is required.</div>
+                  <div *ngIf="addressSubmitted">
+                    <div *ngIf="addressDefinition.hasError('required')" class="inputError">Address Definition is required</div>
+                    <div *ngIf="addressDefinition.hasError('maxlength')" class="inputError">Email must be less than 100 characters</div>
+                  </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="fullAddress" class="form-label">Full Address</label>
                   <textarea rows="5" type="text" id="fullAddress" class="form-control" formControlName="fullAddress"></textarea>
-                  <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Address is required.</div>
+                  <div *ngIf="addressSubmitted">
+                    <div *ngIf="fullAddress.hasError('required')" class="inputError">Full Address is required</div>
+                    <div *ngIf="fullAddress.hasError('maxlength')" class="inputError">Full Address must be less than 400 characters</div>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
           <div class="modal-footer">
-            <button (click)="createAddress()" data-bs-dismiss="modal" [disabled]="!createAddressFrm.valid" type="button" class="btn btn-primary">Create Address</button>
+            <button (click)="createAddress()" type="button" class="btn btn-primary">Create Address</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -229,8 +237,8 @@ declare let $: any;
 export class CheckoutComponent implements OnInit {
   createAddressFrm: FormGroup;
   paymentFrm: FormGroup;
-  submitted: boolean = false;
-
+  submitted = false;
+  addressSubmitted = false;
   faPlus = faPlus;
   faMinus = faMinus;
   faTrash = faTrash;
@@ -441,8 +449,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   async createAddress() {
-    this.spinner.show();
+    this.addressSubmitted = true;
+    if (this.createAddressFrm.invalid) return;
 
+    this.spinner.show();
     const addressModel: CreateUserAddress = new CreateUserAddress();
     addressModel.address = this.fullAddress.value;
     addressModel.definition = this.addressDefinition.value;

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -18,15 +18,22 @@ import { UserService } from 'src/app/services/models/user.service';
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" formControlName="password" />
-            <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi doğru formatta olmalıdır</div>
+            <div *ngIf="submitted">
+              <div *ngIf="password.hasError('required')" class="inputError">Password is required</div>
+              <div *ngIf="password.hasError('maxLength')" class="inputError">Password must be less than 100 characters</div>
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="passwordRepeat" class="form-label">Password Repeat</label>
             <input type="password" id="passwordRepeat" class="form-control" formControlName="passwordRepeat" />
-            <div *ngIf="!passwordRepeat.valid && (passwordRepeat.dirty || passwordRepeat.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur</div>
+            <div *ngIf="submitted">
+              <div *ngIf="passwordRepeat.hasError('required')" class="inputError">Password Repeat is required</div>
+              <div *ngIf="passwordRepeat.hasError('maxLength')" class="inputError">Password must be less than 100 characters</div>
+              <div *ngIf="frm.getError('passwordMismatch')" class="inputError">Passwords must match</div>
+            </div>
           </div>
-          <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+          <button type="submit" class="mb-2 w-100 btn btn-primary">Submit</button>
         </form>
       </div>
     </div>
@@ -36,11 +43,16 @@ import { UserService } from 'src/app/services/models/user.service';
       *:focus {
         box-shadow: none !important;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class UpdatePasswordComponent {
   frm: FormGroup;
+  submitted = false;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService, private activatedRoute: ActivatedRoute) {}
 
@@ -51,6 +63,7 @@ export class UpdatePasswordComponent {
       password: ['', [Validators.required, Validators.maxLength(100)]],
       passwordRepeat: ['', [Validators.required, Validators.maxLength(100)]],
     });
+    this.frm.addValidators(this.passwordMatchValidator());
 
     this.activatedRoute.params.subscribe({
       next: async (params) => {
@@ -63,8 +76,10 @@ export class UpdatePasswordComponent {
     });
   }
   onSubmit() {
-    this.spinner.show();
+    this.submitted = true;
+    if (this.frm.invalid) return;
 
+    this.spinner.show();
     const password: string = this.password.value;
     const passwordRepeat: string = this.passwordRepeat.value;
 
@@ -89,7 +104,16 @@ export class UpdatePasswordComponent {
       },
     });
   }
+  passwordMatchValidator(): ValidatorFn {
+    return (): { [key: string]: boolean } | null => {
+      if (this.password.value !== this.passwordRepeat.value) {
+        // this.frm.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true }; //burada frm objesine error set ediyoruz
+      }
 
+      return null;
+    };
+  }
   get password() {
     return this.frm.get('password');
   }

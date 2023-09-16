@@ -5,11 +5,11 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [CategoryComponent, HeaderComponent, FooterComponent],
-  imports: [CommonModule, FontAwesomeModule, RouterModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, RouterModule, FormsModule],
   exports: [CategoryComponent, HeaderComponent, FooterComponent],
 })
 export class CommonComponentsModule {}

@@ -1,10 +1,9 @@
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { async } from 'rxjs';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
@@ -18,16 +17,22 @@ import { UserService } from 'src/app/services/models/user.service';
         <div class="mb-3">
           <label for="emailOrUserName" class="form-label">E-Mail or Username</label>
           <input type="text" class="form-control" id="emailOrUserName" formControlName="emailOrUserName" />
-          <div *ngIf="!emailOrUserName.valid && (emailOrUserName.dirty || emailOrUserName.touched)" style="color:chocolate; font-size: 12px;">E-Mail girişi doğru formatta olmalıdır</div>
+          <div *ngIf="submitted">
+            <div *ngIf="emailOrUserName.hasError('required')" class="inputError">Email is required</div>
+            <div *ngIf="emailOrUserName.hasError('maxlength')" class="inputError">Email must be less than 100 characters</div>
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="password" class="form-label">Şifre</label>
           <input type="password" id="password" class="form-control" formControlName="password" />
-          <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Şifre girişi zorunludur. Ve en az 6 karakterli olmalıdır</div>
+          <div *ngIf="submitted">
+            <div *ngIf="password.hasError('required')" class="inputError">Password is required</div>
+            <div *ngIf="password.hasError('maxlength')" class="inputError">Password must be less than 100 characters</div>
+          </div>
         </div>
 
-        <button type="submit" class="mb-4 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+        <button type="submit" class="mb-4 w-100 btn btn-primary">Submit</button>
 
         <div type="button" class=" d-flex justify-content-center align-items-center py-2" style="background-color: #dc2626;border-radius: 8px;">
           <div class="d-block m-0 p-0 me-2" style="width: 30px;">
@@ -53,12 +58,16 @@ import { UserService } from 'src/app/services/models/user.service';
       .nsm7Bb-HzV7m-LgbsSe-BPrWId {
         height: 40px;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class LoginComponent {
   frm: FormGroup;
-
+  submitted = false;
   constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private router: Router, private socialAuthService: SocialAuthService, private toastr: ToastrService) {
     socialAuthService.authState.subscribe(async (user: SocialUser) => {
       console.log(user);
@@ -92,6 +101,9 @@ export class LoginComponent {
     });
   }
   async onSubmit(emailOrUserName: string, password: string) {
+    this.submitted = true;
+    if (this.frm.invalid) return;
+
     this.spinner.show();
     await this.userService
       .login(emailOrUserName, password)

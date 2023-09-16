@@ -14,45 +14,62 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
       <div>
         <h1 class=" mt-2 text-center ">Create Product</h1>
         <div style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; padding: 10px;">
+          <div class="mb-3">
+            <div class="form-check">
+              <label class="form-check-label" for="isActive"> Is Active </label>
+              <input [(ngModel)]="isActiveInput" name="isActive" class="form-check-input" type="checkbox" id="isActive" />
+              {{ isActiveInput }}
+            </div>
+          </div>
           <form [formGroup]="frm" (ngSubmit)="onSubmit()" class=" my-3">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
               <input type="text" class="form-control" id="name" formControlName="name" />
-              <div *ngIf="!name.valid && (name.dirty || name.touched)" style="color:chocolate; font-size: 12px;">The name field is required</div>
+              <div *ngIf="submitted">
+                <div *ngIf="name.hasError('required')" class="inputError">Name is required</div>
+                <div *ngIf="name.hasError('maxlength')" class="inputError">Name must be less than 150 characters</div>
+              </div>
             </div>
 
             <div class="d-flex justify-content-evenly">
               <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
                 <input class="form-control" id="price" rows="3" formControlName="price" />
-                <div *ngIf="!price.valid && (price.dirty || price.touched)" style="color:chocolate; font-size: 12px;">The price field is required</div>
+                <div *ngIf="submitted">
+                  <div *ngIf="price.hasError('required')" class="inputError">Price is required</div>
+                  <div *ngIf="price.hasError('pattern')" class="inputError">Price cannot be less than zero.</div>
+                </div>
               </div>
 
               <div class="mb-3">
                 <label for="stock" class="form-label">Stock</label>
                 <input class="form-control" id="stock" rows="3" formControlName="stock" />
-                <div *ngIf="!stock.valid && (stock.dirty || stock.touched)" style="color:chocolate; font-size: 12px;">The stock field is required</div>
+                <div *ngIf="submitted">
+                  <div *ngIf="stock.hasError('required')" class="inputError">Stock is required</div>
+                  <div *ngIf="stock.hasError('pattern')" class="inputError">Stock cannot be less than zero.</div>
+                </div>
               </div>
             </div>
 
             <div class="mb-3">
               <label for="name" class="form-label">Description</label>
               <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
-              <div class="my-2" style="font-size: 13px;">The description field is required!</div>
-            </div>
-
-            <div class="mb-3">
-              <div class="form-check">
-                <label class="form-check-label" for="isActive"> Is Active </label>
-                <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive" value="" checked />
+              <div *ngIf="submitted">
+                <div *ngIf="description.hasError('required')" class="inputError">Description is required</div>
+                <div *ngIf="description.hasError('maxlength')" class="inputError">Description must be less than 4000 characters</div>
               </div>
             </div>
 
-            <button type="button" (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning mb-4 btn-sm" style="display: block;">Select Categories</button>
+            <div class="mb-3">
+              <button type="button" (click)="openCategoryDialog()" data-bs-toggle="modal" data-bs-target="#categoryModal" class="btn btn-warning btn-sm" style="display: block;">Select Categories</button>
+              <div *ngIf="submitted">
+                <div *ngIf="selectedCategories.length < 1" class="inputError">You must select at least one category</div>
+              </div>
+            </div>
 
-            <div style="font-size: 15px;" *ngIf="selectedCategories.length > 0" class="d-flex align-items-center mb-3">Seçilen Kategoriler: {{ selectedCategories ? selectedCategories : '' }}</div>
+            <div style="font-size: 15px;" *ngIf="selectedCategories.length > 0" class="d-flex align-items-center mb-3 mt-3">Seçilen Kategoriler: {{ selectedCategories ? selectedCategories : '' }}</div>
 
-            <button type="submit" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
@@ -100,19 +117,23 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
       ::ng-deep .angular-editor-button[title='Unlink'] {
         display: none;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class CreateComponent {
   frm: FormGroup;
+  submitted = false;
 
   constructor(private formBuilder: FormBuilder, private productService: ProductService, private toastr: ToastrService, private spinner: NgxSpinnerService, private categoryService: CategoryService) {
     this.frm = formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(150)]],
       price: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       stock: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      isActive: [''],
-      description: ['', [Validators.required, Validators.maxLength(1500)]],
+      description: ['', [Validators.required, Validators.maxLength(4000)]],
     });
   }
 
@@ -140,26 +161,39 @@ export class CreateComponent {
     this.listCategories = [];
   }
 
-  onSubmit() {
-    // this.spinner.show();
+  isActiveInput = false;
+  product: CreateProduct = {
+    name: '',
+    price: 0,
+    stock: 0,
 
-    const product: CreateProduct = {
+    description: '',
+    categoryNames: [],
+    isActive: false,
+  };
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.frm.invalid) return;
+    if (this.selectedCategories.length < 1) return;
+
+    this.spinner.show();
+
+    this.product = {
       name: this.name.value,
       price: parseInt(this.price.value),
       stock: parseFloat(this.stock.value),
 
       description: this.description.value,
       categoryNames: this.selectedCategories,
-      isActive: this.isActive.value,
+      isActive: this.isActiveInput,
     };
 
-    console.log(product);
-
     this.productService
-      .create(product)
+      .create(this.product)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${product.name} successfully created`);
+        this.toastr.success(`${this.product.name} successfully created`);
       })
       .catch((err) => {
         this.spinner.hide();
@@ -184,9 +218,6 @@ export class CreateComponent {
   }
   get stock() {
     return this.frm.get('stock');
-  }
-  get isActive() {
-    return this.frm.get('isActive');
   }
 
   get description() {

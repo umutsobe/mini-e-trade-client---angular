@@ -22,20 +22,21 @@ import { AccountService } from 'src/app/services/models/account.service';
           <div class="d-flex justify-content-between">
             <input type="text" id="name" class="form-control" formControlName="name" [value]="userDetails.name" />
             <div>
-              <button (click)="updateName()" [disabled]="!name.valid" class="btn btn-primary ms-2">Save</button>
+              <button (click)="updateName()" class="btn btn-primary ms-2">Save</button>
             </div>
           </div>
-          <div *ngIf="!name.valid && name.dirty" style="color:chocolate; font-size: 12px;">Full name entry is required</div>
+          <div *ngIf="nameSubmitted">
+            <div *ngIf="name.hasError('required')" class="inputError">Name is required</div>
+            <div *ngIf="name.hasError('maxlength')" class="inputError">Name must be less than 100 characters</div>
+          </div>
         </div>
 
         <div style="width: 100%;" class="mb-3">
           <label for="email" class="form-label">E-Mail</label>
-
           <div class="d-flex justify-content-between p-0">
-            <input readonly type="text" class="form-control" id="email" formControlName="email" [value]="userDetails.email" />
+            <input readonly type="text" class="form-control" id="email" [value]="userDetails.email" />
           </div>
           <button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-outline-primary  mt-2 w-100">Email Change</button>
-          <div *ngIf="!email.valid && email.dirty" style="color:chocolate; font-size: 12px;">Email entry must be in the correct format</div>
         </div>
       </form>
     </div>
@@ -54,15 +55,23 @@ import { AccountService } from 'src/app/services/models/account.service';
               <div class="mb-3">
                 <label for="newEmail" class="form-label">New Email</label>
                 <input type="text" class="form-control" id="newEmail" formControlName="newEmail" autocomplete="off" />
-                <div *ngIf="!newEmail.valid && (newEmail.dirty || newEmail.touched)" style="color:chocolate; font-size: 12px;">Email entry must be in the correct format</div>
+                <div *ngIf="modalSubmitted">
+                  <div *ngIf="newEmail.hasError('required')" class="inputError">Email is required</div>
+                  <div *ngIf="newEmail.hasError('email')" class="inputError">Please enter a valid email address</div>
+                  <div *ngIf="newEmail.hasError('maxlength')" class="inputError">Email must be less than 100 characters</div>
+                </div>
               </div>
 
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" id="password" class="form-control" formControlName="password" autocomplete="new-password" />
-                <div *ngIf="!password.valid && (password.dirty || password.touched)" style="color:chocolate; font-size: 12px;">Password filed is required.</div>
+                <div *ngIf="modalSubmitted">
+                  <div *ngIf="password.hasError('required')" class="inputError">Email is required</div>
+                  <div *ngIf="password.hasError('maxlength')" class="inputError">Email must be less than 100 characters</div>
+                </div>
               </div>
-              <button [disabled]="!frmModal.valid" (click)="updateEmailStep1()" class="btn btn-primary">{{ isUpdateMailCodeSend == true ? 'Send code again' : 'Send verification code' }}</button>
+
+              <button (click)="updateEmailStep1()" class="btn btn-primary">{{ isUpdateMailCodeSend == true ? 'Send code again' : 'Send verification code' }}</button>
 
               <div *ngIf="isUpdateMailCodeSend" class="mt-3">
                 <div class="mb-3">Email adresinize doğrulama kodu gönderildi. Eğer maili <span style="color: red;">göremiyorsanız</span> spam klasörüne bakın.</div>
@@ -87,13 +96,16 @@ import { AccountService } from 'src/app/services/models/account.service';
       *:focus {
         box-shadow: none !important;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class UserDetailsComponent implements OnInit {
   constructor(private accountService: AccountService, private spinner: NgxSpinnerService, private formBuilder: FormBuilder, private authService: AuthService, private toastr: ToastrService) {
     this.frm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
       name: ['', [Validators.required, Validators.maxLength(100)]],
     });
 
@@ -105,7 +117,9 @@ export class UserDetailsComponent implements OnInit {
   }
 
   frm: FormGroup;
+  nameSubmitted = false;
   frmModal: FormGroup;
+  modalSubmitted = false;
   userDetails: ListUserDetails = { name: '', email: '' };
   isUpdateMailCodeSend = false;
 
@@ -126,6 +140,9 @@ export class UserDetailsComponent implements OnInit {
   }
 
   async updateName() {
+    this.nameSubmitted = true;
+    if (this.name.invalid) return;
+
     this.spinner.show();
     await this.accountService
       .updateUserName(this.authService.UserId, this.name.value)
@@ -139,6 +156,9 @@ export class UserDetailsComponent implements OnInit {
   }
 
   async updateEmailStep1() {
+    this.modalSubmitted = true;
+    if (this.frmModal.invalid) return;
+
     this.spinner.show();
     let result: TwoFactorResult = {
       message: '',
@@ -161,6 +181,7 @@ export class UserDetailsComponent implements OnInit {
       this.toastr.error(result.message);
     }
   }
+
   async updateEmailStep2() {
     this.spinner.show();
     let result: TwoFactorResult = {
@@ -184,13 +205,12 @@ export class UserDetailsComponent implements OnInit {
     }
   }
 
-  get email() {
-    return this.frm.get('email');
-  }
+  //#region form gets
   get name() {
     return this.frm.get('name');
   }
 
+  //modal
   get newEmail() {
     return this.frmModal.get('newEmail');
   }
@@ -200,4 +220,5 @@ export class UserDetailsComponent implements OnInit {
   get code() {
     return this.frmModal.get('code');
   }
+  //#endregion
 }

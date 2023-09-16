@@ -48,19 +48,25 @@ import { AccountService } from 'src/app/services/models/account.service';
                 <div class="mb-3">
                   <label for="addressDefinition" class="form-label">Address Name</label>
                   <input type="text" class="form-control" id="addressDefinition" formControlName="addressDefinition" />
-                  <div *ngIf="!addressDefinition.valid && (addressDefinition.dirty || addressDefinition.touched)" style="color:chocolate; font-size: 12px">Address Name is required.</div>
+                  <div *ngIf="submitted">
+                    <div *ngIf="addressDefinition.hasError('required')" class="inputError">Address Definition is required</div>
+                    <div *ngIf="addressDefinition.hasError('maxlength')" class="inputError">Email must be less than 100 characters</div>
+                  </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="fullAddress" class="form-label">Full Address</label>
                   <textarea rows="5" type="text" id="fullAddress" class="form-control" formControlName="fullAddress"></textarea>
-                  <div *ngIf="!fullAddress.valid && (fullAddress.dirty || fullAddress.touched)" style="color:chocolate; font-size: 12px;">Address is required.</div>
+                  <div *ngIf="submitted">
+                    <div *ngIf="fullAddress.hasError('required')" class="inputError">Full Address is required</div>
+                    <div *ngIf="fullAddress.hasError('maxlength')" class="inputError">Full Address must be less than 400 characters</div>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
           <div class="modal-footer">
-            <button (click)="createAddress()" data-bs-dismiss="modal" [disabled]="!frm.valid" type="button" class="btn btn-primary">Create Address</button>
+            <button (click)="createAddress()" type="button" class="btn btn-primary">Create Address</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -74,10 +80,14 @@ import { AccountService } from 'src/app/services/models/account.service';
       }
 
       .address-text {
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 4;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
+      }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
       }
     `,
   ],
@@ -87,6 +97,7 @@ export class AddresessComponent implements OnInit {
 
   addresess: ListUserAddresess[] = [];
   frm: FormGroup;
+  submitted = false;
 
   constructor(private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private accountService: AccountService, private formBuilder: FormBuilder) {
     this.frm = this.formBuilder.group({
@@ -113,6 +124,9 @@ export class AddresessComponent implements OnInit {
   }
 
   async createAddress() {
+    this.submitted = true;
+    if (this.frm.invalid) return;
+
     this.spinner.show();
 
     const addressModel: CreateUserAddress = new CreateUserAddress();

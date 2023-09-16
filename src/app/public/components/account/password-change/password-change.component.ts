@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UpdateUserPassword } from 'src/app/contracts/account/UpdateUserPassword';
@@ -15,21 +15,31 @@ import { AccountService } from 'src/app/services/models/account.service';
         <div class="mb-5">
           <label for="currentPassword" class="form-label">Current Password</label>
           <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword" />
-          <div *ngIf="!currentPassword.valid && (currentPassword.dirty || currentPassword.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
+          <div *ngIf="submitted">
+            <div *ngIf="currentPassword.hasError('required')" class="inputError">Password is required</div>
+            <div *ngIf="currentPassword.hasError('maxlength')" class="inputError">Password must be less than 100 characters</div>
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="newPassword" class="form-label">New Password</label>
           <input type="password" class="form-control" id="newPassword" formControlName="newPassword" />
-          <div *ngIf="!newPassword.valid && (newPassword.dirty || newPassword.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
+          <div *ngIf="submitted">
+            <div *ngIf="newPassword.hasError('required')" class="inputError">Password is required</div>
+            <div *ngIf="newPassword.hasError('maxlength')" class="inputError">Password must be less than 100 characters</div>
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="newPasswordRepeat" class="form-label">New Password Repeat</label>
           <input type="password" id="newPasswordRepeat" class="form-control" formControlName="newPasswordRepeat" />
-          <div *ngIf="!newPasswordRepeat.valid && (newPasswordRepeat.dirty || newPasswordRepeat.touched)" style="color:chocolate; font-size: 12px;">Password entry is required.</div>
+          <div *ngIf="submitted">
+            <div *ngIf="newPasswordRepeat.hasError('required')" class="inputError">Password Repeat is required</div>
+            <div *ngIf="newPasswordRepeat.hasError('maxlength')" class="inputError">Password Repeat must be less than 100 characters</div>
+            <div *ngIf="frm.getError('passwordMismatch')" class="inputError">Passwords must match</div>
+          </div>
         </div>
-        <button type="submit" class="mb-2 w-100 btn btn-primary" [disabled]="!frm.valid">Submit</button>
+        <button type="submit" class="mb-2 w-100 btn btn-primary">Submit</button>
       </form>
     </div>
   `,
@@ -38,11 +48,16 @@ import { AccountService } from 'src/app/services/models/account.service';
       *:focus {
         box-shadow: none !important;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class PasswordChangeComponent implements OnInit {
   frm: FormGroup;
+  submitted = false;
 
   constructor(private formBuilder: FormBuilder, private spinner: NgxSpinnerService, private toastr: ToastrService, private accountService: AccountService, private authService: AuthService) {}
 
@@ -52,14 +67,18 @@ export class PasswordChangeComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.maxLength(100)]],
       newPasswordRepeat: ['', [Validators.required, Validators.maxLength(100)]],
     });
+    this.frm.addValidators(this.passwordMatchValidator());
   }
 
   async onSubmit() {
+    this.submitted = true;
+    if (this.frm.invalid) return;
+
     const userModel: UpdateUserPassword = new UpdateUserPassword();
     userModel.userId = this.authService.UserId;
     userModel.newPassword = this.newPassword.value;
     userModel.oldPassword = this.currentPassword.value;
-    let token;
+    let token: any;
     this.accountService
       .updateUserPassword(userModel)
       .then((response) => {
@@ -76,6 +95,16 @@ export class PasswordChangeComponent implements OnInit {
         this.authService.identityCheck();
         console.log(token);
       });
+  }
+  passwordMatchValidator(): ValidatorFn {
+    return (): { [key: string]: boolean } | null => {
+      if (this.newPassword.value !== this.newPasswordRepeat.value) {
+        // this.frm.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true }; //burada frm objesine error set ediyoruz
+      }
+
+      return null;
+    };
   }
 
   get currentPassword() {
