@@ -165,15 +165,7 @@ export class OrderListComponent {
   }
   async openOrderDetailDialog(element: List_Order) {
     this.selectedOrder = element;
-    this.selectedSingleOrder = await this.orderService.getOrderById(
-      element.id,
-      () => {
-        // success
-      },
-      (err) => {
-        //error
-      }
-    );
+    this.selectedSingleOrder = await this.orderService.getOrderById(element.id);
   }
   async completeOrder() {
     this.spinner.show();

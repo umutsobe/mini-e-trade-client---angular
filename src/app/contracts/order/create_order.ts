@@ -6,8 +6,3 @@ export class Create_Order {
   description: string;
   orderItems: Create_Order_Item[];
 }
-
-// public string UserId { get; set; }
-// public string Description { get; set; }
-// public string Address { get; set; }
-// public List<OrderItem> OrderItems { get; set; }

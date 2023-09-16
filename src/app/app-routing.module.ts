@@ -78,6 +78,7 @@ const routes: Routes = [
     loadChildren: () => import('./public/components/basket/basket.module').then((module) => module.BasketModule),
     canActivate: [AuthGuard],
   },
+  { path: 'success-order/:orderCode', loadChildren: () => import('./public/success-order/success-order.module').then((m) => m.SuccessOrderModule), canActivate: [LoginBeforeGuard] },
 
   { path: 'checkout', loadChildren: () => import('./public/components/checkout/checkout.module').then((m) => m.CheckoutModule), canActivate: [LoginBeforeGuard] },
 

@@ -4,6 +4,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { Create_Order } from 'src/app/contracts/order/create_order';
 import { List_Order } from 'src/app/contracts/order/list-order';
 import { SingleOrder } from 'src/app/contracts/order/single_order';
+import { CreateOrderResponse } from 'src/app/contracts/order/create-order-response';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +12,16 @@ import { SingleOrder } from 'src/app/contracts/order/single_order';
 export class OrderService {
   constructor(private httpCLientService: HttpClientService) {}
 
-  async create(order: Create_Order): Promise<void> {
-    const observable: Observable<any> = this.httpCLientService.post(
+  async create(order: Create_Order): Promise<CreateOrderResponse> {
+    const observable: Observable<CreateOrderResponse | any> = this.httpCLientService.post(
       {
         controller: 'order',
+        action: 'CreateOrder',
       },
       order
     );
 
-    await firstValueFrom(observable);
+    return (await firstValueFrom(observable)) as CreateOrderResponse;
   }
   async read(page = 0, size = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalOrderCount: number; orders: List_Order[] }> {
     const observable: Observable<{ totalOrderCount: number; orders: List_Order[] }> = this.httpCLientService.get({
@@ -32,7 +34,7 @@ export class OrderService {
 
     return await promiseData;
   }
-  async getOrderById(id: string, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void) {
+  async getOrderById(id: string) {
     const observable: Observable<SingleOrder> = this.httpCLientService.get<SingleOrder>(
       {
         controller: 'order',
@@ -40,10 +42,7 @@ export class OrderService {
       id
     );
 
-    const promiseData = firstValueFrom(observable);
-    promiseData.then((value) => successCallBack()).catch((error) => errorCallBack(error));
-
-    return await promiseData;
+    return await firstValueFrom(observable);
   }
 
   async completeOrder(id: string): Promise<void> {
@@ -58,5 +57,15 @@ export class OrderService {
     await firstValueFrom(observable);
   }
 
-  async delete() {}
+  async isOrderValid(orderCode: string) {
+    const observable: Observable<any> = this.httpCLientService.get<SingleOrder>(
+      {
+        controller: 'order',
+        action: 'IsOrderValid',
+      },
+      orderCode
+    );
+
+    return await firstValueFrom(observable);
+  }
 }

@@ -56,7 +56,7 @@ declare let $: any;
                 {{ (totalPriceCalculate && products ? totalPriceCalculate() : '-') + ' TL' }}
               </h2>
             </div>
-            <button (click)="completeShopping()" class="btn mt-3 btn-lg" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Complete Shopping</button>
+            <button routerLink="/checkout" class="btn mt-3 btn-lg" style="background-color: #f7ca00; color: black; font-size: 15px; width: 100%;">Go to payment</button>
           </div>
         </div>
       </div>
@@ -90,6 +90,10 @@ export class BasketComponent implements OnInit {
 
   constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, private exceptionMessageService: ExceptionMessageService) {}
   async ngOnInit() {
+    this.getProducts();
+  }
+
+  async getProducts() {
     this.products = await this.basketService.get().finally(() => {
       this.spinnerElement = false;
     });
@@ -160,45 +164,45 @@ export class BasketComponent implements OnInit {
     return totalPrice;
   }
 
-  async completeShopping() {
-    this.spinner.show();
-    const order: Create_Order = new Create_Order();
+  // async completeShopping() {
+  //   this.spinner.show();
+  //   const order: Create_Order = new Create_Order();
 
-    order.address = 'ankara kızılay';
-    order.description = '....';
-    order.userId = this.userService.getUserId();
-    order.orderItems = this.convertBasketItemsToOrderItems(this.products);
+  //   order.address = 'ankara kızılay';
+  //   order.description = '....';
+  //   order.userId = this.userService.getUserId();
+  //   order.orderItems = this.convertBasketItemsToOrderItems(this.products);
 
-    await this.orderService
-      .create(order)
-      .then(async () => {
-        this.products = await this.basketService.get();
+  //   await this.orderService
+  //     .create(order)
+  //     .then(async () => {
+  //       this.products = await this.basketService.get();
 
-        this.spinner.hide();
-        this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
-      })
-      .catch((err) => {
-        const message = this.exceptionMessageService.createOrderMessage(err.error);
-        if (message.length > 0) this.toastr.error(message);
-      })
-      .finally(() => {
-        this.spinner.hide();
-      });
-  }
+  //       this.spinner.hide();
+  //       this.toastr.success('Siparişiniz Başarıyla Oluşturuldu', 'Başarılı');
+  //     })
+  //     .catch((err) => {
+  //       const message = this.exceptionMessageService.createOrderMessage(err.error);
+  //       if (message.length > 0) this.toastr.error(message);
+  //     })
+  //     .finally(() => {
+  //       this.spinner.hide();
+  //     });
+  // }
 
-  convertBasketItemsToOrderItems(basketItems: List_Basket_Item[]): Create_Order_Item[] {
-    const orderItems: Create_Order_Item[] = [];
+  // convertBasketItemsToOrderItems(basketItems: List_Basket_Item[]): Create_Order_Item[] {
+  //   const orderItems: Create_Order_Item[] = [];
 
-    for (const basketItem of basketItems) {
-      const orderItem: Create_Order_Item = {
-        productId: basketItem.productId,
-        quantity: basketItem.quantity,
-        price: basketItem.price,
-      };
+  //   for (const basketItem of basketItems) {
+  //     const orderItem: Create_Order_Item = {
+  //       productId: basketItem.productId,
+  //       quantity: basketItem.quantity,
+  //       price: basketItem.price,
+  //     };
 
-      orderItems.push(orderItem);
-    }
+  //     orderItems.push(orderItem);
+  //   }
 
-    return orderItems;
-  }
+  //   return orderItems;
+  // }
 }
