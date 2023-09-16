@@ -17,10 +17,10 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
           <div class="mb-3">
             <div class="form-check">
               <label class="form-check-label" for="isActive"> Is Active </label>
-              <input [(ngModel)]="isActiveInput" name="isActive" class="form-check-input" type="checkbox" id="isActive" />
-              {{ isActiveInput }}
+              <input [(ngModel)]="isActive" class="form-check-input" type="checkbox" id="isActive" />
             </div>
           </div>
+
           <form [formGroup]="frm" (ngSubmit)="onSubmit()" class=" my-3">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
@@ -161,17 +161,7 @@ export class CreateComponent {
     this.listCategories = [];
   }
 
-  isActiveInput = false;
-  product: CreateProduct = {
-    name: '',
-    price: 0,
-    stock: 0,
-
-    description: '',
-    categoryNames: [],
-    isActive: false,
-  };
-
+  isActive = false;
   onSubmit() {
     this.submitted = true;
     if (this.frm.invalid) return;
@@ -179,21 +169,23 @@ export class CreateComponent {
 
     this.spinner.show();
 
-    this.product = {
+    const product: CreateProduct = {
       name: this.name.value,
       price: parseInt(this.price.value),
       stock: parseFloat(this.stock.value),
 
       description: this.description.value,
       categoryNames: this.selectedCategories,
-      isActive: this.isActiveInput,
+      isActive: this.isActive,
     };
 
+    console.log(product);
+
     this.productService
-      .create(this.product)
+      .create(product)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${this.product.name} successfully created`);
+        this.toastr.success(`${product.name} successfully created`);
       })
       .catch((err) => {
         this.spinner.hide();

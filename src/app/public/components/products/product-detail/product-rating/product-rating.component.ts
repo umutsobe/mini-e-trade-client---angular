@@ -11,7 +11,7 @@ import { ListProductRatings } from 'src/app/contracts/productRating/listProductR
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { ProductService } from 'src/app/services/models/product.service';
 import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Subject, debounceTime } from 'rxjs';
 
 @Component({
@@ -99,20 +99,27 @@ import { Subject, debounceTime } from 'rxjs';
                 <div class="mb-3 d-flex flex-column align-items-center">
                   <label for="star" class="form-label">Star</label>
                   <p-rating class="d-block" formControlName="star" [cancel]="false"></p-rating>
-                  <div *ngIf="!star.valid && (star.dirty || star.touched)" style="color:chocolate; font-size: 12px">Star alanı zorunludur. 1-5 arası olmalıdır.</div>
+                  <div *ngIf="submitted">
+                    <div *ngIf="star.hasError('required')" class="inputError">Star is required</div>
+                    <div *ngIf="star.hasError('max')" class="inputError">Star must be less than 6</div>
+                    <div *ngIf="star.hasError('min')" class="inputError">Star must be more than 0</div>
+                  </div>
                 </div>
 
                 <div class="mb-3 d-flex flex-column align-items-center">
                   <label for="comment" class="form-label">Comment</label>
-                  <textarea rows="5" type="text" id="comment" class="form-control" formControlName="comment"></textarea>
-                  <div *ngIf="!comment.valid && (comment.dirty || comment.touched)" style="color:chocolate; font-size: 12px">Comment alanı zorunludur. Maksimum 400 karakterli olmalıdır</div>
+                  <textarea maxlength="800" rows="5" type="text" id="comment" class="form-control" formControlName="comment"></textarea>
+                  <div *ngIf="submitted">
+                    <div *ngIf="comment.hasError('required')" class="inputError">Comment is required</div>
+                    <div *ngIf="comment?.hasError('maxLength')" class="inputError">Comment must be less than 400 characters</div>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
           <div class="modal-footer">
-            <button *ngIf="ratingStatus.state === 'BuyedAndNotRating'" (click)="rateProduct()" type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="!frm.valid">Yorum Yap</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button [disabled]="isSend" *ngIf="ratingStatus.state === 'BuyedAndNotRating'" (click)="rateProduct()" type="button" class="btn btn-danger">Yorum Yap</button>
+            <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -134,11 +141,18 @@ import { Subject, debounceTime } from 'rxjs';
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
+      .inputError {
+        color: chocolate;
+        font-size: 12px;
+      }
     `,
   ],
 })
 export class ProductRatingComponent implements OnInit {
   frm: FormGroup;
+  submitted = false;
+  isSend = false;
+
   urlId: string;
   faUser = faUser;
   bootstrapSpinner = true;
@@ -152,7 +166,7 @@ export class ProductRatingComponent implements OnInit {
 
     this.frm = this.formBuilder.group({
       star: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
-      comment: ['', [Validators.required, Validators.maxLength(400)]],
+      comment: ['', [Validators.required, Validators.maxLength(800)]],
     });
 
     this.inputChangeSubject.pipe(debounceTime(this.searchInputDelayTime)).subscribe(() => {
@@ -206,6 +220,9 @@ export class ProductRatingComponent implements OnInit {
   async openRatingModel() {}
 
   rateProduct() {
+    this.submitted = true;
+    if (this.frm.invalid) return;
+
     this.spinner.show();
 
     const model: CreateRating = {
@@ -219,6 +236,7 @@ export class ProductRatingComponent implements OnInit {
       .createRating(model)
       .then(() => {
         this.toastr.success('Yorum başarıyla yapıldı.');
+        this.isSend = true;
       })
       .catch((err) => {
         console.log(err);
