@@ -4,9 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register.component';
 import { RouterModule } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
 
 @NgModule({
-  declarations: [],
-  imports: [CommonModule, NgxSpinnerModule, ReactiveFormsModule, RouterModule.forChild([{ path: '', component: RegisterComponent }])],
+  declarations: [RegisterComponent],
+  imports: [CommonModule, GoogleSigninButtonModule, NgxSpinnerModule, SocialLoginModule, ReactiveFormsModule, RouterModule.forChild([{ path: '', component: RegisterComponent }])],
 })
 export class RegisterModule {}

@@ -27,11 +27,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  { path: 'success-order/:orderCode', loadChildren: () => import('./public/success-order/success-order.module').then((m) => m.SuccessOrderModule), canActivate: [LoginBeforeGuard] },
+  { path: 'success-order/:orderCode', loadChildren: () => import('./public/components/success-order/success-order.module').then((m) => m.SuccessOrderModule), canActivate: [LoginBeforeGuard] },
 
   { path: 'checkout', loadChildren: () => import('./public/components/checkout/checkout.module').then((m) => m.CheckoutModule), canActivate: [LoginBeforeGuard] },
 
-  { path: 'search', loadChildren: () => import('./public/components/products/products.module').then((module) => module.ProductsModule) },
+  { path: 'search', loadChildren: () => import('./public/components/products/product-list/product-list.module').then((module) => module.ProductListModule) },
 
   { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule) },
 

@@ -23,7 +23,7 @@ const routes: Routes = [
       },
       {
         path: 'orders',
-        loadChildren: () => import('./orders/orders.module').then((module) => module.OrdersModule),
+        loadChildren: () => import('./orders/order-list/order-list.module').then((module) => module.OrderListModule),
         canActivate: [AuthGuard, AdminPanelGuard],
       },
       {
@@ -38,7 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'users',
-        loadChildren: () => import('./users/users.module').then((module) => module.UsersModule),
+        loadChildren: () => import('./users/user-list/user-list.module').then((module) => module.UserListModule),
         canActivate: [AuthGuard],
       },
     ],

@@ -124,7 +124,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
     `,
   ],
 })
-export class CreateComponent {
+export class ProductCreateComponent {
   frm: FormGroup;
   submitted = false;
 

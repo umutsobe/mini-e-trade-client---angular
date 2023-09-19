@@ -10,6 +10,5 @@ import { MatTableModule } from '@angular/material/table';
 @NgModule({
   declarations: [OrderListComponent],
   imports: [CommonModule, RouterModule.forChild([{ path: '', component: OrderListComponent }]), MatFormFieldModule, MatTableModule, MatPaginatorModule, NgxSpinnerModule],
-  exports: [OrderListComponent],
 })
 export class OrderListModule {}
