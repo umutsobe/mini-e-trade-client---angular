@@ -425,9 +425,11 @@ export class CheckoutComponent implements OnInit {
     // Örnek olarak, bu radyo düğmesini seçili hale getirin:
     this.selectedAddress = address;
 
-    const selectedRadio = document.getElementById(address.id.toString()) as HTMLInputElement;
-    if (selectedRadio) {
-      selectedRadio.checked = true;
+    if (typeof document !== 'undefined') {
+      const selectedRadio = document.getElementById(address.id.toString()) as HTMLInputElement;
+      if (selectedRadio) {
+        selectedRadio.checked = true;
+      }
     }
   }
 

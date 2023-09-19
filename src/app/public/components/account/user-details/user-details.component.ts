@@ -136,7 +136,7 @@ export class UserDetailsComponent implements OnInit {
         this.spinner.hide();
       });
 
-    this.isUpdateMailCodeSend = localStorage.getItem('isUpdateMailCodeSend') == 'true' ? true : false;
+    if (typeof localStorage !== 'undefined') this.isUpdateMailCodeSend = localStorage.getItem('isUpdateMailCodeSend') == 'true' ? true : false;
   }
 
   async updateName() {
@@ -175,7 +175,7 @@ export class UserDetailsComponent implements OnInit {
 
     if (result.succeeded) {
       this.toastr.success('Kod başarıyla gönderildi');
-      localStorage.setItem('isUpdateMailCodeSend', 'true');
+      if (typeof localStorage !== 'undefined') localStorage.setItem('isUpdateMailCodeSend', 'true');
       this.isUpdateMailCodeSend = true;
     } else {
       this.toastr.error(result.message);
@@ -198,7 +198,7 @@ export class UserDetailsComponent implements OnInit {
 
     if (result.succeeded) {
       this.toastr.success(result.message);
-      localStorage.removeItem('isUpdateMailCodeSend');
+      if (typeof localStorage !== 'undefined') localStorage.removeItem('isUpdateMailCodeSend');
       this.ngOnInit();
     } else {
       this.toastr.error(result.message);

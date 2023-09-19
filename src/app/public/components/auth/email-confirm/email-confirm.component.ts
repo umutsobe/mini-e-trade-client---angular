@@ -50,7 +50,7 @@ import { TwoFactorAuthService } from 'src/app/services/models/two-factor-auth.se
 })
 export class EmailConfirmComponent implements OnInit {
   constructor(private twoFactorAuthService: TwoFactorAuthService, private accountService: AccountService, private router: Router, private toastr: ToastrService, private spinner: NgxSpinnerService) {
-    this.userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '';
+    if (typeof localStorage !== 'undefined') this.userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : '';
   }
   isCodeSend = false;
   userId = '';
@@ -61,7 +61,7 @@ export class EmailConfirmComponent implements OnInit {
   };
 
   async ngOnInit() {
-    if (localStorage.getItem('isCodeSend') == 'true') this.isCodeSend = true;
+    if (typeof localStorage !== 'undefined') if (localStorage.getItem('isCodeSend') == 'true') this.isCodeSend = true;
   }
 
   async sendCode() {
@@ -71,7 +71,7 @@ export class EmailConfirmComponent implements OnInit {
 
     if (result.succeeded) {
       this.toastr.success('Kod başarıyla gönderildi');
-      localStorage.setItem('isCodeSend', 'true');
+      if (typeof localStorage !== 'undefined') localStorage.setItem('isCodeSend', 'true');
       this.isCodeSend = true;
     } else {
       this.toastr.error(result.message);
@@ -87,8 +87,10 @@ export class EmailConfirmComponent implements OnInit {
 
     if (result.succeeded) {
       this.toastr.success(result.message);
-      localStorage.removeItem('userId');
-      localStorage.removeItem('isCodeSend');
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('isCodeSend');
+      }
       this.router.navigateByUrl('/login');
     } else {
       this.toastr.error(result.message);

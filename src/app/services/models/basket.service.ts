@@ -14,11 +14,14 @@ export class BasketService {
   constructor(private httpClientService: HttpClientService, private jwtHelper: JwtHelperService) {}
 
   getBasketId(): string {
-    const token = localStorage.getItem('accessToken');
-    const decodedToken = this.jwtHelper.decodeToken(token);
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      const decodedToken = this.jwtHelper.decodeToken(token);
 
-    const basketId: string = decodedToken.basketId;
-    return basketId;
+      const basketId: string = decodedToken.basketId;
+      return basketId;
+    }
+    return '';
   }
 
   async get(): Promise<List_Basket_Item[]> {

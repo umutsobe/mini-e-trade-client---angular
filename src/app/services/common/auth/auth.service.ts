@@ -9,7 +9,7 @@ export class AuthService {
   isExpired = false;
 
   get Token(): string {
-    if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
+    if (typeof localStorage !== 'undefined') if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
     return '';
   }
 

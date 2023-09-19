@@ -50,18 +50,21 @@ export class UserService {
     const tokenResponse: TokenResponse = (await firstValueFrom(observable)) as TokenResponse;
 
     if (tokenResponse.token) {
-      localStorage.setItem('accessToken', tokenResponse.token.accessToken);
+      if (typeof localStorage !== 'undefined') localStorage.setItem('accessToken', tokenResponse.token.accessToken);
     }
 
     callBackFunction();
   }
 
   getUserId(): string {
-    const token = localStorage.getItem('accessToken');
-    const decodedToken = this.jwtHelper.decodeToken(token);
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      const decodedToken = this.jwtHelper.decodeToken(token);
 
-    const userId: string = decodedToken.userId;
-    return userId;
+      const userId: string = decodedToken.userId;
+      return userId;
+    }
+    return '';
   }
 
   async passwordReset(email: string, callBackFunction?: () => void) {

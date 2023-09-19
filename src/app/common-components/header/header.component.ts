@@ -78,14 +78,16 @@ export class HeaderComponent implements OnInit {
   async ngOnInit() {
     this.authService.identityCheck();
 
-    if (!localStorage.getItem('theme')) {
-      localStorage.setItem('theme', 'light');
-      this.toggleThemeString = 'Light Theme';
-    } else {
-      if (localStorage.getItem('theme') == 'light') {
-        $('body').attr('data-bs-theme', 'light');
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+        this.toggleThemeString = 'Light Theme';
       } else {
-        $('body').attr('data-bs-theme', 'dark');
+        if (localStorage.getItem('theme') == 'light') {
+          $('body').attr('data-bs-theme', 'light');
+        } else {
+          $('body').attr('data-bs-theme', 'dark');
+        }
       }
     }
   }
@@ -102,7 +104,7 @@ export class HeaderComponent implements OnInit {
   signOut() {
     localStorage.removeItem('accessToken');
     this.router.navigate(['']).then(() => {
-      window.location.reload();
+      if (typeof window !== 'undefined') window.location.reload();
     });
   }
   toggleTheme() {

@@ -121,7 +121,7 @@ export class RegisterComponent {
         this.toastr.info('Ana sayfaya yönlendiriliyorsunuz');
         setTimeout(() => {
           this.router.navigate(['']).then(() => {
-            window.location.reload();
+            if (typeof window !== 'undefined') window.location.reload();
           });
         }, 1500);
       });
@@ -150,7 +150,7 @@ export class RegisterComponent {
     });
 
     if (result.succeeded && result.userId.length > 5) {
-      localStorage.setItem('userId', result.userId);
+      if (typeof localStorage !== 'undefined') localStorage.setItem('userId', result.userId);
       this.router.navigateByUrl('/email-confirm');
     } else if (result.succeeded) {
       this.toastr.success('Kullanıcı Başarıyla Oluşturuldu');

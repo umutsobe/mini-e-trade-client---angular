@@ -82,7 +82,7 @@ export class PasswordChangeComponent implements OnInit {
     this.accountService
       .updateUserPassword(userModel)
       .then((response) => {
-        localStorage.setItem('accessToken', response.accessToken);
+        if (typeof localStorage !== 'undefined') localStorage.setItem('accessToken', response.accessToken);
 
         this.spinner.hide();
         this.toastr.success('Password Successfully Changed.');

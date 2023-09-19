@@ -11,6 +11,7 @@ import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
 import { CommonComponentsModule } from './common-components/common-components.module';
+import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
   declarations: [AppComponent],
   providers: [
@@ -36,6 +37,7 @@ import { CommonComponentsModule } from './common-components/common-components.mo
     AppRoutingModule,
     CommonComponentsModule,
     BrowserAnimationsModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     FontAwesomeModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule,
@@ -43,7 +45,7 @@ import { CommonComponentsModule } from './common-components/common-components.mo
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
-          if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
+          if (typeof localStorage !== 'undefined') if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
           return '';
         },
         allowedDomains: [environment.jwtDomain],

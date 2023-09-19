@@ -35,8 +35,10 @@ import { AfterViewChecked, Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   //sayfayı yenilerken footer gözükmesin diye önlem
   ngOnInit(): void {
-    setTimeout(() => {
-      document.getElementById('footer').classList.remove('d-none');
-    }, 1000);
+    if (typeof document !== 'undefined') {
+      setTimeout(() => {
+        document.getElementById('footer').classList.remove('d-none');
+      }, 1000);
+    }
   }
 }

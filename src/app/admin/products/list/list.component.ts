@@ -314,7 +314,7 @@ export class ListComponent implements OnInit {
     // date daha güzel görünür
 
     const date = new Date(dateString);
-    if (window.innerWidth < 600) return formatDate(date, 'yyyy-MM-dd', 'en-US');
+    if (typeof window !== 'undefined') if (window.innerWidth < 600) return formatDate(date, 'yyyy-MM-dd', 'en-US');
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
   }
 

@@ -88,7 +88,7 @@ export class LoginComponent {
         authService.identityCheck();
 
         this.router.navigate(['']).then(() => {
-          window.location.reload();
+          if (typeof window !== 'undefined') window.location.reload();
         });
       });
     });
@@ -109,18 +109,18 @@ export class LoginComponent {
       .login(emailOrUserName, password)
       .then((response) => {
         if (response.token) {
-          localStorage.setItem('accessToken', response.token.accessToken);
+          if (typeof localStorage !== 'undefined') localStorage.setItem('accessToken', response.token.accessToken);
 
           //ana ekrana yönlendirip reload ettirdim. bunu yapmasaydım login olduktan sonra header yenilenmeyecekti.
           this.router.navigate(['']).then(() => {
-            window.location.reload();
+            if (typeof window !== 'undefined') window.location.reload();
           });
         } else if (response.message) {
           this.toastr.error(response.message);
         } else if (response.authMessage) {
           this.toastr.info(response.authMessage);
           this.router.navigateByUrl('/email-confirm');
-          localStorage.setItem('userId', response.userId);
+          if (typeof localStorage !== 'undefined') localStorage.setItem('userId', response.userId);
         }
       })
       .finally(() => {

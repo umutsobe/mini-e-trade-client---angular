@@ -263,48 +263,54 @@ export class ProductDetailComponent implements OnInit {
   }
 
   descriptionButtonClicked() {
-    const descriptionButton = document.getElementById('descriptionButton');
-    const ratingButton = document.getElementById('ratingButton');
-    const ratingSection = document.getElementById('rating');
-    const descriptionSection = document.getElementById('description');
+    if (typeof document !== 'undefined') {
+      const descriptionButton = document.getElementById('descriptionButton');
+      const ratingButton = document.getElementById('ratingButton');
+      const ratingSection = document.getElementById('rating');
+      const descriptionSection = document.getElementById('description');
 
-    if (!descriptionButton.classList.contains('nav-link')) {
-      descriptionButton.classList.add('nav-link');
+      if (!descriptionButton.classList.contains('nav-link')) {
+        descriptionButton.classList.add('nav-link');
 
-      descriptionSection.classList.remove('d-none');
-      ratingSection.classList.add('d-none');
-      ratingButton.classList.remove('nav-link');
+        descriptionSection.classList.remove('d-none');
+        ratingSection.classList.add('d-none');
+        ratingButton.classList.remove('nav-link');
+      }
     }
   }
   ratingButtonClicked() {
-    const descriptionButton = document.getElementById('descriptionButton');
-    const ratingButton = document.getElementById('ratingButton');
-    const ratingSection = document.getElementById('rating');
-    const descriptionSection = document.getElementById('description');
+    if (typeof document !== 'undefined') {
+      const descriptionButton = document.getElementById('descriptionButton');
+      const ratingButton = document.getElementById('ratingButton');
+      const ratingSection = document.getElementById('rating');
+      const descriptionSection = document.getElementById('description');
 
-    if (!ratingButton.classList.contains('nav-link')) {
-      ratingButton.classList.add('nav-link');
+      if (!ratingButton.classList.contains('nav-link')) {
+        ratingButton.classList.add('nav-link');
 
-      ratingSection.classList.remove('d-none');
-      descriptionSection.classList.add('d-none');
-      descriptionButton.classList.remove('nav-link');
+        ratingSection.classList.remove('d-none');
+        descriptionSection.classList.add('d-none');
+        descriptionButton.classList.remove('nav-link');
+      }
+      this.ratingComponentLoaded = true;
     }
-    this.ratingComponentLoaded = true;
   }
 
   goToRatings() {
-    const ratingButton = document.getElementById('ratingButton');
-    const ratingSection = document.getElementById('rating');
-    const section = document.getElementById('section');
-    const descriptionButton = document.getElementById('descriptionButton');
-    const descriptionSection = document.getElementById('description');
+    if (typeof document !== 'undefined') {
+      const ratingButton = document.getElementById('ratingButton');
+      const ratingSection = document.getElementById('rating');
+      const section = document.getElementById('section');
+      const descriptionButton = document.getElementById('descriptionButton');
+      const descriptionSection = document.getElementById('description');
 
-    descriptionButton.classList.remove('nav-link');
-    descriptionSection.classList.add('d-none');
-    ratingButton.classList.add('nav-link');
-    ratingSection.classList.remove('d-none');
-    section.scrollIntoView();
-    this.ratingComponentLoaded = true;
+      descriptionButton.classList.remove('nav-link');
+      descriptionSection.classList.add('d-none');
+      ratingButton.classList.add('nav-link');
+      ratingSection.classList.remove('d-none');
+      section.scrollIntoView();
+      this.ratingComponentLoaded = true;
+    }
   }
 
   //image slider
