@@ -18,7 +18,6 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { RegisterComponent } from './public/components/auth/register/register.component';
 import { environment } from 'src/environments/environment';
 import { CommonComponentsModule } from './common-components/common-components.module';
-
 @NgModule({
   declarations: [AppComponent, LoginComponent, RegisterComponent],
   providers: [

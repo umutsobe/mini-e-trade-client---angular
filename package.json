@@ -6,12 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "dev:ssr": "ng run client-angular:serve-ssr",
-    "serve:ssr": "node dist/client-angular/server/main.js",
-    "build:ssr": "ng build && ng run client-angular:server",
-    "prerender": "ng run client-angular:prerender",
-    "lint": "ng lint"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -34,6 +29,10 @@
     "@microsoft/signalr": "^7.0.9",
     "@ng-bootstrap/ng-bootstrap": "^14.2.0",
     "@popperjs/core": "^2.11.6",
+    "@scullyio/init": "^2.1.41",
+    "@scullyio/ng-lib": "^2.1.41",
+    "@scullyio/scully": "^2.1.41",
+    "@scullyio/scully-plugin-puppeteer": "^2.1.41",
     "angular-font-awesome": "^3.1.2",
     "angular-popper": "^2.0.1",
     "bootstrap": "^5.2.3",

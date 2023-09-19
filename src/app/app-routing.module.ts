@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
-import { NoPreloading, PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './public/components/home/home.component';
-import { AdminComponent } from './admin/admin.component';
 import { ErrorComponent } from './public/components/error/error.component';
 import { AuthGuard } from './guards/common/auth.guard';
 import { LoginAfterGuard } from './guards/common/login-after.guard';
 import { AdminPanelGuard } from './guards/admin-panel/admin-panel.guard';
-import { AccountComponent } from './public/components/account/account.component';
-import { UserDetailsComponent } from './public/components/account/user-details/user-details.component';
 import { LoginBeforeGuard } from './guards/common/login-before.guard';
 
 const routes: Routes = [
@@ -16,61 +12,13 @@ const routes: Routes = [
 
   {
     path: 'admin',
-    component: AdminComponent,
+    loadChildren: () => import('./admin/admin.module').then((module) => module.AdminModule),
     canActivate: [AuthGuard, AdminPanelGuard],
-    children: [
-      { path: '', component: DashboardComponent, canActivate: [AuthGuard, AdminPanelGuard] },
-      { path: 'create-product', loadChildren: () => import('./admin/products/create/create.module').then((module) => module.CreateModule), canActivate: [AuthGuard, AdminPanelGuard] },
-      { path: 'list-product', loadChildren: () => import('./admin/products/list/list.module').then((module) => module.ListModule), canActivate: [AuthGuard, AdminPanelGuard] },
-      {
-        path: 'categories',
-        loadChildren: () => import('./admin/categories/categories.module').then((module) => module.CategoriesModule),
-        canActivate: [AuthGuard, AdminPanelGuard],
-      },
-      {
-        path: 'orders',
-        loadChildren: () => import('./admin/orders/orders.module').then((module) => module.OrdersModule),
-        canActivate: [AuthGuard, AdminPanelGuard],
-      },
-      {
-        path: 'authorize-menu',
-        loadChildren: () => import('./admin/authorize-menu/authorize-menu.module').then((module) => module.AuthorizeMenuModule),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'roles',
-        loadChildren: () => import('./admin/role/role.module').then((module) => module.RoleModule),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'users',
-        loadChildren: () => import('./admin/users/users.module').then((module) => module.UsersModule),
-        canActivate: [AuthGuard],
-      },
-    ],
   },
   {
     path: 'account',
-    component: AccountComponent,
+    loadChildren: () => import('./public/components/account/account.module').then((module) => module.AccountModule),
     canActivate: [AuthGuard],
-    children: [
-      { path: '', component: UserDetailsComponent, canActivate: [AuthGuard] },
-      {
-        path: 'orders',
-        loadChildren: () => import('./public/components/account/user-orders/user-orders.module').then((module) => module.UserOrdersModule),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'password-change',
-        loadChildren: () => import('./public/components/account/password-change/password-change.module').then((module) => module.PasswordChangeModule),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'my-addresess',
-        loadChildren: () => import('./public/components/account/addresess/addresess.module').then((module) => module.AddresessModule),
-        canActivate: [AuthGuard],
-      },
-    ],
   },
 
   {
@@ -78,6 +26,7 @@ const routes: Routes = [
     loadChildren: () => import('./public/components/basket/basket.module').then((module) => module.BasketModule),
     canActivate: [AuthGuard],
   },
+
   { path: 'success-order/:orderCode', loadChildren: () => import('./public/success-order/success-order.module').then((m) => m.SuccessOrderModule), canActivate: [LoginBeforeGuard] },
 
   { path: 'checkout', loadChildren: () => import('./public/components/checkout/checkout.module').then((m) => m.CheckoutModule), canActivate: [LoginBeforeGuard] },
