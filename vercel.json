@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "public": true,
+  "name": "client-angular",
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/client-angular/browser/**"
+    }
+  }
+}

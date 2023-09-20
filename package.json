@@ -13,7 +13,8 @@
     "dev:ssr": "ng run client-angular:serve-ssr",
     "serve:ssr": "node dist/client-angular/server/main.js",
     "build:ssr": "ng build && ng run client-angular:server",
-    "prerender": "ng run client-angular:prerender"
+    "prerender": "ng run client-angular:prerender",
+    "vercel-build": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {
