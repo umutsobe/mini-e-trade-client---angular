@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -104,7 +105,7 @@ import { AccountService } from 'src/app/services/models/account.service';
   ],
 })
 export class UserDetailsComponent implements OnInit {
-  constructor(private accountService: AccountService, private spinner: NgxSpinnerService, private formBuilder: FormBuilder, private authService: AuthService, private toastr: ToastrService) {
+  constructor(private accountService: AccountService, private spinner: NgxSpinnerService, private formBuilder: FormBuilder, private authService: AuthService, private toastr: ToastrService, @Inject(PLATFORM_ID) private platformId: Object) {
     this.frm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
     });
@@ -124,17 +125,19 @@ export class UserDetailsComponent implements OnInit {
   isUpdateMailCodeSend = false;
 
   async ngOnInit() {
-    this.spinner.show();
-    await this.accountService
-      .getUserDetails()
-      .then((response) => {
-        this.spinner.hide();
-        this.userDetails.email = response.email;
-        this.userDetails.name = response.name;
-      })
-      .catch((err) => {
-        this.spinner.hide();
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this.spinner.show();
+      await this.accountService
+        .getUserDetails()
+        .then((response) => {
+          this.spinner.hide();
+          this.userDetails.email = response.email;
+          this.userDetails.name = response.name;
+        })
+        .catch((err) => {
+          this.spinner.hide();
+        });
+    }
 
     if (typeof localStorage !== 'undefined') this.isUpdateMailCodeSend = localStorage.getItem('isUpdateMailCodeSend') == 'true' ? true : false;
   }

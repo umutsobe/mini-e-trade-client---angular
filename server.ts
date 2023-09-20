@@ -12,7 +12,7 @@ import { AppServerModule } from './src/main.server';
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-  server.use(compression({ level: 8 }));
+  // server.use(compression({ level: 8 })); işe yaramıyor
   const distFolder = join(process.cwd(), 'dist/client-angular/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
@@ -24,8 +24,6 @@ export function app(): express.Express {
       providers: [{ provide: 'serverData', useValue: server.locals['serverData'] }],
     })
   );
-  const serverData = { message: 'Merhaba, dünya!' };
-  server.locals['serverData'] = serverData;
 
   server.set('view engine', 'html');
   server.set('views', distFolder);
@@ -33,6 +31,7 @@ export function app(): express.Express {
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browse
+
   server.get(
     '*.*',
     express.static(distFolder, {
@@ -49,7 +48,7 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env['PORT'] || 4000;
+  const port = process.env['PORT'] || 4200;
 
   // Start up the Node server
   const server = app();

@@ -177,7 +177,7 @@ export class ProductDetailComponent implements OnInit {
   };
 
   async ngOnInit() {
-    if (typeof window !== null) window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
 
     this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
     this.isLoading = true;

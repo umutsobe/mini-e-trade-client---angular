@@ -11,7 +11,8 @@ import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
 import { CommonComponentsModule } from './common-components/common-components.module';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
+import { TransferHttpCacheModule } from '@nguniversal/common';
 @NgModule({
   declarations: [AppComponent],
   providers: [
@@ -37,7 +38,8 @@ import { BrowserModule } from '@angular/platform-browser';
     AppRoutingModule,
     CommonComponentsModule,
     BrowserAnimationsModule,
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule.withServerTransition({ appId: 'client-angular' }),
+    TransferHttpCacheModule,
     FontAwesomeModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule,

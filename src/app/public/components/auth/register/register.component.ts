@@ -101,7 +101,6 @@ export class RegisterComponent {
   submitted = false;
   constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService, private socialAuthService: SocialAuthService, private authService: AuthService, private router: Router) {
     socialAuthService.authState.subscribe(async (user: SocialUser) => {
-      console.log(user);
       this.spinner.show();
 
       if (!user.lastName) {

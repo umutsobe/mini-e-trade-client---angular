@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -99,7 +99,7 @@ import { ProductService } from 'src/app/services/models/product.service';
               </ul>
             </div>
             <!-- products -->
-            <div class="d-flex flex-wrap justify-content-center product-cards">
+            <div class="d-flex flex-wrap justify-content-center product-cards" *ngIf="isBrowser">
               <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
                 <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
@@ -136,7 +136,6 @@ import { ProductService } from 'src/app/services/models/product.service';
         <a class="page-link " class="page-link" [routerLink]="['/products', pageNo]" (click)="scrollToTop()">{{ pageNo }}</a>
       </li> -->
     </div>
-    <div>{{ message }}</div>
     <div *ngIf="!(totalProductCount > 0)!; spinnerBootstrap" style="margin-bottom: 700px;"></div>
   `,
   styles: [
@@ -210,7 +209,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   ],
 })
 export class ProductListComponent {
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService, private transferState: TransferState) {}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   products: List_Product[] = [];
   categories: List_Category[] = [];
@@ -226,20 +225,11 @@ export class ProductListComponent {
 
   defaultImage = '/assets/preload.png';
 
-  message: string;
+  isBrowser: boolean;
+
   async ngOnInit() {
-    // Sunucu tarafından gelen veriyi al
-    const serverData = { message: 'Merhaba, dünya!' };
+    this.isBrowser = isPlatformBrowser(this.platformId); //search prerender iyi çalışmıyor
 
-    // TransferState için dize (string) bir anahtar oluştur
-    const key = makeStateKey<string>('serverData');
-
-    // Veriyi TransferState ile Angular'a aktar
-    this.transferState.set(key, JSON.stringify(serverData)); // JSON.stringify ile nesneyi dizeye dönüştür
-
-    // Veriyi bileşen içinde kullanabilirsiniz
-    this.message = serverData.message;
-    ////////////////
     this.scrollToTop();
     this.activatedRoute.queryParams.subscribe(async (params) => {
       this.queryStringBuilder(params);

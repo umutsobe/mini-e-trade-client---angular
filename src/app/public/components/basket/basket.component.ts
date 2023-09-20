@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/services/models/order.service';
 import { UserService } from 'src/app/services/models/user.service';
 import { Error_DTO } from 'src/app/contracts/error_dto';
+import { isPlatformBrowser } from '@angular/common';
 
 declare let $: any;
 
@@ -86,9 +87,11 @@ export class BasketComponent implements OnInit {
   products: List_Basket_Item[] = [];
   spinnerElement = true;
 
-  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService) {}
+  constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, @Inject(PLATFORM_ID) private platformId: Object) {}
   async ngOnInit() {
-    this.getProducts();
+    if (isPlatformBrowser(this.platformId)) {
+      this.getProducts();
+    }
   }
 
   async getProducts() {

@@ -57,8 +57,6 @@ export class FileUploadComponent {
         fileData.append(_file.name, _file, file.relativePath);
       });
 
-      console.log(this.idService.getId());
-
       this.http
         .post(
           {

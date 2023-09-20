@@ -179,8 +179,6 @@ export class ProductCreateComponent {
       isActive: this.isActive,
     };
 
-    console.log(product);
-
     this.productService
       .create(product)
       .then(() => {

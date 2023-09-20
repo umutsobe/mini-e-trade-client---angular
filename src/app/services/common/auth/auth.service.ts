@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private jwtHelper: JwtHelperService) {}
+  constructor(private jwtHelper: JwtHelperService, @Inject(PLATFORM_ID) private platformId: Object) {}
   isExpired = false;
 
   get Token(): string {
@@ -42,6 +42,7 @@ export class AuthService {
     this.isExpired = isExpired;
 
     if (token != null && !isExpired) _isAuthenticated = true; // token varsa ve expired değilse true olacak
+    else _isAuthenticated = false;
   }
 
   get isAuthenticated() {
@@ -58,4 +59,4 @@ export class AuthService {
   }
 }
 
-export let _isAuthenticated: boolean;
+export let _isAuthenticated: boolean = true;

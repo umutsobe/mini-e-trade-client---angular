@@ -93,7 +93,6 @@ export class PasswordChangeComponent implements OnInit {
       })
       .finally(() => {
         this.authService.identityCheck();
-        console.log(token);
       });
   }
   passwordMatchValidator(): ValidatorFn {

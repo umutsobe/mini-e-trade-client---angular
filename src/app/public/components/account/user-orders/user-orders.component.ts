@@ -1,5 +1,5 @@
-import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { formatDate, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ListUserOrders } from 'src/app/contracts/account/ListUserOrders';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
@@ -42,14 +42,16 @@ import { AccountService } from 'src/app/services/models/account.service';
   `,
 })
 export class UserOrdersComponent implements OnInit {
-  constructor(private accountService: AccountService, private authService: AuthService) {}
+  constructor(private accountService: AccountService, private authService: AuthService, @Inject(PLATFORM_ID) private platformId: Object) {}
   orders: ListUserOrders[];
 
   spinnerElement = true;
 
   async ngOnInit() {
-    this.orders = await this.accountService.listUserOrders(this.authService.UserId);
-    this.spinnerElement = false;
+    if (isPlatformBrowser(this.platformId)) {
+      this.orders = await this.accountService.listUserOrders(this.authService.UserId);
+      this.spinnerElement = false;
+    }
   }
 
   formatDate(dateString: string): string {

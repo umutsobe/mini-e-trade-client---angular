@@ -70,7 +70,6 @@ export class LoginComponent {
   submitted = false;
   constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private authService: AuthService, private router: Router, private socialAuthService: SocialAuthService, private toastr: ToastrService) {
     socialAuthService.authState.subscribe(async (user: SocialUser) => {
-      console.log(user);
       this.spinner.show();
 
       if (!user.lastName) {

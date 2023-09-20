@@ -76,9 +76,7 @@ export class CategoryComponent implements OnInit {
   faBars = faBars;
   categories: List_Category[] = [];
 
-  ngOnInit(): void {
-    this.categoryService.getCategories(0, 3).then((response) => {
-      this.categories = response.categories;
-    });
+  async ngOnInit() {
+    this.categories = (await this.categoryService.getCategories(0, 3)).categories;
   }
 }

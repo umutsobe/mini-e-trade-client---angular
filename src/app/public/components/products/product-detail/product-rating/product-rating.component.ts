@@ -239,8 +239,6 @@ export class ProductRatingComponent implements OnInit {
         this.isSend = true;
       })
       .catch((err) => {
-        console.log(err);
-
         this.toastr.error(err.error);
       })
       .finally(() => this.spinner.hide());

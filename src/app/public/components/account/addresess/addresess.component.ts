@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -99,7 +100,7 @@ export class AddresessComponent implements OnInit {
   frm: FormGroup;
   submitted = false;
 
-  constructor(private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private accountService: AccountService, private formBuilder: FormBuilder) {
+  constructor(private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private accountService: AccountService, private formBuilder: FormBuilder, @Inject(PLATFORM_ID) private platformId: Object) {
     this.frm = this.formBuilder.group({
       addressDefinition: ['', [Validators.required, Validators.maxLength(50)]],
       fullAddress: ['', [Validators.required, Validators.maxLength(400)]],
@@ -107,8 +108,10 @@ export class AddresessComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.spinner.show();
-    await this.getAddresess();
+    if (isPlatformBrowser(this.platformId)) {
+      this.spinner.show();
+      await this.getAddresess();
+    }
   }
 
   async getAddresess() {

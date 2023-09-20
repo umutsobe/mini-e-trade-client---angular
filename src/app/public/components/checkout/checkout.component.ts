@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +18,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CreateOrderResponse } from 'src/app/contracts/order/create-order-response';
 import { Router } from '@angular/router';
 import { Error_DTO } from 'src/app/contracts/error_dto';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-checkout',
@@ -244,7 +245,7 @@ export class CheckoutComponent implements OnInit {
   faTrash = faTrash;
 
   faEllipsis = faEllipsis;
-  constructor(private basketService: BasketService, private formBuilder: FormBuilder, private accountService: AccountService, private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private orderService: OrderService, private router: Router) {
+  constructor(private basketService: BasketService, private formBuilder: FormBuilder, private accountService: AccountService, private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private orderService: OrderService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
     this.createAddressFrm = this.formBuilder.group({
       addressDefinition: ['', [Validators.required, Validators.maxLength(50)]],
       fullAddress: ['', [Validators.required, Validators.maxLength(400)]],
@@ -263,11 +264,13 @@ export class CheckoutComponent implements OnInit {
   products: List_Basket_Item[] = [];
 
   async ngOnInit() {
-    this.products = await this.basketService.get();
+    if (isPlatformBrowser(this.platformId)) {
+      this.products = await this.basketService.get();
 
-    this.addresess = await this.accountService.getUserAdresses(this.authService.UserId).catch((err) => {
-      return [];
-    });
+      this.addresess = await this.accountService.getUserAdresses(this.authService.UserId).catch((err) => {
+        return [];
+      });
+    }
 
     this.spinnerElement = false;
   }
