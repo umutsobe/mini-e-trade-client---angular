@@ -13,20 +13,20 @@ declare let $: any;
   template: `
     <nav class="navbar navbar-expand-lg" style="background-color: #1B6B93;">
       <div class="container-sm">
-        <a routerLink="" role="button" class="navbar-brand cursor-pointer text-white">Home</a>
+        <a routerLink="" role="button" class="navbar-brand cursor-pointer text-white" style="width: fit-content;">Home</a>
 
-        <div class="d-none d-md-block nav-link me-auto">
+        <div class="d-none d-md-block nav-link mx-auto">
           <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())">Admin Panel</a></div>
         </div>
 
-        <div class="d-none d-lg-block mx-auto">
+        <div class="d-none d-lg-block mx-auto" style="width: 400px;">
           <form class="d-flex mx-auto" style="height: 40px; padding-left: 2vw;">
             <input [(ngModel)]="keyword" name="keyword" class="input form-control me-2" placeholder="Ara" />
             <button (click)="search()" type="submit" class="btn btn-warning"><fa-icon class="fs-5 me-1" [icon]="faMagnifyingGlass"></fa-icon></button>
           </form>
         </div>
 
-        <div class="d-flex">
+        <div class="d-flex ms-auto">
           <a routerLink="login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Login</button></a>
         </div>
 
