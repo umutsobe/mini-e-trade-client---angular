@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
-
+import { inject } from '@vercel/analytics';
 @Component({
   selector: 'app-root',
   template: `
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   //sayfayı yenilerken footer gözükmesin diye önlem
   ngOnInit(): void {
     if (typeof document !== 'undefined') {
+      inject();
       setTimeout(() => {
         document.getElementById('footer').classList.remove('d-none');
       }, 1000);
