@@ -14,7 +14,8 @@
     "serve:ssr": "node dist/client-angular/server/main.js",
     "build:ssr": "ng build && ng run client-angular:server",
     "prerender": "ng run client-angular:prerender",
-    "vercel-build": "ng run client-angular:prerender"
+    "my-prerender": "ng run client-angular:prerender --no-guess-routes --routes-file routes.txt",
+    "vercel-build": "ng run client-angular:prerender --no-guess-routes --routes-file routes.txt"
   },
   "private": true,
   "dependencies": {
