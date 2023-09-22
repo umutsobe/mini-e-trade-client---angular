@@ -6,7 +6,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node dist/client-angular/server/main.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
