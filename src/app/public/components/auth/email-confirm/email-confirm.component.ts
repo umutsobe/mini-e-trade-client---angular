@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { IsCodeValidRequest } from 'src/app/contracts/two-factor-auth/IsCodeValidRequest';
 import { TwoFactorResult } from 'src/app/contracts/two-factor-auth/TwoFactorResult';
+import { _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { AccountService } from 'src/app/services/models/account.service';
 import { TwoFactorAuthService } from 'src/app/services/models/two-factor-auth.service';
 
@@ -61,6 +62,11 @@ export class EmailConfirmComponent implements OnInit {
   };
 
   async ngOnInit() {
+    if (_isAuthenticated == true) {
+      this.router.navigateByUrl('/');
+      return;
+    }
+
     if (typeof localStorage !== 'undefined') if (localStorage.getItem('isCodeSend') == 'true') this.isCodeSend = true;
   }
 

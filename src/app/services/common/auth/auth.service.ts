@@ -59,4 +59,4 @@ export class AuthService {
   }
 }
 
-export let _isAuthenticated: boolean = true;
+export let _isAuthenticated = true;

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
@@ -43,12 +44,17 @@ export class PasswordResetComponent implements OnInit {
   frm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private spinner: NgxSpinnerService, private toastr: ToastrService, private router: Router) {}
 
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
     });
+
+    if (_isAuthenticated == true) {
+      this.router.navigateByUrl('/');
+      return;
+    }
   }
   async onSubmit() {
     this.submitted = true;

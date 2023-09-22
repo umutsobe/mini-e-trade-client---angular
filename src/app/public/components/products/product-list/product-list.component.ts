@@ -99,11 +99,14 @@ import { ProductService } from 'src/app/services/models/product.service';
               </ul>
             </div>
             <!-- products -->
-            <div class="d-flex flex-wrap justify-content-center product-cards">
+            <!-- api browser-->
+            <div *ngIf="isBrowser" class="d-flex flex-wrap justify-content-center product-cards">
               <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-                <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath && isBrowser" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
-                <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
+                <img *ngIf="!isBrowser" src="/assets/preload.png" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+
+                <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath && isBrowser" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
                 <div class="card-body m-0 p-2">
                   <p (click)="routeToProductDetail(product.url)" type="button" class="product-name m-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
@@ -114,6 +117,21 @@ import { ProductService } from 'src/app/services/models/product.service';
                   </div>
                   <h5 class="text-center mt-1 text-truncate" style="font-size: 18px;">{{ product.price | currency : '₺' }}</h5>
                   <button class="btn btn-primary btn-sm shadow-none w-100 mt-2" (click)="addToBasket(product)">Add to cart</button>
+                </div>
+              </div>
+            </div>
+            <!-- awdawd -->
+            <div class="d-flex flex-wrap justify-content-center product-cards" *ngIf="!isBrowser" aria-hidden="true">
+              <div *ngFor="let item of [].constructor(12)" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
+                <img class="card-img-top mb-0 rounded-2" src="/assets/preload.png" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+
+                <div class="card-body m-0 p-2">
+                  <p type="button" class="product-name m-0 p-0 placeholder rounded-2" style="font-size: 16px;">a</p>
+                  <div style="height: 24px;" class="mt-1">
+                    <div style="height: 24px;" class="m-0 p-0 d-flex align-content-center placeholder rounded-2">star</div>
+                  </div>
+                  <h5 class="text-center mt-1 text-truncate placeholder rounded-2" style="font-size: 18px;">price</h5>
+                  <button class="btn  btn-sm shadow-none w-100 mt-2 placeholder">-</button>
                 </div>
               </div>
             </div>
@@ -231,6 +249,7 @@ export class ProductListComponent {
     this.isBrowser = isPlatformBrowser(this.platformId); //search prerender iyi çalışmıyor
 
     this.scrollToTop();
+
     this.activatedRoute.queryParams.subscribe(async (params) => {
       this.queryStringBuilder(params);
       this.currentPageNo = +params['page'] || 0;
@@ -265,17 +284,6 @@ export class ProductListComponent {
 
         return listProduct;
       });
-
-      this.pageList = [];
-
-      if (this.totalPageCount >= 5) {
-        if (this.currentPageNo - 2 <= 0) for (let i = 1; i <= 5; i++) this.pageList.push(i);
-        else if (this.currentPageNo + 2 >= this.totalPageCount) for (let i = this.totalPageCount - 4; i <= this.totalPageCount; i++) this.pageList.push(i);
-        else for (let i = this.currentPageNo - 2; i <= this.currentPageNo + 2; i++) this.pageList.push(i);
-      } else {
-        for (let i = 1; i <= this.totalPageCount; i++) this.pageList.push(i);
-      }
-
       this.spinnerBootstrap = false;
     });
   }

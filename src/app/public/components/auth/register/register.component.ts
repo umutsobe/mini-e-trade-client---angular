@@ -6,7 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Create_User } from 'src/app/contracts/create_user';
 import { User } from 'src/app/entities/user';
-import { AuthService } from 'src/app/services/common/auth/auth.service';
+import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
@@ -137,6 +137,11 @@ export class RegisterComponent {
     });
 
     this.frm.addValidators(this.passwordMatchValidator());
+
+    if (_isAuthenticated == true) {
+      this.router.navigateByUrl('/');
+      return;
+    }
   }
   async onSubmit(user: User) {
     this.submitted = true;

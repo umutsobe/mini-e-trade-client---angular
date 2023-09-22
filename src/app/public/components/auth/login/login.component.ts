@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/services/common/auth/auth.service';
+import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { UserService } from 'src/app/services/models/user.service';
 
 @Component({
@@ -91,14 +91,19 @@ export class LoginComponent {
         });
       });
     });
-  }
-
-  ngOnInit(): void {
     this.frm = this.formBuilder.group({
       emailOrUserName: ['', [Validators.required, Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
+
+  ngOnInit(): void {
+    if (_isAuthenticated == true) {
+      this.router.navigateByUrl('/');
+      return;
+    }
+  }
+
   async onSubmit(emailOrUserName: string, password: string) {
     this.submitted = true;
     if (this.frm.invalid) return;

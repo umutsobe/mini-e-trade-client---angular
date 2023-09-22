@@ -1,30 +1,38 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { Inject, Injectable, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { _isAuthenticated } from 'src/app/services/common/auth/auth.service';
+import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
-  constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {}
+export class AuthGuard implements CanActivate, OnInit {
+  constructor(private authService: AuthService, private toastr: ToastrService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {}
+  async ngOnInit() {
+    await this.authService.identityCheck();
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    this.spinner.show();
+    var canContinue: boolean = false;
 
-    if (!_isAuthenticated) {
-      // token yoksa veya token süresi geçmişse tekrar oturum açmasını sağlayabilmek için login sayfasına yönlendiriyoruz
-      if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
+      // Browser
+      // Verify here if the token exists
+      canContinue = _isAuthenticated;
+
+      if (!canContinue) {
         this.router.navigate(['login'], { queryParams: { returnUrl: state.url } });
 
         this.toastr.error('Oturum açmanız gerekiyor', 'Yetkisiz Erişim');
-        //serverda auth durumu false olduğu için bu toastr serverdan render edilip geliyor ve dokunduğumuzda gitmiyordu
       }
     }
+    if (isPlatformServer(this.platformId)) {
+      // Server side
+      canContinue = true;
+    }
 
-    this.spinner.hide();
-    return true;
+    return canContinue;
   }
 }

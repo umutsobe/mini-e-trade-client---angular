@@ -77,6 +77,6 @@ export class CategoryComponent implements OnInit {
   categories: List_Category[] = [];
 
   async ngOnInit() {
-    this.categories = (await this.categoryService.getCategories(0, 3)).categories;
+    this.categories = (await this.categoryService.getCategories(0, 10)).categories;
   }
 }

@@ -1,4 +1,5 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { AuthService } from './services/common/auth/auth.service';
 @Component({
   selector: 'app-root',
   template: `
@@ -32,8 +33,10 @@ import { AfterViewChecked, Component, OnInit } from '@angular/core';
   ],
 })
 export class AppComponent implements OnInit {
+  constructor(private authService: AuthService) {}
   //sayfayı yenilerken footer gözükmesin diye önlem
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.authService.identityCheck();
     if (typeof document !== 'undefined') {
       setTimeout(() => {
         document.getElementById('footer').classList.remove('d-none');

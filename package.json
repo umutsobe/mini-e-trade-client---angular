@@ -7,16 +7,17 @@
   "scripts": {
     "ng": "ng",
     "start": "node dist/client-angular/server/main.js",
-    "build": "ng build",
+    "build": "ng build && ng run client-angular:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run client-angular:serve-ssr",
     "serve:ssr": "node dist/client-angular/server/main.js",
     "build:ssr": "ng build ;; ng run client-angular:server",
     "prerender": "ng run client-angular:prerender",
+    "postbuild": "node postbuild.js",
     "pre": "ng run client-angular:prerender --routes-file routes.txt",
     "node": "node dist/client-angular/server/main.js",
-    "heroku-postbuild": "ng run client-angular:prerender --routes-file routes.txt",
+    "heroku-postbuild": "ng build && ng run client-angular:server",
     "vercel-build": "ng build && ng run client-angular:server"
   },
   "private": true,
@@ -57,6 +58,7 @@
     "npm": "^9.8.1",
     "popper.js": "^1.16.1",
     "primeng": "^15.4.1",
+    "purgecss": "^5.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "^0.13.3"
