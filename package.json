@@ -16,7 +16,7 @@
     "prerender": "ng run client-angular:prerender",
     "pre": "ng run client-angular:prerender --routes-file routes.txt",
     "node": "node dist/client-angular/server/main.js",
-    "heroku-postbuild": "ng build && ng run client-angular:server",
+    "heroku-postbuild": "ng run client-angular:prerender --routes-file routes.txt",
     "vercel-build": "ng build && ng run client-angular:server"
   },
   "private": true,
