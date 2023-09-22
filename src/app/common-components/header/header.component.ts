@@ -80,8 +80,8 @@ export class HeaderComponent implements OnInit {
 
     if (typeof localStorage !== 'undefined') {
       if (!localStorage.getItem('theme')) {
-        localStorage.setItem('theme', 'light');
-        this.toggleThemeString = 'Light Theme';
+        localStorage.setItem('theme', 'dark');
+        this.toggleThemeString = 'Dark Theme';
       } else {
         if (localStorage.getItem('theme') == 'light') {
           $('body').attr('data-bs-theme', 'light');
