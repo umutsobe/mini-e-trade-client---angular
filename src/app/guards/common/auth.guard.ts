@@ -1,7 +1,6 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Inject, Injectable, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 

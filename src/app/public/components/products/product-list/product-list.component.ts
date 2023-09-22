@@ -80,15 +80,11 @@ import { ProductService } from 'src/app/services/models/product.service';
         <!-- products colonu -->
         <div class="px-2 p-0 mt-0" style="width: 100%;">
           <!-- products yoksa info -->
-          <div *ngIf="!(totalProductCount > 0) && !spinnerBootstrap" class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center" *ngIf="products.length < 1 && !spinnerBootstrap">
             <div class="alert alert-info ">No Results. Try checking your spelling or use more general terms.</div>
           </div>
           <!-- products list -->
           <div class="m-0">
-            <!-- spinner -->
-            <div class="text-center d-flex justify-content-center" style="width: 50%; position: absolute;">
-              <div *ngIf="spinnerBootstrap" class="spinner-border text-primary" role="status"></div>
-            </div>
             <!-- sort dropdown  lg sonrası için-->
             <div *ngIf="totalProductCount > 0" class="dropdown mt-1 mb-4 mb-lg-5 ps-4" style="width: fit-content;">
               <div class="d-none d-lg-block dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sort By</div>

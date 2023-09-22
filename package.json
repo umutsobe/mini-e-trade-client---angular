@@ -8,15 +8,14 @@
     "ng": "ng",
     "start": "node dist/client-angular/server/main.js",
     "build": "ng build && ng run client-angular:server",
+    "devbuild": "ng build && ng run client-angular:server && --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "dev:ssr": "ng run client-angular:serve-ssr",
-    "serve:ssr": "node dist/client-angular/server/main.js",
+    "ssr": "ng run client-angular:serve-ssr",
+    "node": "node dist/client-angular/server/main.js",
     "build:ssr": "ng build ;; ng run client-angular:server",
-    "prerender": "ng run client-angular:prerender",
-    "postbuild": "node postbuild.js",
-    "pre": "ng run client-angular:prerender --routes-file routes.txt",
-    "node": "node dist/client-angular/server/main.js"
+    "prerender": "ng run client-angular:prerender --routes-file routes.txt",
+    "postbuild": "node postbuild.js"
   },
   "private": true,
   "dependencies": {

@@ -21,7 +21,7 @@ declare let $: any;
 
         <div class="d-none d-lg-block mx-auto" style="width: 300px;" *ngIf="isBrowser">
           <form class="d-flex" style="height: 40px">
-            <input [(ngModel)]="keyword" name="keyword" class="input form-control me-2" placeholder="Ara" />
+            <input [(ngModel)]="keyword" (keyup.enter)="search()" name="keyword" class="input form-control me-2" placeholder="Ara" />
             <div (click)="search()" type="submit" class="btn btn-warning"><img width="24px" src="/assets/glass.png" /></div>
           </form>
         </div>

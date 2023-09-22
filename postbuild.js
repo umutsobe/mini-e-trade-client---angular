@@ -20,7 +20,7 @@ for (let f of files) {
 
 console.log("Run PurgeCSS...");
 
-exec("purgecss -css ./dist/client-angular/browser/*.css --content ./dist/client-angular/browser/*.html ./dist/client-angular/browser/*.js -o ./dist/client-angular/browser/", function (error, stdout, stderr) {
+exec("purgecss -css ./dist/client-angular/browser/*.css --content ./dist/client-angular/browser/index.html ./dist/client-angular/browser/*.js -o ./dist/client-angular/browser/", function (error, stdout, stderr) {
   console.log("PurgeCSS done");
   console.log();
 
