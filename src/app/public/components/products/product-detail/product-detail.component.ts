@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { ProductService } from 'src/app/services/models/product.service';
@@ -10,8 +10,6 @@ import { BasketService } from 'src/app/services/models/basket.service';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from 'src/app/services/models/file.service';
-import { PhotoSliderObject } from 'src/app/contracts/product/photoSlider/photoSliderObject';
-import { NgImageSliderComponent } from 'ng-image-slider';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
@@ -31,13 +29,15 @@ import { Error_DTO } from 'src/app/contracts/error_dto';
             <div class="col-12 col-lg-6">
               <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-12 col-md-10 col-lg-12">
-                  <div class="d-flex align-items-center border rounded-3 text-center p-3 h-80">
-                    <img (click)="showcaseImageClick()" *ngIf="showCaseImagePath" [defaultImage]="defaultImage" [lazyLoad]="showCaseImagePath" type="button" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
-                    <img *ngIf="!showCaseImagePath" src="/assets/product.jpg" class="showcaseImage w-100 rounded-3" style="height: 45vh; object-fit: contain;" />
-                  </div>
-                  <div class="mt-2 col-12 d-flex justify-content-center">
-                    <ng-image-slider *ngIf="imageObject.length > 0" class="imageSlider" [imagePopup]="true" [slideImage]="2" [lazyLoading]="false" [animationSpeed]="0.4" [imageSize]="{ width: '75', height: '70', space: 2 }" style="height: 70px; width: 300px;" [images]="imageObject" #imageSlider></ng-image-slider>
-                  </div>
+                  <p-galleria [value]="images" [responsiveOptions]="responsiveOptions" [numVisible]="5">
+                    <ng-template pTemplate="item" let-item>
+                      <img panel [src]="item.itemImageSrc" class="rounded-3 w-100" [lazyLoad]="showCaseImagePath" [defaultImage]="defaultImage" style="height: 40vh; object-fit: contain; border-radius: 10px;" />
+                    </ng-template>
+
+                    <ng-template pTemplate="thumbnail" let-item>
+                      <div class="grid grid-nogutter justify-content-center"><img [src]="item.thumbnailImageSrc" class="rounded-1" style="height: 80px; width: 75px; object-fit: cover;" /></div>
+                    </ng-template>
+                  </p-galleria>
                 </div>
               </div>
             </div>
@@ -107,14 +107,6 @@ import { Error_DTO } from 'src/app/contracts/error_dto';
   `,
   styles: [
     `
-      @media only screen and (max-width: 450px) {
-        /* .showcaseImage {
-          height: 30vh !important;
-        } */
-        .imageSlider {
-          width: 200px !important;
-        }
-      }
       /* number inputlardan arrow kaldırma */
       input[type='number']::-webkit-inner-spin-button,
       input[type='number']::-webkit-outer-spin-button {
@@ -139,11 +131,14 @@ import { Error_DTO } from 'src/app/contracts/error_dto';
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
+      ::ng-deep .p-galleria .p-galleria-thumbnail-container {
+        background: #212529 !important;
+      }
     `,
   ],
 })
 export class ProductDetailComponent implements OnInit {
-  //
+  //#region variables
   faPlus = faPlus;
   faMinus = faMinus;
   faStar = faStar;
@@ -153,10 +148,12 @@ export class ProductDetailComponent implements OnInit {
   productNotFound: boolean;
   photoLinks: string[] = [];
   showCaseImagePath: string;
+  images: PrimeSliderImage[] = [];
+  responsiveOptions: any[] | undefined;
   defaultImage = '/assets/preload.png';
   baseUrl: string;
-  imageObject: Array<PhotoSliderObject> = [];
   ratingComponentLoaded = false;
+  //#endregion
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService) {
     this.urlId = router.url.split('/')[2];
@@ -187,28 +184,6 @@ export class ProductDetailComponent implements OnInit {
       if (fetchedProduct) {
         this.product = fetchedProduct;
 
-        for (const item of this.product.productImageFiles) {
-          if (item.showcase == true) this.showCaseImagePath = `${this.baseUrl}/${item.path}`;
-
-          const photoSliderObject: PhotoSliderObject = {
-            image: `${this.baseUrl}/${item.path}`,
-            thumbImage: `${this.baseUrl}/${item.path}`,
-            showcase: item.showcase,
-          };
-          this.imageObject.push(photoSliderObject);
-        }
-
-        this.imageObject.sort((a, b) => {
-          //imageObject true olan resim en başta olacak şekilde sıralama
-          if (a.showcase && !b.showcase) {
-            return -1; // a showcase ise, b değilse a önce gelir
-          } else if (!a.showcase && b.showcase) {
-            return 1; // b showcase ise, a değilse b önce gelir
-          } else {
-            return 0; // Her ikisi de aynı, sıralamada değişiklik yapma
-          }
-        });
-
         this.sanitizer.bypassSecurityTrustHtml(this.product.description as string);
       } else {
         //
@@ -218,9 +193,56 @@ export class ProductDetailComponent implements OnInit {
       this.toastr.clear();
     }
 
-    setTimeout(() => {
-      if (this.imageObject.length > 0) this.slider.prev();
-    }, 100);
+    //primeng image slider
+    this.responsiveOptions = [
+      {
+        breakpoint: '1200px',
+        numVisible: 4,
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 4,
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 2,
+      },
+    ];
+    if (this.product.productImageFiles.length > 0) {
+      //dev
+      this.product.productImageFiles.map((image) => {
+        let primeImage: PrimeSliderImage = {
+          alt: image.fileName,
+          itemImageSrc: `${this.baseUrl}/${image.path}`,
+          thumbnailImageSrc: `${this.baseUrl}/${image.path}`,
+          title: image.fileName,
+          showcase: image.showcase,
+        };
+        if (image.showcase == true) this.showCaseImagePath = `${this.baseUrl}/${image.path}`;
+        this.images.push(primeImage);
+      });
+
+      this.images.sort((a, b) => {
+        if (a.showcase && !b.showcase) {
+          return -1;
+        } else if (!a.showcase && b.showcase) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      let primeImage: PrimeSliderImage = {
+        alt: '',
+        itemImageSrc: '/assets/product.jpg',
+        thumbnailImageSrc: '/assets/product.jpg',
+        title: '',
+        showcase: true,
+      };
+      this.showCaseImagePath = '/assets/product.jpg';
+      this.images.push(primeImage);
+    }
+
     this.isLoading = false;
     this.spinner.hide();
   }
@@ -230,16 +252,6 @@ export class ProductDetailComponent implements OnInit {
   minusQuantity() {
     if (this.productQuantity != 1) this.productQuantity--;
   }
-  // getStarIcons(starCount: number): any[] {
-  //   const filledStar = faStar;
-
-  //   const icons = [];
-  //   for (let i = 0; i < starCount; i++) {
-  //     if (i < starCount) icons.push(filledStar);
-  //   }
-
-  //   return icons;
-  // }
   addToBasket() {
     if (this.authService.isAuthenticated) {
       const basketItem: Create_Basket_Item = new Create_Basket_Item();
@@ -313,12 +325,13 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  //image slider
-  @ViewChild('imageSlider') slider: NgImageSliderComponent;
+  //prime ng image slider
+}
 
-  showcaseImageClick() {
-    this.slider.imageOnClick(0);
-  }
-
-  //rating
+class PrimeSliderImage {
+  itemImageSrc: string;
+  thumbnailImageSrc: string;
+  alt: string;
+  title: string;
+  showcase: boolean;
 }

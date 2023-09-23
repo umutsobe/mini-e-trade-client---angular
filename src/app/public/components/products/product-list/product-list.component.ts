@@ -31,7 +31,7 @@ import { ProductService } from 'src/app/services/models/product.service';
               <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Bestsellers</li>
             </ul>
           </div>
-          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">Filters</button>
+          <button *ngIf="products.length > 0" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">Filters</button>
           <!-- filtre bottom offcanvas -->
           <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasFilters" style="height: fit-content;">
             <div class="offcanvas-header">
@@ -150,7 +150,7 @@ import { ProductService } from 'src/app/services/models/product.service';
         <a class="page-link " class="page-link" [routerLink]="['/products', pageNo]" (click)="scrollToTop()">{{ pageNo }}</a>
       </li> -->
     </div>
-    <div *ngIf="!(totalProductCount > 0)!; spinnerBootstrap" style="margin-bottom: 700px;"></div>
+    <div *ngIf="!(totalProductCount > 0)!; spinnerBootstrap" style="margin-bottom: 800px;"></div>
   `,
   styles: [
     `

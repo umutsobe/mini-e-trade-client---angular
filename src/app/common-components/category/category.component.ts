@@ -6,7 +6,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-category',
   template: `
-    <div class="categories">
+    <div class="categories" style="height: 40px;">
       <!-- <div class="dropdown">
         <button id="allCategories" class=" dropdown-toggle list-group-item p-2 d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">Kategoriler</button>
         <ul class="dropdown-menu" style="width: 340px">
@@ -77,6 +77,6 @@ export class CategoryComponent implements OnInit {
   categories: List_Category[] = [];
 
   async ngOnInit() {
-    this.categories = (await this.categoryService.getCategories(0, 10)).categories;
+    this.categories = (await this.categoryService.getCategories(0, 14)).categories;
   }
 }
