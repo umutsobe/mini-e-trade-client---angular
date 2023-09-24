@@ -1,4 +1,4 @@
-import { List_Product_Image } from './list_product_image';
+import { Image } from './image';
 
 export class List_Product_Admin {
   id: string;
@@ -8,7 +8,7 @@ export class List_Product_Admin {
   createdDate: Date;
   url: string;
   updatedDate: Date;
-  productImageFiles?: List_Product_Image[]; //null gelebilir
+  productImageFiles?: Image[]; //null gelebilir
   imagePath?: string;
   //admin
   isActive: boolean;

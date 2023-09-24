@@ -27,6 +27,11 @@ const routes: Routes = [
         canActivate: [AuthGuard, AdminPanelGuard],
       },
       {
+        path: 'image-control',
+        loadChildren: () => import('./image-control/images-control.module').then((module) => module.ImageControlModule),
+        canActivate: [AuthGuard, AdminPanelGuard],
+      },
+      {
         path: 'authorize-menu',
         loadChildren: () => import('./authorize-menu/authorize-menu.module').then((module) => module.AuthorizeMenuModule),
         canActivate: [AuthGuard],

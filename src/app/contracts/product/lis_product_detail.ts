@@ -1,4 +1,4 @@
-import { List_Product_Image } from './list_product_image';
+import { Image } from './image';
 
 export class List_Product_Detail {
   id: string;
@@ -11,5 +11,5 @@ export class List_Product_Detail {
   updatedDate: Date;
   averageStar: number;
   totalRatingNumber: number;
-  productImageFiles?: List_Product_Image[]; //null gelebilir
+  productImageFiles?: Image[]; //null gelebilir
 }

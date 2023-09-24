@@ -8,7 +8,7 @@ import { BaseUrl } from 'src/app/contracts/base_url';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { Error_DTO } from 'src/app/contracts/error_dto';
-import { ProductFilter } from 'src/app/contracts/product/filter_product';
+import { ProductFilter } from 'src/app/contracts/filter_product';
 import { List_Product } from 'src/app/contracts/product/list_product';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { BasketService } from 'src/app/services/models/basket.service';

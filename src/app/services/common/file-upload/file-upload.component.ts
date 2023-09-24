@@ -13,7 +13,7 @@ import { IdExchangeService } from '../../data-exchange/id-exchange.service';
       <ngx-file-drop dropZoneLabel="Drop files here" [accept]="fileFormats" (onFileDrop)="selectedFiles($event)">
         <!-- accept = seçilecek dosya tipini belirtir -->
         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-          <button class="btn btn-primary" type="button" (click)="openFileSelector()">Select file</button>
+          <button class="btn btn-primary" type="button" (click)="openFileSelector()">Select Files</button>
         </ng-template>
       </ngx-file-drop>
       <div class="upload-table" *ngIf="files.length > 0">
@@ -33,16 +33,15 @@ import { IdExchangeService } from '../../data-exchange/id-exchange.service';
         </table>
       </div>
     </div>
-    <button (click)="send()" *ngIf="files.length > 0" class="btn btn-success">Gönder</button>
+    <button (click)="send()" *ngIf="files.length > 0" class="btn btn-success">Send</button>
+    <button (click)="cancel()" *ngIf="files.length > 0" class="d-block mt-2 btn-sm btn btn-warning">Cancel</button>
   `,
 })
 export class FileUploadComponent {
   constructor(private http: HttpClientService, private toastr: ToastrService, private spinner: NgxSpinnerService, private idService: IdExchangeService) {}
-  public files: NgxFileDropEntry[] = [];
 
-  // @Input() options: Partial<FileUploadOptions>; //böyle daha modülerdi ama ben amele versiyonu yapacağım
-
-  fileFormats = '.png, .jpg, .jpeg';
+  @Input() definition: string;
+  isProduct: boolean;
 
   public selectedFiles(files: NgxFileDropEntry[]) {
     this.files = files;
@@ -50,7 +49,18 @@ export class FileUploadComponent {
 
   send() {
     this.spinner.show();
-    ('');
+    if (this.definition == 'product') this.productFileSend();
+    else this.otherFileSend();
+
+    this.spinner.hide();
+  }
+  cancel() {
+    this.files = [];
+  }
+
+  fileFormats = '.png, .jpg, .jpeg, .webP';
+  public files: NgxFileDropEntry[] = [];
+  productFileSend() {
     for (const file of this.files) {
       const fileData: FormData = new FormData();
       (file.fileEntry as FileSystemFileEntry).file((_file: File) => {
@@ -77,6 +87,36 @@ export class FileUploadComponent {
             this.toastr.error('An error occurred while uploading files.');
             this.spinner.hide();
           }
+        );
+    }
+    this.files = [];
+  }
+  otherFileSend() {
+    for (const file of this.files) {
+      const fileData: FormData = new FormData();
+      (file.fileEntry as FileSystemFileEntry).file((_file: File) => {
+        fileData.append(_file.name, _file, file.relativePath);
+      });
+
+      this.http
+        .post(
+          {
+            controller: 'image',
+            action: 'UploadImage',
+            queryString: `definition=${this.definition}`,
+          },
+          fileData
+        )
+        .subscribe(
+          (data) => {
+            //success
+            this.toastr.success('File has been successfully added.');
+          },
+          (error: HttpErrorResponse) => {
+            //error
+            this.toastr.error('An error occurred while uploading files.');
+          },
+          () => this.spinner.hide()
         );
     }
     this.files = [];

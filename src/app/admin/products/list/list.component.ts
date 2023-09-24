@@ -5,12 +5,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
 import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange.service';
-import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
+import { Image } from 'src/app/contracts/product/image';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { MatSelectionList } from '@angular/material/list';
 import { CategoryService } from 'src/app/services/models/category.service';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { ProductFilter } from 'src/app/contracts/product/filter_product';
+import { ProductFilter } from 'src/app/contracts/filter_product';
 import { Subject, debounceTime } from 'rxjs';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 
@@ -143,7 +143,7 @@ declare let $: any;
           <p class="ms-3 mt-2">Product Name: {{ selectedProduct ? selectedProduct.name : '' }}</p>
           <div class="modal-body">
             <h4 class="text-center">Add Photo to Product</h4>
-            <app-file-upload></app-file-upload>
+            <app-file-upload [definition]="'product'"></app-file-upload>
             <!-- appfilecomponent child componenttir bu componentte göre -->
           </div>
           <div class="list-images">
@@ -270,7 +270,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  productImages: List_Product_Image[];
+  productImages: Image[];
 
   openPhotoDialog(element) {
     this.selectedProduct = element;

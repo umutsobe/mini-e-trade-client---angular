@@ -5,7 +5,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { List_Product } from 'src/app/contracts/product/list_product';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
-import { List_Product_Image } from 'src/app/contracts/product/list_product_image';
+import { Image } from 'src/app/contracts/product/image';
 
 @Injectable({
   providedIn: 'root',
@@ -111,8 +111,8 @@ export class ProductService {
     return await firstValueFrom(observable);
   }
 
-  readImages(id: string): Observable<List_Product_Image[]> {
-    return this.http.get<List_Product_Image[]>(
+  readImages(id: string): Observable<Image[]> {
+    return this.http.get<Image[]>(
       {
         action: 'getproductimages',
         controller: 'productcontrollers',
