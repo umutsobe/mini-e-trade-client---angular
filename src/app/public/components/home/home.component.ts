@@ -12,9 +12,6 @@ import { ImageService } from 'src/app/services/models/image.service';
         <!-- carouselTop -->
         <div id="carouselTop" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner w-100">
-            <div class="carousel-item rounded-2" *ngIf="!isBrowser">
-              <img class="carousel-image w-100" src="/assets/preload.png" height="300" />
-            </div>
             <div *ngFor="let image of homePageImages; let isFirst = first" class="carousel-item rounded-2" [class.active]="isFirst">
               <img *ngIf="isBrowser" class="carousel-image w-100" height="300" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultImage" />
             </div>
