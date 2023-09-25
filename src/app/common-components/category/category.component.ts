@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { CategoryService } from 'src/app/services/models/category.service';
 import { faBars } from '@fortawesome/free-solid-svg-icons';

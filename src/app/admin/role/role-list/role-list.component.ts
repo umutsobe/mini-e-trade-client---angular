@@ -127,7 +127,6 @@ export class RoleListComponent {
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 

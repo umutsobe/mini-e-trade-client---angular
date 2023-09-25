@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnChanges, OnDestroy, OnInit, PLATFORM_ID, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +15,14 @@ declare let $: any;
       <div class="container-sm">
         <a routerLink="" role="button" class="navbar-brand cursor-pointer text-white" style="width: fit-content;">Home</a>
 
-        <div class="d-none d-md-block nav-link me-auto" *ngIf="isBrowser">
+        <!-- <div class="d-none d-md-block nav-link me-auto" *ngIf="isBrowser">
           <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())">Admin Panel</a></div>
+        </div> -->
+        <div class="nav-link me-auto" *ngIf="isBrowser">
+          <div routerLink="admin" role="button" class="d-flex align-items-center">
+            <img src="/assets/admin.png" style="width: 36px;" />
+            <div class="me-auto "><a class="text-white nav-link cursor-pointer">Admin Panel</a></div>
+          </div>
         </div>
 
         <div class="d-none d-lg-block mx-auto" style="width: 300px;" *ngIf="isBrowser">
@@ -26,7 +32,7 @@ declare let $: any;
           </form>
         </div>
 
-        <div class="d-flex" style="margin-left: 170px;" *ngIf="isBrowser">
+        <div class="d-flex" [style.margin-left]="marginLeftLoginButton()" *ngIf="isBrowser">
           <a (click)="routeLogin()" routerLink="/login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Login</button></a>
         </div>
 
@@ -40,7 +46,7 @@ declare let $: any;
             <li routerLink="/basket" role="button" class="dropdown-item">Basket<fa-icon class="fs-5 ms-2" [icon]="faShoppingCart"></fa-icon></li>
 
             <li><hr class="dropdown-divider" /></li>
-            <li *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())" routerLink="admin" role="button" class="dropdown-item">Admin Panel</li>
+            <li routerLink="admin" role="button" class="dropdown-item">Admin Panel</li>
 
             <li (click)="toggleTheme()" role="button" class="dropdown-item">{{ toggleThemeString }} <fa-icon role="button" class="fs-5 m-0 ms-2 align-content-center" [icon]="faCircleHalfStroke"></fa-icon></li>
             <li><a role="button" class="dropdown-item text-danger" (click)="signOut()">Logout</a></li>
@@ -125,5 +131,9 @@ export class HeaderComponent implements OnInit {
     this.authService.identityCheck();
     this.authService.isAuthenticated;
     this.router.navigateByUrl('/login');
+  }
+  marginLeftLoginButton(): string {
+    if (window.innerWidth < 600) return '5';
+    else return '170';
   }
 }

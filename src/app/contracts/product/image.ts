@@ -1,7 +1,7 @@
 export class Image {
+  id: string;
   path: string;
   showcase?: boolean;
   fileName: string;
-  id: string;
-  order?: string;
+  order?: number;
 }

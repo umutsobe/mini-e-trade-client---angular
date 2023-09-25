@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Image } from 'src/app/contracts/product/image';
+import { FileService } from 'src/app/services/models/file.service';
+import { ImageService } from 'src/app/services/models/image.service';
 
 @Component({
   selector: 'app-home',
   template: `
     <div class="container-sm" style="margin-bottom: 500px;">
-      <div class="d-flex flex-column align-items-center">
-        <!-- carousel1 -->
-        <div id="carousel1" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="/assets/home1.jpg" class="carousel-image d-block w-100" alt="..." />
+      <div class="">
+        <!-- carouselTop -->
+        <div id="carouselTop" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner w-100">
+            <div class="carousel-item rounded-2" *ngIf="!isBrowser">
+              <img class="carousel-image w-100" src="/assets/preload.png" height="300" />
             </div>
-            <div class="carousel-item">
-              <img style="object-fit: cover" src="/assets/home2.jpg" class="d-block w-100" alt="..." />
-            </div>
-            <div class="carousel-item">
-              <img style="object-fit: cover" src="/assets/home3.jpg" class="d-block w-100" alt="..." />
+            <div *ngFor="let image of homePageImages; let isFirst = first" class="carousel-item rounded-2" [class.active]="isFirst">
+              <img *ngIf="isBrowser" class="carousel-image w-100" height="300" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultImage" />
             </div>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
+          <button *ngIf="isBrowser" class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
+          <button *ngIf="isBrowser" class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
@@ -34,13 +35,23 @@ import { Component, OnInit } from '@angular/core';
   styles: [
     `
       .carousel-image {
-        object-fit: contain;
+        object-fit: cover;
       }
     `,
   ],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(private imageService: ImageService, private fileService: FileService, @Inject(PLATFORM_ID) private platformId: Object) {}
+  homePageImages: Image[] = [];
+  baseUrl: string = '';
+  defaultImage = '/assets/preload.png';
+  isBrowser = false;
 
-  ngOnInit(): void {}
+  async ngOnInit() {
+    this.isBrowser = isPlatformBrowser(this.platformId); //search prerender iyi çalışmıyor
+
+    this.homePageImages = await this.imageService.getImagesByDefinition('home');
+    this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
+    console.log(this.baseUrl);
+  }
 }

@@ -136,7 +136,6 @@ export class ListCategoryComponent {
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 

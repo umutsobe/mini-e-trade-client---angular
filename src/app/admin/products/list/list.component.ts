@@ -33,7 +33,7 @@ declare let $: any;
               <li (click)="sortLowPrice()" type="button" class="dropdown-item">Lowest Price</li>
               <li (click)="sortHighPrice()" type="button" class="dropdown-item">Highest Price</li>
               <li (click)="sortSaleNumber()" type="button" class="dropdown-item">Bestsellers</li>
-              <li type="button" class="dropdown-item">Newly products</li>
+              <!-- <li type="button" class="dropdown-item">Newly products</li> -->
             </ul>
           </div>
           <select *ngIf="categories" class="mt-1 mt-sm-1 mt-sm-1 mt-md-0 form-select" (change)="categorySelected($event)" style="width: fit-content; border: 1px solid gray">
@@ -81,7 +81,7 @@ declare let $: any;
                   <img class="dropdown-toggle" src="/assets/edit.png" width="25" style="cursor:pointer;" data-bs-toggle="dropdown" />
 
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-                    <li data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="dropdown-item text-truncate">Select Category</li>
+                    <li role="button" data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="dropdown-item text-truncate">Select Category</li>
                     <li data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" role="button" class="dropdown-item">Select Photo</li>
                     <li role="button" class="dropdown-item">Edit Product</li>
                     <li><hr class="dropdown-divider" /></li>
@@ -263,11 +263,16 @@ export class ListComponent implements OnInit {
   }
   delete() {
     this.spinner.show();
-    this.productService.delete(this.selectedProduct.id).subscribe(() => {
-      this.spinner.hide();
-      this.toastr.success('Product Successfully Deleted');
-      this.getProducts();
-    });
+    this.productService.delete(this.selectedProduct.id).subscribe(
+      () => {
+        this.spinner.hide();
+        this.toastr.success('Product Successfully Deleted');
+        this.getProducts();
+      },
+      () => this.spinner.hide(),
+      () => this.spinner.hide()
+    );
+    this.spinner.hide();
   }
 
   productImages: Image[];
@@ -301,6 +306,7 @@ export class ListComponent implements OnInit {
         this.spinner.hide();
       }
     );
+    this.spinner.hide();
   }
   showCase(imageId: string) {
     this.spinner.show();

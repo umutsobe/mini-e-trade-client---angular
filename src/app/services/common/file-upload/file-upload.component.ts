@@ -50,7 +50,6 @@ export class FileUploadComponent {
   send() {
     this.spinner.show();
     if (this.definition == 'product') this.productFileSend();
-    else this.otherFileSend();
 
     this.spinner.hide();
   }
@@ -87,36 +86,6 @@ export class FileUploadComponent {
             this.toastr.error('An error occurred while uploading files.');
             this.spinner.hide();
           }
-        );
-    }
-    this.files = [];
-  }
-  otherFileSend() {
-    for (const file of this.files) {
-      const fileData: FormData = new FormData();
-      (file.fileEntry as FileSystemFileEntry).file((_file: File) => {
-        fileData.append(_file.name, _file, file.relativePath);
-      });
-
-      this.http
-        .post(
-          {
-            controller: 'image',
-            action: 'UploadImage',
-            queryString: `definition=${this.definition}`,
-          },
-          fileData
-        )
-        .subscribe(
-          (data) => {
-            //success
-            this.toastr.success('File has been successfully added.');
-          },
-          (error: HttpErrorResponse) => {
-            //error
-            this.toastr.error('An error occurred while uploading files.');
-          },
-          () => this.spinner.hide()
         );
     }
     this.files = [];

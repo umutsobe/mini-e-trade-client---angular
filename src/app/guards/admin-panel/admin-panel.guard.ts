@@ -11,9 +11,12 @@ export class AdminPanelGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.authService.isAdmin() || this.authService.isModerator()) return true;
+    // if (this.authService.isAdmin() || this.authService.isModerator()) return true;
 
-    this.router.navigateByUrl('/error');
-    return false;
+    // this.router.navigateByUrl('/error');
+    // return false;
+
+    //sadece developmentta return true, diğerlerinde yukarıdaki
+    return true;
   }
 }

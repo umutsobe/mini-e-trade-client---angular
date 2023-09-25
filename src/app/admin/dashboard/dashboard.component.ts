@@ -7,7 +7,12 @@ import { SignalRService } from 'src/app/services/common/signal-r.service';
 
 @Component({
   selector: 'app-dashboard',
-  template: `<p style="margin-bottom: 500px;">DashboardComponent</p>`,
+  template: `
+    <div style="margin-bottom: 500px;">
+      <div style="color: red;">Under Development...</div>
+      <div class="alert alert-warning mt-2">You have permission to view read operations in the admin panel, but you do not have permission for write operations. You will receive 401 Unauthorized error in server.</div>
+    </div>
+  `,
 })
 export class DashboardComponent implements OnInit {
   constructor(private signalRService: SignalRService, private toastr: ToastrService, private hubUrlsService: HubUrlsService, @Inject(PLATFORM_ID) private platformId: Object) {

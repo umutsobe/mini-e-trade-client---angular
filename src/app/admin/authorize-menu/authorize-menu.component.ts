@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Action } from 'src/app/contracts/application-configurations/action';
 import { List_Role } from 'src/app/contracts/role/list_role';
+import { AuthService } from 'src/app/services/common/auth/auth.service';
 import { ApplicationService } from 'src/app/services/models/application.service';
 import { AuthorizationEndpointService } from 'src/app/services/models/authorization-endpoint.service';
 import { RoleService } from 'src/app/services/models/role.service';
@@ -14,12 +15,17 @@ import { RoleService } from 'src/app/services/models/role.service';
   selector: 'app-authorize-menu',
   template: `
     <div class="p-0 m-0" style="margin-bottom: 500px;">
+      <div class="ms-3 mb-3">
+        <div>Total Authorize Controller:{{ totalController }}</div>
+        <div>Total Authorize Endpoint:{{ totalEndpoint }}</div>
+        <div>Total Endpoint: 56</div>
+      </div>
       <button (click)="updateEndpoints()" class="btn btn-primary ms-3 mb-3 btn-sm">UpdateMenusAndEndpoints</button>
 
       <mat-tree class="bg-dark" [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="ps-0 ps-md-5 mb-1">
           <!-- <button mat-icon-button disabled></button> -->
-          <button class="btn btn-primary btn-sm me-3 p-1 text-truncate" style="width: 66px;" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal">Assign Role</button>
+          <button class="btn btn-primary btn-sm me-1 me-md-3 p-1 text-truncate" (click)="openRoleDialog(node.code, node.name, node.menuName)" data-bs-toggle="modal" data-bs-target="#roleModal" style="font-size: 12px;">Assign Role</button>
           <div class="me-1 text-truncate" style="width: fit-content;">{{ node.name }}</div>
           <div class="me-1 text-truncate" style="color: green;" *ngFor="let role of node.newAssignedRoles">({{ role }})</div>
         </mat-tree-node>
@@ -78,7 +84,7 @@ import { RoleService } from 'src/app/services/models/role.service';
   ],
 })
 export class AuthorizeMenuComponent implements OnInit {
-  constructor(private spinner: NgxSpinnerService, private applicationService: ApplicationService, public authorizationEndpointService: AuthorizationEndpointService, private roleService: RoleService, private toastr: ToastrService) {}
+  constructor(private spinner: NgxSpinnerService, private applicationService: ApplicationService, public authorizationEndpointService: AuthorizationEndpointService, private roleService: RoleService, private toastr: ToastrService, private authService: AuthService) {}
 
   roles: { datas: List_Role[]; totalCount: number }; //ham rolümüz
   assignedRoles: Array<string> = []; // backende göndereceğimiz roller
@@ -126,11 +132,10 @@ export class AuthorizeMenuComponent implements OnInit {
       .assignRoleEndpoint(roles, this.selectedAction.code, this.selectedAction.menuName)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success('Success');
+        if (this.authService.isModerator() || this.authService.isAdmin()) this.toastr.success('Success');
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 
@@ -144,12 +149,14 @@ export class AuthorizeMenuComponent implements OnInit {
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 
+  totalController: number = 0;
+  totalEndpoint: number = 0;
   async ngOnInit() {
-    this.dataSource.data = (await this.applicationService.getAuthorizeDefinitionEndpoints()).map((m) => {
+    const responseData = await this.applicationService.getAuthorizeDefinitionEndpoints();
+    this.dataSource.data = responseData.map((m) => {
       const treeMenu: ITreeMenu = {
         name: m.name,
         actions: m.actions.map((a) => {
@@ -163,6 +170,16 @@ export class AuthorizeMenuComponent implements OnInit {
           return _treeMenu;
         }),
       };
+      // Toplam controller sayısını hesapla
+      this.totalController = responseData.length;
+
+      // Toplam action sayısını hesapla
+      let totalActions = 0;
+
+      responseData.forEach((controller) => {
+        totalActions += controller.actions.length;
+      });
+      this.totalEndpoint = totalActions;
 
       return treeMenu;
     });

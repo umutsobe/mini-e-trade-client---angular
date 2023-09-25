@@ -176,9 +176,6 @@ export class OrderListComponent {
         this.toastr.success('Order Successfully Confirmed', 'Başarılı');
         this.refresh();
       })
-      .catch((err) => {
-        this.toastr.error(err, 'Hata');
-      })
       .finally(() => {
         this.spinner.hide();
       });

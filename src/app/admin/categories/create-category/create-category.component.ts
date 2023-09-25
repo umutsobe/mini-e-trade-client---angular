@@ -59,7 +59,6 @@ export class CreateCategoryComponent {
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 

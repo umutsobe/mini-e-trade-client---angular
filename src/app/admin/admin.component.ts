@@ -19,8 +19,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
             <div routerLink="/admin/categories" role="button" class="item cursor-pointer">Categories</div>
             <div routerLink="/admin/orders" role="button" class="item cursor-pointer">Orders</div>
             <div routerLink="/admin/image-control" role="button" class="item cursor-pointer">Image Control</div>
-            <div *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
-            <div *ngIf="this.authService.isAdmin()" routerLink="roles" role="button" class="item cursor-pointer">Roles</div>
+            <div routerLink="authorize-menu" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
+            <div routerLink="roles" role="button" class="item cursor-pointer">Roles</div>
             <div *ngIf="this.authService.isAdmin()" routerLink="users" role="button" class="item cursor-pointer">Users</div>
           </div>
         </div>
@@ -39,8 +39,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
                 <div routerLink="create-product" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Create Product</div>
                 <div routerLink="categories" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Categories</div>
                 <div routerLink="orders" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Orders</div>
-                <div *ngIf="this.authService.isAdmin()" routerLink="authorize-menu" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
-                <div *ngIf="this.authService.isAdmin()" routerLink="roles" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Roles</div>
+                <div routerLink="authorize-menu" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
+                <div routerLink="roles" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Roles</div>
                 <div *ngIf="this.authService.isAdmin()" routerLink="users" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Users</div>
               </div>
             </div>

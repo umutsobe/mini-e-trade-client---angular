@@ -61,7 +61,6 @@ export class CreateRoleComponent {
       })
       .catch((err) => {
         this.spinner.hide();
-        this.toastr.error(err);
       });
   }
 

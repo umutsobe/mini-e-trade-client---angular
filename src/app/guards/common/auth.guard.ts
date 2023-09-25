@@ -14,24 +14,26 @@ export class AuthGuard implements CanActivate, OnInit {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    var canContinue: boolean = false;
+    // var canContinue: boolean = false;
 
-    if (isPlatformBrowser(this.platformId)) {
-      // Browser
-      // Verify here if the token exists
-      canContinue = _isAuthenticated;
+    // if (isPlatformBrowser(this.platformId)) {
+    //   // Browser
+    //   // Verify here if the token exists
+    //   canContinue = _isAuthenticated;
 
-      if (!canContinue) {
-        this.router.navigate(['login'], { queryParams: { returnUrl: state.url } });
+    //   if (!canContinue) {
+    //     this.router.navigate(['login'], { queryParams: { returnUrl: state.url } });
 
-        this.toastr.error('Oturum açmanız gerekiyor', 'Yetkisiz Erişim');
-      }
-    }
-    if (isPlatformServer(this.platformId)) {
-      // Server side
-      canContinue = true;
-    }
+    //     this.toastr.error('Oturum açmanız gerekiyor', 'Yetkisiz Erişim');
+    //   }
+    // }
+    // if (isPlatformServer(this.platformId)) {
+    //   // Server side
+    //   canContinue = true;
+    // }
 
-    return canContinue;
+    // return canContinue;
+
+    return true;
   }
 }
