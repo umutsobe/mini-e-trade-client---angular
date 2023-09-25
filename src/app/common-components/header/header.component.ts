@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
@@ -13,15 +13,15 @@ declare let $: any;
   template: `
     <nav class="navbar navbar-expand-lg" style="background-color: #1B6B93; height: 56px;">
       <div class="container-sm">
-        <a routerLink="" role="button" class="navbar-brand cursor-pointer text-white" style="width: fit-content;">Home</a>
+        <a routerLink="" role="button" class="navbar-brand cursor-pointer text-white me-1" style="width: fit-content;">Home</a>
 
         <!-- <div class="d-none d-md-block nav-link me-auto" *ngIf="isBrowser">
           <div class="me-auto "><a routerLink="admin" role="button" class="text-white nav-link cursor-pointer" *ngIf="authService.isAuthenticated && (this.authService.isAdmin() || this.authService.isModerator())">Admin Panel</a></div>
         </div> -->
         <div class="nav-link me-auto" *ngIf="isBrowser">
           <div routerLink="admin" role="button" class="d-flex align-items-center">
-            <img src="/assets/admin.png" style="width: 36px;" />
-            <div class="me-auto "><a class="text-white nav-link cursor-pointer">Admin Panel</a></div>
+            <img src="/assets/admin.png" style="width: 32px;" />
+            <div><a class="text-white nav-link cursor-pointer" style="font-size: 13px;">Admin Panel</a></div>
           </div>
         </div>
 
@@ -32,7 +32,7 @@ declare let $: any;
           </form>
         </div>
 
-        <div class="d-flex" [style.margin-left]="marginLeftLoginButton()" *ngIf="isBrowser">
+        <div class="d-flex" [style.margin-left.px]="marginLeftLoginButton()" *ngIf="isBrowser">
           <a (click)="routeLogin()" routerLink="/login" role="button" class="text-white me-4 nav-link cursor-pointer" *ngIf="!authService.isAuthenticated"><button class="btn btn-warning">Login</button></a>
         </div>
 
@@ -81,6 +81,7 @@ export class HeaderComponent implements OnInit {
   isBrowser;
 
   constructor(public authService: AuthService, private router: Router, private accountService: AccountService, @Inject(PLATFORM_ID) private platformId: Object) {}
+
   async ngOnInit() {
     this.authService.identityCheck();
     this.isBrowser = isPlatformBrowser(this.platformId); //search prerender iyi çalışmıyor
@@ -132,8 +133,9 @@ export class HeaderComponent implements OnInit {
     this.authService.isAuthenticated;
     this.router.navigateByUrl('/login');
   }
-  marginLeftLoginButton(): string {
-    if (window.innerWidth < 600) return '5';
-    else return '170';
+
+  marginLeftLoginButton(): number {
+    if (window.innerWidth < 600) return 5;
+    else return 190;
   }
 }

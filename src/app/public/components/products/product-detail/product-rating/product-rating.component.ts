@@ -89,7 +89,7 @@ import { Subject, debounceTime } from 'rxjs';
           </div>
           <div *ngIf="ratingStatus" class="modal-body">
             <div *ngIf="ratingStatus.state === 'NotBuyed'" class="alert alert-warning" role="alert">You must have purchased the product to leave a review.</div>
-            <div *ngIf="ratingStatus.state === 'noLogin'" class="alert alert-warning" role="alert">Yorum yapmak için giriş yapmalısınız</div>
+            <div *ngIf="ratingStatus.state === 'noLogin'" class="alert alert-warning" role="alert">You must be login to perform this action.</div>
             <div *ngIf="ratingStatus.state === 'BuyedAndHasRating'" class="alert alert-warning" role="alert">Ürüne daha önce yorum yaptınız. Yorumlarınıza Hesabım bölümünden erişebilirsiniz</div>
 
             <div *ngIf="ratingStatus.state === 'BuyedAndNotRating'">

@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/models/user.service';
   template: `
     <div class="d-flex justify-content-center">
       <div *ngIf="state" class="col-10 col-sm-8 col-md-7 col-lg-4 col-xl-2">
-        <div *ngIf="!state.state" class="alert alert-danger" style="margin-top: 50px;">Geçersiz Link!!</div>
+        <div *ngIf="!state.state" class="alert alert-danger" style="margin-top: 50px;">Invalid link</div>
 
         <form *ngIf="state.state" [formGroup]="frm" (ngSubmit)="onSubmit()" style="margin-top: 75px; margin-bottom: 300px;">
           <h1>Change Password</h1>

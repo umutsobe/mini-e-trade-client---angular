@@ -35,7 +35,7 @@ import { UserService } from 'src/app/services/models/user.service';
         </div>
 
         <div class="mb-2">
-          <label for="email" class="form-label">EMail</label>
+          <label for="email" class="form-label">E-Mail</label>
           <input type="text" class="form-control" id="email" formControlName="email" />
           <div *ngIf="submitted">
             <div *ngIf="email.hasError('required')" class="inputError">Email is required</div>
@@ -75,7 +75,7 @@ import { UserService } from 'src/app/services/models/user.service';
           <asl-google-signin-button width="280" size="large" type="standard" style="opacity: 0.0001; position: relative; top: -46px;"></asl-google-signin-button>
         </div>
 
-        <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Üye Misiniz? Giriş Yapın </a>
+        <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Already have an account? Register </a>
       </form>
     </div>
 

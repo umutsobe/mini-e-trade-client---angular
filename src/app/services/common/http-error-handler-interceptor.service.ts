@@ -19,11 +19,11 @@ export class HttpErrorHandlerInterceptorService {
             break;
 
           case HttpStatusCode.InternalServerError:
-            this.toastr.warning('Sunucuya erişilmiyor!', 'Sunucu hatası!');
+            this.toastr.warning('Cannot access the server!');
             break;
 
           case HttpStatusCode.NotFound:
-            this.toastr.warning('Cannot access the serve');
+            this.toastr.warning('Cannot access the server!');
             break;
 
           default:

@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/models/user.service';
   template: `
     <div class="d-flex justify-content-center">
       <form [formGroup]="frm" (ngSubmit)="onSubmit(emailOrUserName.value, password.value)" style="margin-top: 75px;" class="col-10 col-sm-6 col-md-5 col-lg-4 col-xl-3">
-        <h1 class="mb-4">Giriş Yap</h1>
+        <h1 class="mb-4">Login</h1>
 
         <div class="mb-3">
           <label for="emailOrUserName" class="form-label">E-Mail or Username</label>
@@ -45,8 +45,8 @@ import { UserService } from 'src/app/services/models/user.service';
           <asl-google-signin-button width="280" size="large" type="standard" style="opacity: 0.0001; position: relative; top: -46px;"></asl-google-signin-button>
         </div>
 
-        <a routerLink="/register" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none;"> Üye Değil Misiniz? Kayıt Olun </a>
-        <a routerLink="/password-reset" type="button" class="mt-3 link cursor-pointer" style="text-decoration: none; display: block;"> Şifremi unuttum </a>
+        <a routerLink="/register" type="button" class="mt-2 p-1 link cursor-pointer" style="text-decoration: none;"> New to -Company-? Create your account. </a>
+        <a routerLink="/password-reset" type="button" class="mt-2 p-1 link cursor-pointer" style="text-decoration: none; display: block;"> If you forgot your password, click here. </a>
       </form>
     </div>
   `,

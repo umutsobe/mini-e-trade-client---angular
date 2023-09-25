@@ -271,7 +271,7 @@ export class ProductDetailComponent implements OnInit {
         .catch(() => {
           this.spinner.hide();
         });
-    } else this.toastr.info('Bu işlemi yapmak için giriş yapmalısınız', 'Hata');
+    } else this.toastr.info('You must be login to perform this action.');
   }
 
   descriptionButtonClicked() {

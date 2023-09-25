@@ -35,7 +35,7 @@ import { TwoFactorAuthService } from 'src/app/services/models/two-factor-auth.se
       </div>
     </div>
     <div *ngIf="userId.length < 5" class="w-100 d-flex justify-content-center mt-4" style="margin-bottom: 800px;">
-      <div class=" col-10 col-md-8 col-lg-4 alert alert-danger">Hata</div>
+      <div class=" col-10 col-md-8 col-lg-4 alert alert-danger">Invalid Link</div>
     </div>
   `,
   styles: [
