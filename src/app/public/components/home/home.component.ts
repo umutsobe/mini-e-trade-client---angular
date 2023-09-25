@@ -19,11 +19,11 @@ import { ImageService } from 'src/app/services/models/image.service';
               <img *ngIf="isBrowser" class="carousel-image w-100" height="300" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultImage" />
             </div>
           </div>
-          <button *ngIf="isBrowser" class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button *ngIf="isBrowser" class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
