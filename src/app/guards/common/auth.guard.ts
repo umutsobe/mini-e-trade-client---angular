@@ -1,13 +1,13 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Inject, Injectable, OnInit, PLATFORM_ID } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate, OnInit {
+export class AuthGuard  implements OnInit {
   constructor(private authService: AuthService, private toastr: ToastrService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {}
   async ngOnInit() {
     await this.authService.identityCheck();

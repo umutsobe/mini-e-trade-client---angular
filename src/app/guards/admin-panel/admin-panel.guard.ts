@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/services/common/auth/auth.service';
 })
 
 //login olduktan sonra ulaşılamayacak yerlere koy. mesela login, register sayfaları
-export class AdminPanelGuard implements CanActivate {
+export class AdminPanelGuard  {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
