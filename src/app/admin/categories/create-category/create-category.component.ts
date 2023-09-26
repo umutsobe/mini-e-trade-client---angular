@@ -54,7 +54,7 @@ export class CreateCategoryComponent {
     this.categoryService
       .create(this.name.value)
       .then(() => {
-        this.toastr.success(`${this.name.value} kategorisi başarıyla oluşturuldu`, 'Başarılı');
+        this.toastr.success('Success');
         this.spinner.hide();
       })
       .catch((err) => {

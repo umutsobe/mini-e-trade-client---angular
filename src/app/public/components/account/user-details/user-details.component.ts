@@ -177,7 +177,7 @@ export class UserDetailsComponent implements OnInit {
     result = await this.accountService.updateEmailStep1(model).finally(() => this.spinner.hide());
 
     if (result.succeeded) {
-      this.toastr.success('Kod başarıyla gönderildi');
+      this.toastr.success('Code send to email');
       if (typeof localStorage !== 'undefined') localStorage.setItem('isUpdateMailCodeSend', 'true');
       this.isUpdateMailCodeSend = true;
     } else {

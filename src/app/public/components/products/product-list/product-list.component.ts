@@ -145,10 +145,6 @@ import { ProductService } from 'src/app/services/models/product.service';
           <li (click)="lastPage()" type="button" class="page-item page-link">>></li>
         </ul>
       </nav>
-
-      <!-- <li class="page-item" *ngFor="let pageNo of pageList" routerLinkActive="active">
-        <a class="page-link " class="page-link" [routerLink]="['/products', pageNo]" (click)="scrollToTop()">{{ pageNo }}</a>
-      </li> -->
     </div>
     <div *ngIf="!(totalProductCount > 0)!; spinnerBootstrap" style="margin-bottom: 800px;"></div>
   `,
@@ -381,7 +377,7 @@ export class ProductListComponent {
           this.spinner.hide();
         });
     } else {
-      this.toastr.info('You must log in to perform this action', 'Hata');
+      this.toastr.info('You must login to perform this action');
     }
   }
 

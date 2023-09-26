@@ -60,7 +60,9 @@ declare let $: any;
           </thead>
           <tbody *ngIf="this.allProducts">
             <tr *ngFor="let product of this.allProducts.products" class="text-center">
-              <td class="item">{{ product.name }}</td>
+              <td class="item">
+                <a class="text-decoration-none" routerLink="/product/{{ product.url }}">{{ product.name }}</a>
+              </td>
               <td>{{ product.stock }}</td>
               <td>{{ product.price }}</td>
               <td>{{ product.totalOrderNumber }}</td>

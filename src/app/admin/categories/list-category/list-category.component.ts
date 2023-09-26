@@ -55,7 +55,7 @@ import { CategoryService } from 'src/app/services/models/category.service';
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger">Kategori silme işlemi geri alınamaz!!!</p>
+            <p class="text-danger">Category deletion is irreversible</p>
             <p>Silinecek Kategori: {{ selectedCategory ? selectedCategory.name : '' }}</p>
             <!-- null hatası almamak için kontrol -->
           </div>
@@ -131,7 +131,7 @@ export class ListCategoryComponent {
       .delete(this.selectedCategory.id)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${this.selectedCategory.name} başarıyla silindi`, 'Başarılı');
+        this.toastr.success('Success');
         this.getCategories();
       })
       .catch((err) => {

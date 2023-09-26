@@ -49,6 +49,5 @@ export class HomeComponent implements OnInit {
 
     this.homePageImages = await this.imageService.getImagesByDefinition('home');
     this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
-    console.log(this.baseUrl);
   }
 }

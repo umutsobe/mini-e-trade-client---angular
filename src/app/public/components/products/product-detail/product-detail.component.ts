@@ -265,7 +265,7 @@ export class ProductDetailComponent implements OnInit {
           if (response.succeeded == false) {
             this.toastr.error(response.message);
           } else {
-            this.toastr.success('Ürün Başarıyla Sepete eklendi');
+            this.toastr.success('Product added to cart');
           }
         })
         .catch(() => {

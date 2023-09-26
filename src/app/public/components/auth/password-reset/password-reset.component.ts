@@ -64,7 +64,7 @@ export class PasswordResetComponent implements OnInit {
     this.spinner.show();
     this.userService.passwordReset(email, () => {
       this.spinner.hide();
-      this.toastr.success('Şifre Değiştirme Maili Başarıyla Gönderilmiştir');
+      this.toastr.success('Password change email sent successfully.');
     });
   }
 

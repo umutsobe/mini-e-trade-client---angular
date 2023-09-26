@@ -91,7 +91,7 @@ export class UpdatePasswordComponent {
         this.userService
           .updatePassword(userId, resetToken, password, passwordRepeat)
           .then(() => {
-            this.toastr.success('Şifre Başarıyla Değiştirildi');
+            this.toastr.success('Success');
             this.spinner.hide();
           })
           .catch((err) => {

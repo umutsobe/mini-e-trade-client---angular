@@ -235,7 +235,7 @@ export class ProductRatingComponent implements OnInit {
     this.ratingService
       .createRating(model)
       .then(() => {
-        this.toastr.success('Yorum başarıyla yapıldı.');
+        this.toastr.success('Success');
         this.isSend = true;
       })
       .catch((err) => {

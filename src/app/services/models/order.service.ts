@@ -23,16 +23,14 @@ export class OrderService {
 
     return (await firstValueFrom(observable)) as CreateOrderResponse;
   }
-  async read(page = 0, size = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{ totalOrderCount: number; orders: List_Order[] }> {
+  async getAllOrdersByFilter(filterQueryString: string): Promise<{ totalOrderCount: number; orders: List_Order[] }> {
     const observable: Observable<{ totalOrderCount: number; orders: List_Order[] }> = this.httpCLientService.get({
       controller: 'order',
-      queryString: `page=${page}&size=${size}`,
+      action: 'getAllOrdersByFilter',
+      queryString: `${filterQueryString}`,
     });
 
-    const promiseData = firstValueFrom(observable);
-    promiseData.then((value) => successCallback()).catch((error) => errorCallback(error));
-
-    return await promiseData;
+    return await firstValueFrom(observable);
   }
   async getOrderById(id: string) {
     const observable: Observable<SingleOrder> = this.httpCLientService.get<SingleOrder>(

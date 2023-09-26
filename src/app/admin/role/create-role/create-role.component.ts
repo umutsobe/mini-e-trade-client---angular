@@ -56,7 +56,7 @@ export class CreateRoleComponent {
     this.roleService
       .create(this.name.value)
       .then(() => {
-        this.toastr.success(`${this.name.value} rolü başarıyla oluşturuldu`, 'Başarılı');
+        this.toastr.success('Success');
         this.spinner.hide();
       })
       .catch((err) => {

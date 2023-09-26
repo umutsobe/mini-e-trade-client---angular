@@ -183,7 +183,7 @@ export class UserListComponent implements OnInit {
     this.userService.assignRoleToUser(this.selectedUser.id, roles).then(
       () => {
         this.spinner.hide();
-        this.toastr.success('Roller Başarıyla Atandı');
+        this.toastr.success('Success');
       },
       (err) => {
         this.spinner.hide();

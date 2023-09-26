@@ -157,10 +157,10 @@ export class RegisterComponent {
       if (typeof localStorage !== 'undefined') localStorage.setItem('userId', result.userId);
       this.router.navigateByUrl('/email-confirm');
     } else if (result.succeeded) {
-      this.toastr.success('Kullanıcı Başarıyla Oluşturuldu');
+      this.toastr.success('Success');
       this.spinner.hide();
     } else if (!result.succeeded) {
-      this.toastr.error(result.message, 'Hata');
+      this.toastr.error(result.message, 'Error');
       this.spinner.hide();
     }
   }

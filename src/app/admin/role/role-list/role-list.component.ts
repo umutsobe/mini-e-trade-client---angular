@@ -46,7 +46,7 @@ import { RoleService } from 'src/app/services/models/role.service';
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-danger">Rol silme işlemi geri alınamaz!!!</p>
+            <p class="text-danger">Role deletion is irreversible!!!</p>
             <p>Silinecek Rol: {{ selectedRole ? selectedRole.name : '' }}</p>
             <!-- null hatası almamak için kontrol -->
           </div>
@@ -122,7 +122,7 @@ export class RoleListComponent {
       .delete(this.selectedRole.id)
       .then(() => {
         this.spinner.hide();
-        this.toastr.success(`${this.selectedRole.name} başarıyla silindi`, 'Başarılı');
+        this.toastr.success('Success');
         this.getRoles();
       })
       .catch((err) => {

@@ -76,7 +76,7 @@ export class EmailConfirmComponent implements OnInit {
     const result: TwoFactorResult = await this.twoFactorAuthService.createCodeAndSendEmail(this.userId).finally(() => this.spinner.hide());
 
     if (result.succeeded) {
-      this.toastr.success('Kod başarıyla gönderildi');
+      this.toastr.success('Code sent to email.');
       if (typeof localStorage !== 'undefined') localStorage.setItem('isCodeSend', 'true');
       this.isCodeSend = true;
     } else {
