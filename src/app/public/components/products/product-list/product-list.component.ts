@@ -22,7 +22,7 @@ import { ProductService } from 'src/app/services/models/product.service';
     <div class="mt-1 mt-lg-5 px-0 px-lg-4">
       <div class="d-flex flex-column flex-lg-row">
         <!-- sadece lg altında gözükecek -->
-        <div class="d-block d-lg-none d-flex justify-content-center mt-2 mb-- mb-lg-5">
+        <div class="d-block d-lg-none d-flex justify-content-center mt-2 mb-2   mb-lg-5">
           <div *ngIf="totalProductCount > 0" class="dropdown me-2" style="width: fit-content;">
             <div class="dropdown-toggle user-select-none" type="button" data-bs-toggle="dropdown" style="padding: 8px; border: 1px solid gray;border-radius: 5px; ">Sort By</div>
             <ul class="dropdown-menu dropstart">
@@ -41,7 +41,7 @@ import { ProductService } from 'src/app/services/models/product.service';
               <div class=" col-12 col-sm-8 col-md-6">
                 <h1 class="text-center mt-1 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
 
-                <select class="form-select" (change)="categorySelected($event)">
+                <select *ngIf="!isCategoryPage" class="form-select" (change)="categorySelected($event)">
                   <option selected>Category</option>
                   <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
                 </select>
@@ -63,7 +63,7 @@ import { ProductService } from 'src/app/services/models/product.service';
           <div class="px-3 pb-3 mb-3 mb-lg-0" style="width: 230px; height: 500px; border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
             <h1 class="text-center pt-2 mt-lg-4 mb-2 mb-lg-5">Filters</h1>
 
-            <select class="form-select" (change)="categorySelected($event)">
+            <select *ngIf="!isCategoryPage" class="form-select" (change)="categorySelected($event)">
               <option selected>Category</option>
               <option type="button" *ngFor="let category of categories" [selected]="productFilter.categoryName == category.name">{{ category.name }}</option>
             </select>
@@ -95,27 +95,11 @@ import { ProductService } from 'src/app/services/models/product.service';
               </ul>
             </div>
             <!-- products -->
-            <!-- serverda render edilecek, preload image ile -->
-            <div class="d-flex flex-wrap justify-content-center product-cards" *ngIf="!isBrowser" aria-hidden="true">
-              <div *ngFor="let item of [].constructor(12)" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-                <img class="card-img-top mb-0 rounded-2" src="/assets/preload.png" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
-
-                <div class="card-body m-0 p-2">
-                  <p type="button" class="product-name m-0 p-0 placeholder rounded-2" style="font-size: 16px;">a</p>
-                  <div style="height: 24px;" class="mt-1">
-                    <div style="height: 24px;" class="m-0 p-0 d-flex align-content-center placeholder rounded-2">star</div>
-                  </div>
-                  <h5 class="text-center mt-1 text-truncate w-100 placeholder rounded-2" style="font-size: 18px;">price</h5>
-                  <button class="btn  btn-sm shadow-none w-100 mt-2 placeholder">-</button>
-                </div>
-              </div>
-            </div>
-            <!-- api browser-->
             <div class="d-flex flex-wrap justify-content-center product-cards">
               <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
                 <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath && isBrowser" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
-                <img *ngIf="!isBrowser" src="/assets/preload.png" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img *ngIf="!isBrowser" src="/assets/dark-preload.png" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
                 <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath && isBrowser" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
@@ -138,7 +122,7 @@ import { ProductService } from 'src/app/services/models/product.service';
       <!-- pagination -->
       <nav *ngIf="totalPageCount > 1 && !spinnerBootstrap" aria-label="Page navigation example">
         <ul class="mt-4 pagination pagination justify-content-center">
-          <div style="margin: 6px 8px 0 0;">{{ currentPageNo + 1 + '-' + totalPageCount }}</div>
+          <div style="margin: 6px 8px 0 0;">{{ productFilter.page + ('-' + (totalPageCount - 1)) }}</div>
           <li (click)="firstPage()" type="button" class="page-item page-link"><<</li>
           <li (click)="previousPage()" type="button" class="page-item page-link"><</li>
           <li (click)="nextPage()" type="button" class="page-item page-link">></li>
@@ -224,60 +208,72 @@ export class ProductListComponent {
   products: List_Product[] = [];
   categories: List_Category[] = [];
 
-  currentPageNo: number;
   totalProductCount: number;
   totalPageCount: number;
   pageSize = 12; // GetProductsByFilterDTO'daki ile aynı olmalı
   pageList: number[] = [];
   baseUrl: BaseUrl;
-  productFilter: ProductFilter;
+  productFilter: ProductFilter = {
+    minPrice: 0,
+  };
   spinnerBootstrap = true;
+  isCategoryPage: boolean;
 
   defaultImage = '/assets/preload.png';
 
   isBrowser: boolean;
 
   async ngOnInit() {
-    this.isBrowser = isPlatformBrowser(this.platformId); //search prerender iyi çalışmıyor
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    this.baseUrl = await this.fileService.getBaseStorageUrl();
 
     this.scrollToTop();
 
-    this.activatedRoute.queryParams.subscribe(async (params) => {
-      this.queryStringBuilder(params);
-      this.currentPageNo = +params['page'] || 0;
-      this.baseUrl = await this.fileService.getBaseStorageUrl();
-      this.spinnerBootstrap = true;
+    this.activatedRoute.queryParams.subscribe(async (queryParams) => {
+      this.activatedRoute.params.subscribe(async (routeParams) => {
+        this.queryStringBuilder(queryParams, routeParams);
+        this.spinnerBootstrap = true;
+        this.productFilter.page = queryParams['page'] || 0;
 
-      let productData: { totalProductCount: number; products: List_Product[] };
-      let categoryData: { categories: List_Category[]; totalCategoryCount: number };
-
-      productData = await this.productService.getProductsByFilter(this.getQueryStringFromURL());
-
-      this.products = productData.products;
-      this.totalProductCount = productData.totalProductCount;
-      this.totalPageCount = Math.ceil(this.totalProductCount / this.pageSize);
-
-      categoryData = await this.categoryService.getCategories(0, 50);
-      this.categories = categoryData.categories;
-
-      this.products = this.products.map<List_Product>((p) => {
-        const listProduct: List_Product = {
-          id: p.id,
-          createdDate: p.createdDate,
-          productImageShowCasePath: p.productImageShowCasePath != null ? `${this.baseUrl.url}/${p.productImageShowCasePath}` : undefined,
-          name: p.name,
-          price: p.price,
-          url: p.url,
-          stock: p.stock,
-          updatedDate: p.updatedDate,
-          averageStar: p.averageStar,
-          totalRatingNumber: p.totalRatingNumber,
-        };
-
-        return listProduct;
+        await this.getProductsByFilter(queryParams, routeParams);
+        this.spinnerBootstrap = false;
       });
-      this.spinnerBootstrap = false;
     });
+
+    this.getCategoriesForFilter();
+  }
+
+  async getProductsByFilter(queryParams: Params, routeParams: Params) {
+    let productData: { totalProductCount: number; products: List_Product[] };
+
+    productData = await this.productService.getProductsByFilter(this.queryStringBuilder(queryParams, routeParams));
+
+    this.products = productData.products;
+    this.totalProductCount = productData.totalProductCount;
+    this.totalPageCount = Math.ceil(this.totalProductCount / this.pageSize);
+
+    this.products = this.products.map<List_Product>((p) => {
+      const listProduct: List_Product = {
+        id: p.id,
+        createdDate: p.createdDate,
+        productImageShowCasePath: p.productImageShowCasePath != null ? `${this.baseUrl.url}/${p.productImageShowCasePath}` : undefined,
+        name: p.name,
+        price: p.price,
+        url: p.url,
+        stock: p.stock,
+        updatedDate: p.updatedDate,
+        averageStar: p.averageStar,
+        totalRatingNumber: p.totalRatingNumber,
+      };
+
+      return listProduct;
+    });
+  }
+
+  async getCategoriesForFilter() {
+    let categoryData: { categories: List_Category[]; totalCategoryCount: number };
+    categoryData = await this.categoryService.getCategories(0, 50);
+    this.categories = categoryData.categories;
   }
 
   previousPage() {
@@ -288,7 +284,7 @@ export class ProductListComponent {
   }
 
   nextPage() {
-    if (this.currentPageNo != this.totalPageCount - 1) {
+    if (this.productFilter.page != this.totalPageCount) {
       this.productFilter.page++;
       this.navigateWithFilters();
     }
@@ -318,40 +314,66 @@ export class ProductListComponent {
   }
 
   private navigateWithFilters() {
-    this.router.navigate(['/search'], { queryParams: this.productFilter }).then(() => {
-      this.scrollToTop();
-    });
-  }
-
-  getQueryStringFromURL() {
-    if (typeof window !== 'undefined') {
-      const currentURL = window.location.href;
-
-      const queryString: string = currentURL.split('?')[1];
-
-      return queryString;
+    if (this.isCategoryPage) {
+      const categoryName = this.productFilter.categoryName;
+      this.productFilter.categoryName = undefined;
+      this.router.navigate([`/category/${categoryName}`], { queryParams: this.productFilter }).then(() => {
+        this.scrollToTop();
+      });
+    } else {
+      this.router.navigate(['/search'], { queryParams: this.productFilter }).then(() => {
+        this.scrollToTop();
+      });
     }
-    return '';
   }
-  queryStringBuilder(params: Params) {
+
+  queryStringBuilder(queryParams: Params, routeParams: Params): string {
     //queryString üzerinde müdahalade bulunuyorken bunu kullan
 
-    this.productFilter = {
-      //diğer parametreler undefined
-      page: params['page'] || 0,
-    };
+    this.productFilter = {};
+    let queryString = `size${this.pageSize}`;
 
-    if (params['categoryName']) this.productFilter.categoryName = params['categoryName'];
+    if (queryParams['page']) {
+      this.productFilter.page = queryParams['page'];
+      queryString += `&page=${this.productFilter.page}`;
+    } else {
+      this.productFilter.page = 0;
+      queryString += `&page=${0}`;
+    }
+    // console.log(routeParams['category']);
 
-    if (params['size']) this.productFilter.size = +params['size'];
+    if (routeParams && routeParams['category']) {
+      this.isCategoryPage = true;
+      this.productFilter.categoryName = routeParams['category'];
+      queryString += `&categoryName=${this.productFilter.categoryName}`;
+    } else {
+      this.isCategoryPage = false;
+      if (queryParams['categoryName']) {
+        this.productFilter.categoryName = queryParams['categoryName'];
+        queryString += `&categoryName=${this.productFilter.categoryName}`;
+      }
+    }
 
-    if (params['keyword']) this.productFilter.keyword = params['keyword'];
+    if (queryParams['keyword']) {
+      this.productFilter.keyword = queryParams['keyword'];
+      queryString += `&keyword=${this.productFilter.keyword}`;
+    }
 
-    if (params['minPrice']) this.productFilter.minPrice = +params['minPrice'];
+    if (queryParams['minPrice']) {
+      this.productFilter.minPrice = +queryParams['minPrice'];
+      queryString += `&minPrice=${this.productFilter.minPrice}`;
+    }
 
-    if (params['maxPrice']) this.productFilter.maxPrice = +params['maxPrice'];
+    if (queryParams['maxPrice']) {
+      this.productFilter.maxPrice = +queryParams['maxPrice'];
+      queryString += `&maxPrice=${this.productFilter.maxPrice}`;
+    }
 
-    if (params['sort']) this.productFilter.sort = params['sort'];
+    if (queryParams['sort']) {
+      this.productFilter.sort = queryParams['sort'];
+      queryString += `&sort=${this.productFilter.sort}`;
+    }
+    return queryString;
   }
 
   async addToBasket(product: List_Product) {

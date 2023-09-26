@@ -31,6 +31,8 @@ const routes: Routes = [
 
   { path: 'search', loadChildren: () => import('./public/components/products/product-list/product-list.module').then((module) => module.ProductListModule) },
 
+  { path: 'category/:category', loadChildren: () => import('./public/components/products/product-list/product-list.module').then((module) => module.ProductListModule) },
+
   { path: 'product/:urlId', loadChildren: () => import('./public/components/products/product-detail/product-detail.module').then((module) => module.ProductDetailModule) },
 
   { path: 'register', loadChildren: () => import('./public/components/auth/register/register.module').then((m) => m.RegisterModule) },
