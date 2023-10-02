@@ -11,8 +11,6 @@ import { UserService } from 'src/app/services/models/user.service';
 import { Error_DTO } from 'src/app/contracts/error_dto';
 import { isPlatformBrowser } from '@angular/common';
 
-declare let $: any;
-
 @Component({
   selector: 'app-basket',
   template: `

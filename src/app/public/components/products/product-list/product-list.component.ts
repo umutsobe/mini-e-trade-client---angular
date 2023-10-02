@@ -219,7 +219,7 @@ export class ProductListComponent {
   spinnerBootstrap = true;
   isCategoryPage: boolean;
 
-  defaultImage = '/assets/preload.png';
+  defaultImage = '/assets/dark-preload.png';
 
   isBrowser: boolean;
 
@@ -428,4 +428,3 @@ export class ProductListComponent {
     this.router.navigateByUrl(`/product/${url}`);
   }
 }
-// routerLink="/product/{{ product.url }}"

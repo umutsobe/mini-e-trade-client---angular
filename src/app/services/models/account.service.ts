@@ -3,7 +3,6 @@ import { AuthService } from '../common/auth/auth.service';
 import { ListUserDetails } from 'src/app/contracts/account/ListUserDetails';
 import { Observable, firstValueFrom } from 'rxjs';
 import { HttpClientService } from '../common/http-client.service';
-import { ListUserOrders } from 'src/app/contracts/account/ListUserOrders';
 import { UpdateUserPassword } from 'src/app/contracts/account/UpdateUserPassword';
 import { ListUserAddresess } from 'src/app/contracts/account/Address/ListUserAddresess';
 import { CreateUserAddress } from 'src/app/contracts/account/Address/CreateUserAddress';
@@ -18,37 +17,31 @@ export class AccountService {
   constructor(private http: HttpClientService, private authService: AuthService) {}
 
   async getUserDetails(): Promise<ListUserDetails> {
-    const observable: Observable<ListUserDetails> = this.http.get(
-      {
-        controller: 'account',
-        action: 'GetUserDetails',
-      },
-      this.authService.UserId
-    );
+    const observable: Observable<ListUserDetails> = this.http.get({
+      controller: 'account',
+      action: 'GetUserDetails',
+    });
 
     return await firstValueFrom(observable);
   }
 
-  async updateUserName(userId: string, name: string): Promise<any> {
+  async updateUserName(name: string): Promise<any> {
     const observable: Observable<any> = this.http.post(
       {
         controller: 'account',
         action: 'UpdateUserName',
       },
-      { userId: userId, name: name }
+      { name: name }
     );
 
     return await firstValueFrom(observable);
   }
 
-  async listUserOrders(userId: string): Promise<any> {
-    const observable: Observable<any> = this.http.get(
-      {
-        controller: 'account',
-        action: 'ListUserOrders',
-      },
-      userId
-    );
+  async listUserOrders(): Promise<any> {
+    const observable: Observable<any> = this.http.get({
+      controller: 'account',
+      action: 'ListUserOrders',
+    });
 
     return await firstValueFrom(observable);
   }
@@ -64,14 +57,11 @@ export class AccountService {
     return await firstValueFrom(observable);
   }
 
-  async getUserAdresses(userId: string): Promise<ListUserAddresess[]> {
-    const observable: Observable<ListUserAddresess[]> = this.http.get(
-      {
-        controller: 'account',
-        action: 'GetUserAddresses',
-      },
-      userId
-    );
+  async getUserAdresses(): Promise<ListUserAddresess[]> {
+    const observable: Observable<ListUserAddresess[]> = this.http.get({
+      controller: 'account',
+      action: 'GetUserAddresses',
+    });
 
     return await firstValueFrom(observable);
   }

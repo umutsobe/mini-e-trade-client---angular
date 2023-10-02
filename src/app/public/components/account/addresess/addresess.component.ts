@@ -116,7 +116,7 @@ export class AddresessComponent implements OnInit {
 
   async getAddresess() {
     this.addresess = await this.accountService
-      .getUserAdresses(this.authService.UserId)
+      .getUserAdresses()
       .catch((err) => {
         this.spinner.hide();
         return [];
@@ -135,7 +135,6 @@ export class AddresessComponent implements OnInit {
     const addressModel: CreateUserAddress = new CreateUserAddress();
     addressModel.address = this.fullAddress.value;
     addressModel.definition = this.addressDefinition.value;
-    addressModel.userId = this.authService.UserId;
 
     this.accountService
       .createUserAddress(addressModel)

@@ -148,7 +148,7 @@ export class UserDetailsComponent implements OnInit {
 
     this.spinner.show();
     await this.accountService
-      .updateUserName(this.authService.UserId, this.name.value)
+      .updateUserName(this.name.value)
       .then(() => {
         this.spinner.hide();
         this.toastr.success('Full Name Successfully Changed.', 'Success');
@@ -171,7 +171,6 @@ export class UserDetailsComponent implements OnInit {
     const model: UpdateEmailStep1 = {
       newEmail: this.newEmail.value,
       password: this.password.value,
-      userId: this.authService.UserId,
     };
 
     result = await this.accountService.updateEmailStep1(model).finally(() => this.spinner.hide());
@@ -194,7 +193,6 @@ export class UserDetailsComponent implements OnInit {
 
     const model: UpdateEmailStep2 = {
       code: this.code.value,
-      userId: this.authService.UserId,
     };
 
     result = await this.accountService.updateEmailStep2(model).finally(() => this.spinner.hide());

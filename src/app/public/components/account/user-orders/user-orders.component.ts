@@ -49,7 +49,7 @@ export class UserOrdersComponent implements OnInit {
 
   async ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.orders = await this.accountService.listUserOrders(this.authService.UserId);
+      this.orders = await this.accountService.listUserOrders();
       this.spinnerElement = false;
     }
   }

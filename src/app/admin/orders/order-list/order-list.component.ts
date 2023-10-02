@@ -154,6 +154,7 @@ export class OrderListComponent {
     orders: [],
     totalOrderCount: 0,
   };
+
   totalOrderCount: number;
   totalPageCount: number;
 
@@ -223,6 +224,7 @@ export class OrderListComponent {
     size: 8,
     isConfirmed: undefined,
   };
+
   queryStringBuilder(): string {
     let queryString = 'size=8';
 

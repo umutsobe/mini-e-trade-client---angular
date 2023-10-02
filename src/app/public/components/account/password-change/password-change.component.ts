@@ -75,7 +75,6 @@ export class PasswordChangeComponent implements OnInit {
     if (this.frm.invalid) return;
 
     const userModel: UpdateUserPassword = new UpdateUserPassword();
-    userModel.userId = this.authService.UserId;
     userModel.newPassword = this.newPassword.value;
     userModel.oldPassword = this.currentPassword.value;
     let token: any;

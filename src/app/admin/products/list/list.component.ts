@@ -14,7 +14,6 @@ import { ProductFilter } from 'src/app/contracts/filter_product';
 import { Subject, debounceTime } from 'rxjs';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 
-declare let $: any;
 @Component({
   selector: 'app-list',
   template: `

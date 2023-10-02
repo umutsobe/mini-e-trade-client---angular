@@ -267,7 +267,7 @@ export class CheckoutComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.products = await this.basketService.get();
 
-      this.addresess = await this.accountService.getUserAdresses(this.authService.UserId).catch((err) => {
+      this.addresess = await this.accountService.getUserAdresses().catch((err) => {
         return [];
       });
     }
@@ -362,7 +362,6 @@ export class CheckoutComponent implements OnInit {
 
     order.address = this.selectedAddress.address;
     order.description = '....';
-    order.userId = this.authService.UserId;
     order.orderItems = this.convertBasketItemsToOrderItems(this.products);
 
     await this.orderService
@@ -438,7 +437,7 @@ export class CheckoutComponent implements OnInit {
 
   async getAddresess() {
     this.addresess = await this.accountService
-      .getUserAdresses(this.authService.UserId)
+      .getUserAdresses()
       .catch((err) => {
         this.spinner.hide();
         return [];
@@ -456,7 +455,6 @@ export class CheckoutComponent implements OnInit {
     const addressModel: CreateUserAddress = new CreateUserAddress();
     addressModel.address = this.fullAddress.value;
     addressModel.definition = this.addressDefinition.value;
-    addressModel.userId = this.authService.UserId;
 
     this.accountService
       .createUserAddress(addressModel)

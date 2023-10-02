@@ -18,7 +18,7 @@ import { RoleService } from 'src/app/services/models/role.service';
       <div class="ms-3 mb-3">
         <div>Total Authorize Controller:{{ totalController }}</div>
         <div>Total Authorize Endpoint:{{ totalEndpoint }}</div>
-        <div>Total Endpoint: 56</div>
+        <div>Total Endpoint: 67</div>
       </div>
       <button (click)="updateEndpoints()" class="btn btn-primary ms-3 mb-3 btn-sm">UpdateMenusAndEndpoints</button>
 
