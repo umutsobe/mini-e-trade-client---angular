@@ -26,7 +26,7 @@ import { Subject, debounceTime } from 'rxjs';
       <button (click)="openRatingModel()" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">Write a customer review</button>
     </div>
 
-    <div *ngIf="productRatings.ratings.length > 0 && !bootstrapSpinner">
+    <div *ngIf="!bootstrapSpinner">
       <!-- filters -->
       <div class="d-flex py-4 ps-2 border-bottom align-items-center">
         <div class="dropdown me-3" style="width: fit-content;">
@@ -78,6 +78,7 @@ import { Subject, debounceTime } from 'rxjs';
     </div>
 
     <!-- <div *ngIf="bootstrapSpinner" style="margin-bottom: 600px;"></div> -->
+
     <!-- rating model -->
 
     <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
