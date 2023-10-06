@@ -16,6 +16,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
             <div routerLink="orders" role="button" class="item cursor-pointer">Orders</div>
             <div routerLink="password-change" role="button" class="item cursor-pointer">Password Change</div>
             <div routerLink="my-addresess" role="button" class="item cursor-pointer">My Addresess</div>
+            <div routerLink="product-ratings" role="button" class="item cursor-pointer">My Reviewsd</div>
           </div>
         </div>
       </div>
@@ -32,11 +33,14 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
                 <div routerLink="orders" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Orders</div>
                 <div routerLink="password-change" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Password Change</div>
                 <div routerLink="my-addresess" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">My Addresess</div>
+                <div routerLink="product-ratings" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">My Reviews</div>
               </div>
             </div>
           </div>
         </div>
-        <router-outlet></router-outlet>
+        <div class="p-1 p-md-2">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   `,

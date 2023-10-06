@@ -3,4 +3,6 @@ export class ListUserRating {
   comment: string;
   productUrlId: string;
   createdDate: string;
+  productName: string;
+  productShowcaseImageUrl: string;
 }

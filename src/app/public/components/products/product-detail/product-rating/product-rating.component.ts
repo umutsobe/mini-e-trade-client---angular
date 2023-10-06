@@ -142,10 +142,6 @@ import { Subject, debounceTime } from 'rxjs';
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
-      .inputError {
-        color: chocolate;
-        font-size: 12px;
-      }
     `,
   ],
 })

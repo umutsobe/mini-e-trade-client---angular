@@ -174,13 +174,17 @@ export class ProductDetailComponent implements OnInit {
   };
 
   async ngOnInit() {
+    this.spinner.show();
     if (typeof window !== 'undefined') window.scrollTo(0, 0);
 
     this.baseUrl = (await this.fileService.getBaseStorageUrl()).url;
     this.isLoading = true;
 
     try {
-      const fetchedProduct = await this.productService.getProductByUrlId(this.urlId);
+      const fetchedProduct = await this.productService.getProductByUrlId(this.urlId).finally(() => {
+        this.spinner.hide();
+      });
+
       if (fetchedProduct) {
         this.product = fetchedProduct;
 

@@ -7,7 +7,7 @@ import { AuthService } from './services/common/auth/auth.service';
     <div>
       <app-header></app-header>
       <app-category></app-category>
-      <div style="margin-bottom: 300px;">
+      <div style="margin-bottom: 400px;">
         <router-outlet></router-outlet>
       </div>
       <div id="footer" class="d-none">

@@ -28,6 +28,11 @@ const routes: Routes = [
         loadChildren: () => import('./addresess/addresess.module').then((module) => module.AddresessModule),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'product-ratings',
+        loadChildren: () => import('./list-user-ratings/list-user-ratings.module').then((module) => module.ListUserRatingsModule),
+        canActivate: [AuthGuard],
+      },
     ],
   },
 ];
