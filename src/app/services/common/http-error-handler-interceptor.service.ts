@@ -1,4 +1,9 @@
-import { HttpEvent, HttpHandler, HttpRequest, HttpStatusCode } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpRequest,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, catchError, of } from 'rxjs';
@@ -10,12 +15,17 @@ export class HttpErrorHandlerInterceptorService {
   constructor(private toastr: ToastrService) {}
 
   // app module providersa bak
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error) => {
         switch (error.status) {
           case HttpStatusCode.Unauthorized:
-            this.toastr.warning('You are not authorized to perform this operation');
+            this.toastr.warning(
+              'You are not authorized to perform this operation'
+            );
             break;
 
           case HttpStatusCode.InternalServerError:
@@ -26,9 +36,9 @@ export class HttpErrorHandlerInterceptorService {
             this.toastr.warning('Cannot access the server!');
             break;
 
-          default:
-            this.toastr.warning('An unexpected error occurred!');
-            break;
+          // default:
+          //   this.toastr.warning('An unexpected error occurred!');
+          //   break;
         }
         return of(error);
       })

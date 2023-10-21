@@ -1,5 +1,6 @@
 services:
   s_angular:
+    container_name: c_angular
     build:
       context: .
       dockerfile: Dockerfile
@@ -7,6 +8,9 @@ services:
       - "4200:4200"
     environment:
       - NODE_TLS_REJECT_UNAUTHORIZED=0
+    networks:
+      - e_commerce
 
 networks:
   e_commerce:
+    name: e_commerce
