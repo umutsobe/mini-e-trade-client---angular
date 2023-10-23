@@ -25,7 +25,9 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.googleLoginCredential),
+            provider: new GoogleLoginProvider(
+              environment.googleLoginCredential
+            ),
           },
         ],
         onError: (err) => {
@@ -33,7 +35,11 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
         },
       } as SocialAuthServiceConfig,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerInterceptorService, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorHandlerInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -50,7 +56,9 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
-          if (typeof localStorage !== 'undefined') if (localStorage.getItem('accessToken')) return localStorage.getItem('accessToken');
+          if (typeof localStorage !== 'undefined')
+            if (localStorage.getItem('accessToken'))
+              return localStorage.getItem('accessToken');
           return '';
         },
         allowedDomains: [environment.jwtDomain],
