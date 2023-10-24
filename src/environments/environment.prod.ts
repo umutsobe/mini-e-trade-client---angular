@@ -1,11 +1,11 @@
+const isLocal = false; // localde docker kullanıyorsak
+//
+
 const serverAdress = '206.81.31.147';
 const port = '7041';
 const dockerApiServiceName = 's_api';
+const googleLoginCredential = '719960856381-4i73af6alrpf3p3pnlbd9ra0vbbbrfhs.apps.googleusercontent.com';
 
-const isLocal = true; // localde docker kullanıyorsak
-
-const googleLoginCredential =
-  '719960856381-4i73af6alrpf3p3pnlbd9ra0vbbbrfhs.apps.googleusercontent.com';
 export const environment = {
   production: true,
   apiUrl: apiUrl(),

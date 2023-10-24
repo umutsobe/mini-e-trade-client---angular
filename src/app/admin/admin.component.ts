@@ -39,6 +39,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
                 <div routerLink="create-product" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Create Product</div>
                 <div routerLink="categories" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Categories</div>
                 <div routerLink="orders" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Orders</div>
+                <div routerLink="/admin/image-control" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Image Control</div>
                 <div routerLink="authorize-menu" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Endpoint-Role Menu</div>
                 <div routerLink="roles" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Roles</div>
                 <div *ngIf="this.authService.isAdmin()" routerLink="users" data-bs-dismiss="offcanvas" role="button" class="item cursor-pointer">Users</div>
