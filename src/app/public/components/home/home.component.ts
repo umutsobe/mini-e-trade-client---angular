@@ -7,10 +7,10 @@ import { ImageService } from 'src/app/services/models/image.service';
 @Component({
   selector: 'app-home',
   template: `
-    <div class="container-sm" style="margin-bottom: 500px;">
+    <div class="container-sm" style="margin-bottom: 900px;">
       <div class="">
         <!-- carouselTop -->
-        <div id="carouselTop" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselTop" class="carousel slide" data-bs-ride="carousel" *ngIf="homePageImages.length > 0">
           <div class="carousel-inner w-100">
             <div *ngFor="let image of homePageImages; let isFirst = first" class="carousel-item rounded-2" [class.active]="isFirst">
               <img class="carousel-image w-100" height="300" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultImage" />

@@ -1,6 +1,6 @@
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -31,6 +31,9 @@ import { UserService } from 'src/app/services/models/user.service';
           <input type="text" id="userName" class="form-control" formControlName="userName" />
           <div *ngIf="submitted">
             <div *ngIf="userName.hasError('required')" class="inputError">Username is required</div>
+            <div *ngIf="userName.hasError('minLength')" class="inputError">Username must be more than 2 characters</div>
+            <div *ngIf="userName.hasError('maxLength')" class="inputError">Username must be less than 50 characters</div>
+            <div *ngIf="userName.hasError('pattern')" class="inputError">Username can only contain English letters and numbers without spaces.</div>
           </div>
         </div>
 
@@ -130,7 +133,7 @@ export class RegisterComponent {
   ngOnInit(): void {
     this.frm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      userName: ['', [Validators.required]],
+      userName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[A-Za-z0-9_-]+$')]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.maxLength(100)]],
       repeatPassword: ['', [Validators.required, Validators.maxLength(100)]],
@@ -148,7 +151,6 @@ export class RegisterComponent {
     if (this.frm.invalid) return;
 
     this.spinner.show();
-    this.toastr.success('awddddd');
     const result: Create_User = await this.userService.create(user).finally(() => {
       this.spinner.hide();
     });

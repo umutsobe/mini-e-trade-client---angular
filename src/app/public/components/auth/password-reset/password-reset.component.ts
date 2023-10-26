@@ -24,7 +24,7 @@ import { UserService } from 'src/app/services/models/user.service';
         </div>
 
         <button type="submit" class="mb-2 w-100 btn btn-primary">Submit</button>
-        <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Already have an account? Register </a>
+        <a routerLink="/login" type="button" class="mt-2 link cursor-pointer" style="text-decoration: none;"> Already have an account? Login </a>
       </form>
     </div>
   `,

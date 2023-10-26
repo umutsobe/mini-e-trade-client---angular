@@ -74,7 +74,7 @@ import { Subject, debounceTime } from 'rxjs';
     </div>
 
     <div *ngIf="productRatings.ratings.length < 1 && !bootstrapSpinner" class="mt-2 d-flex justify-content-center">
-      <div class="alert alert-warning" style="width: fit-content;">Bu ürüne ait yorum bulunmamaktadır</div>
+      <div class="alert alert-warning" style="width: fit-content;">There are no reviews available for this product.</div>
     </div>
 
     <!-- <div *ngIf="bootstrapSpinner" style="margin-bottom: 600px;"></div> -->
@@ -91,7 +91,7 @@ import { Subject, debounceTime } from 'rxjs';
           <div *ngIf="ratingStatus" class="modal-body">
             <div *ngIf="ratingStatus.state === 'NotBuyed'" class="alert alert-warning" role="alert">You must have purchased the product to leave a review.</div>
             <div *ngIf="ratingStatus.state === 'noLogin'" class="alert alert-warning" role="alert">You must be login to perform this action.</div>
-            <div *ngIf="ratingStatus.state === 'BuyedAndHasRating'" class="alert alert-warning" role="alert">Ürüne daha önce yorum yaptınız. Yorumlarınıza Hesabım bölümünden erişebilirsiniz</div>
+            <div *ngIf="ratingStatus.state === 'BuyedAndHasRating'" class="alert alert-warning" role="alert">You have previously made a review on the product. You can access your comments in the 'Account' section.</div>
 
             <div *ngIf="ratingStatus.state === 'BuyedAndNotRating'">
               <form [formGroup]="frm" class="">
