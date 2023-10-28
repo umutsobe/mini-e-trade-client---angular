@@ -15,7 +15,7 @@ export class HttpErrorHandlerInterceptorService {
       catchError((error) => {
         switch (error.status) {
           case HttpStatusCode.Unauthorized:
-            this.toastr.warning('You are not authorized to perform this operation');
+            if (typeof window !== 'undefined') this.toastr.warning('You are not authorized to perform this operation');
             break;
 
           // case HttpStatusCode.InternalServerError:
