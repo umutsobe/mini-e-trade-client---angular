@@ -96,6 +96,9 @@ import { ProductService } from 'src/app/services/models/product.service';
             </div>
             <!-- products -->
             <div class="d-flex flex-wrap justify-content-center product-cards">
+              <div *ngIf="isBrowser && spinnerBootstrap" class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
               <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
                 <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath && isBrowser" src="/assets/product.jpg" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
 
