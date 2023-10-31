@@ -2,8 +2,8 @@ const googleLoginCredential = '719960856381-4i73af6alrpf3p3pnlbd9ra0vbbbrfhs.app
 
 export const environment = {
   production: true,
-  apiUrl: 'http://138.68.101.228:7041/api',
-  signalRUrl: 'http://138.68.101.228:7041/',
+  apiUrl: 'https://138.68.101.228/api',
+  signalRUrl: 'https://138.68.101.228/',
   googleLoginCredential: googleLoginCredential,
-  jwtDomain: '138.68.101.228:7041',
+  jwtDomain: '138.68.101.228',
 };
