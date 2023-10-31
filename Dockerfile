@@ -11,6 +11,9 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 FROM node:18-alpine AS ssr-server
 COPY --from=build /app/dist /app/dist/
 COPY ./package.json /app/package.json
+
+COPY ./certs /app/certs
+
 WORKDIR /app
 EXPOSE 4200
 
