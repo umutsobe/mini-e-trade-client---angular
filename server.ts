@@ -57,8 +57,8 @@ export function app(): express.Express {
 function run(): void {
   const port = process.env['PORT'] || 4200;
 
-  const privateKey = fs.readFileSync('./certs/key.pem', 'utf8');
-  const certificate = fs.readFileSync('./certs/cer.pem', 'utf8');
+  const privateKey = fs.readFileSync('certs/key.pem', 'utf8');
+  const certificate = fs.readFileSync('certs/cer.pem', 'utf8');
   const credentials = { key: privateKey, cert: certificate };
 
   // Start up the Node server
