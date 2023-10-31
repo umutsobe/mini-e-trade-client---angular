@@ -7,6 +7,9 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import * as compression from 'compression';
 
+import * as fs from 'fs';
+import * as https from 'https';
+
 const { exec } = require('child_process');
 
 import { AppServerModule } from './src/main.server';
@@ -16,9 +19,7 @@ export function app(): express.Express {
   const server = express();
   server.use(compression({ level: 8 }));
   const distFolder = join(process.cwd(), 'dist/client-angular/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
-    ? 'index.original.html'
-    : 'index';
+  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   server.engine(
@@ -56,10 +57,15 @@ export function app(): express.Express {
 function run(): void {
   const port = process.env['PORT'] || 4200;
 
+  const privateKey = fs.readFileSync('./certs/key.pem', 'utf8');
+  const certificate = fs.readFileSync('./certs/cer.pem', 'utf8');
+  const credentials = { key: privateKey, cert: certificate };
+
   // Start up the Node server
-  const server = app();
+  const server = https.createServer(credentials, app());
+
   server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`Node Express server listening on https://localhost:${port}`);
   });
 }
 

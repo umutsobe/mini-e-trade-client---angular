@@ -6,10 +6,6 @@ COPY . /app/
 
 RUN npm run build
 
-FROM nginx:latest AS client-browser
-COPY --from=build /app/dist/client-angular/browser/ /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 FROM node:18-alpine AS ssr-server

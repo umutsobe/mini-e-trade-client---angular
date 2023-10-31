@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:4200
+      - 443:4200
     environment:
       - NODE_TLS_REJECT_UNAUTHORIZED=0
     networks:
