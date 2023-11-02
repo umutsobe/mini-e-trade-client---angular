@@ -25,7 +25,7 @@ import { AccountService } from 'src/app/services/models/account.service';
             <div *ngFor="let orderItem of order.orderItems" class="my-2 py-2 card-body">
               <!-- iterasyon burada olacak -->
               <div class="py-2 d-flex">
-                <img width="120px" src="/assets/product.jpg" style="border-radius: 10px;" />
+                <img width="120px" src="/assets/product.webp" style="border-radius: 10px;" />
                 <div class="ms-2 mt-1">
                   <p class="m-0">{{ orders == null ? '' : orderItem.name }}</p>
                   <p class="m-0">Order Price: {{ orders == null ? '' : (orderItem.price | currency : '₺') }}</p>

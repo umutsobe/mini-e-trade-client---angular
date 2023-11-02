@@ -150,7 +150,7 @@ export class ProductDetailComponent implements OnInit {
   showCaseImagePath: string;
   images: PrimeSliderImage[] = [];
   responsiveOptions: any[] | undefined;
-  defaultImage = '/assets/preload.png';
+  defaultImage = '/assets/preload.webp';
   baseUrl: string;
   ratingComponentLoaded = false;
   //#endregion
@@ -238,12 +238,12 @@ export class ProductDetailComponent implements OnInit {
     } else {
       let primeImage: PrimeSliderImage = {
         alt: '',
-        itemImageSrc: '/assets/product.jpg',
-        thumbnailImageSrc: '/assets/product.jpg',
+        itemImageSrc: '/assets/product.webp',
+        thumbnailImageSrc: '/assets/product.webp',
         title: '',
         showcase: true,
       };
-      this.showCaseImagePath = '/assets/product.jpg';
+      this.showCaseImagePath = '/assets/product.webp';
       this.images.push(primeImage);
     }
 

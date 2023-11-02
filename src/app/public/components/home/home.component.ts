@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   constructor(private imageService: ImageService, private fileService: FileService, @Inject(PLATFORM_ID) private platformId: Object) {}
   homePageImages: Image[] = [];
   baseUrl: string = '';
-  defaultImage = '/assets/preload.png';
+  defaultImage = '/assets/preload.webp';
   isBrowser = false;
 
   async ngOnInit() {

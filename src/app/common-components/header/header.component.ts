@@ -1,12 +1,10 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterContentInit, AfterViewChecked, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { AuthService, _isAuthenticated } from 'src/app/services/common/auth/auth.service';
 import { AccountService } from 'src/app/services/models/account.service';
-
-declare let $: any;
 
 @Component({
   selector: 'app-header',
@@ -89,12 +87,14 @@ export class HeaderComponent implements OnInit {
     if (typeof localStorage !== 'undefined') {
       if (!localStorage.getItem('theme')) {
         localStorage.setItem('theme', 'dark');
-        this.toggleThemeString = 'Dark Theme';
+        this.toggleThemeString = 'Light Theme';
       } else {
         if (localStorage.getItem('theme') == 'light') {
-          $('body').attr('data-bs-theme', 'light');
+          document.body.setAttribute('data-bs-theme', 'light');
+          this.toggleThemeString = 'Dark Theme';
         } else {
-          $('body').attr('data-bs-theme', 'dark');
+          document.body.setAttribute('data-bs-theme', 'dark');
+          this.toggleThemeString = 'Light Theme';
         }
       }
     }
@@ -115,19 +115,21 @@ export class HeaderComponent implements OnInit {
       if (typeof window !== 'undefined') window.location.reload();
     });
   }
+
   toggleTheme() {
     if (localStorage.getItem('theme') == 'dark') {
-      $('body').attr('data-bs-theme', 'light');
+      document.body.setAttribute('data-bs-theme', 'light');
       localStorage.setItem('theme', 'light');
 
       this.toggleThemeString = 'Dark Theme';
     } else {
-      $('body').attr('data-bs-theme', 'dark');
+      document.body.setAttribute('data-bs-theme', 'dark');
       localStorage.setItem('theme', 'dark');
 
       this.toggleThemeString = 'Light Theme';
     }
   }
+
   async routeLogin() {
     this.authService.identityCheck();
     this.authService.isAuthenticated;

@@ -18,7 +18,7 @@ import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.s
           <div role="button" class="d-flex align-items-center mb-2" routerLink="/product/{{ rating.productUrlId }}" style="width: fit-content;">
             <img *ngIf="rating.productShowcaseImageUrl" src="{{ rating.productShowcaseImageUrl }}" class="rounded-2" style="width: 80px; height: 80px; object-fit: cover;" />
 
-            <img *ngIf="!rating.productShowcaseImageUrl" src="/assets/product.jpg" class="rounded-2" style="width: 80px; height: 80px; object-fit: cover;" />
+            <img *ngIf="!rating.productShowcaseImageUrl" src="/assets/product.webp" class="rounded-2" style="width: 80px; height: 80px; object-fit: cover;" />
 
             <p class="p-0 m-0 ms-1">{{ rating.productName }}</p>
           </div>

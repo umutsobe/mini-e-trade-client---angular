@@ -23,7 +23,7 @@ import { isPlatformBrowser } from '@angular/common';
 
             <div *ngFor="let product of products" class="d-flex my-2 py-2 border-top">
               <div class="py-2">
-                <img style="height: 130px; object-fit: contain; border-radius: 10px;" src="/assets/product.jpg" />
+                <img style="height: 130px; object-fit: contain; border-radius: 10px;" src="/assets/product.webp" />
               </div>
 
               <div class="ms-3 d-flex flex-column justify-content-between">
