@@ -13,6 +13,8 @@ import * as https from 'https';
 const { exec } = require('child_process');
 
 import { AppServerModule } from './src/main.server';
+import { createServer } from 'http';
+import { environment } from 'src/environments/environment';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -57,12 +59,18 @@ export function app(): express.Express {
 function run(): void {
   const port = process.env['PORT'] || 4200;
 
-  const privateKey = fs.readFileSync('certs/key.pem', 'utf8');
-  const certificate = fs.readFileSync('certs/cer.pem', 'utf8');
-  const credentials = { key: privateKey, cert: certificate };
+  let server;
 
-  // Start up the Node server
-  const server = https.createServer(credentials, app());
+  if (environment.production) {
+    const privateKey = fs.readFileSync('certs/key.pem', 'utf8');
+    const certificate = fs.readFileSync('certs/cer.pem', 'utf8');
+    const credentials = { key: privateKey, cert: certificate };
+
+    // // Start up the Node server
+    server = https.createServer(credentials, app());
+  } else {
+    server = createServer(app());
+  }
 
   server.listen(port, () => {
     console.log(`Node Express server listening on https://localhost:${port}`);
