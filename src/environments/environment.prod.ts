@@ -2,8 +2,8 @@ const googleLoginCredential = '719960856381-4i73af6alrpf3p3pnlbd9ra0vbbbrfhs.app
 
 export const environment = {
   production: true,
-  apiUrl: 'https://apiecommercesobe.online/api',
-  signalRUrl: 'https://apiecommercesobe.online/',
+  apiUrl: 'https://apiecommercesobe.site/api',
+  signalRUrl: 'https://apiecommercesobe.site/',
   googleLoginCredential: googleLoginCredential,
-  jwtDomain: 'apiecommercesobe.online',
+  jwtDomain: 'apiecommercesobe.site',
 };
