@@ -1,6 +1,6 @@
 # ASP.NET Mini-E-Commerce App
 
-![WhatsApp Image 2023-10-25 at 03 04 58](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/bcc473ae-d5ce-4a8c-b209-c9e91b08f50b)
+![e_commerce](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/d721ce15-c106-4d6b-9772-b73271688d03)
 
 **Before You Begin:** To try out the application, you can visit the following link: [E-Commerce App](https://ecommercesobe.site)
 
@@ -26,15 +26,18 @@
 
 ## Hosting
 
+- DigitalOcean Machine (now hosting)
+- Cloudflare (DDOS Protection, Caching)
 - Docker
+- Jenkins
 - Azure (before Docker)
 - Heroku (before Docker)
-- DigitalOcean Machine (now hosting)
-- Jenkins
 
 ## Other Technologies
 
 - Multiple Role Management (admin, moderator, normalUser ...)
+- Two Factor Authentication (Mail)
+- PostgreSQL
 - Mail Service
 - Google Login
 - Azure Blob Storage
