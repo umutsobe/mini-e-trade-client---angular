@@ -23,12 +23,17 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-checkout',
   template: `
-    <div class="container-sm p-0">
-      <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0" style="margin-bottom: 800px;">
+    <div class="container-sm p-0" style="margin-bottom: 800px;">
+      <div *ngIf="spinnerElement && isBrowser" class="d-flex justify-content-center mt-3" style="width: 100%;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0">
         <div class="d-flex flex-column flex-md-row">
           <div class="col-12 d-block col-md-8 col-lg-8 col-xl-9">
             <!-- sol -->
-            <!-- address -->
+            <!-- addresses -->
             <div class="mb-4">
               <h1 class="m-0 p-0">1 - Shipping Address</h1>
               <div class="border rounded-2 p-3 mt-2">
@@ -163,7 +168,7 @@ import { isPlatformBrowser } from '@angular/common';
         </div>
       </div>
     </div>
-    <div *ngIf="!spinnerElement && !(products == null ? false : products.length > 0)" class="mt-4 d-flex justify-content-center" style="margin-bottom: 700px;">
+    <div *ngIf="!spinnerElement && isBrowser" class="mt-4 d-flex justify-content-center" style="margin-bottom: 700px;">
       <div class="d-flex flex-column col-8 col-md-4">
         <div class="alert alert-info">Your card is empty.</div>
         <button routerLink="/search" class="btn btn-success mt-2">Continue shopping</button>
@@ -243,6 +248,7 @@ export class CheckoutComponent implements OnInit {
   faPlus = faPlus;
   faMinus = faMinus;
   faTrash = faTrash;
+  isBrowser: boolean;
 
   faEllipsis = faEllipsis;
   constructor(private basketService: BasketService, private formBuilder: FormBuilder, private accountService: AccountService, private authService: AuthService, private toastr: ToastrService, private spinner: NgxSpinnerService, private orderService: OrderService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
@@ -260,10 +266,12 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  spinnerElement: boolean = false;
+  spinnerElement: boolean = true;
   products: List_Basket_Item[] = [];
 
   async ngOnInit() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
     if (isPlatformBrowser(this.platformId)) {
       this.products = await this.basketService.get();
 

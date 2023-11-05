@@ -5,14 +5,13 @@ import { ProductService } from 'src/app/services/models/product.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { BasketService } from 'src/app/services/models/basket.service';
 import { Create_Basket_Item } from 'src/app/contracts/basket/create_basket_item';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from 'src/app/services/models/file.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/services/common/auth/auth.service';
-import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
 import { Error_DTO } from 'src/app/contracts/error_dto';
 
 @Component({
@@ -155,7 +154,7 @@ export class ProductDetailComponent implements OnInit {
   ratingComponentLoaded = false;
   //#endregion
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private ratingService: ProuductRatingService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private sanitizer: DomSanitizer, private basketService: BasketService, private toastr: ToastrService, private fileService: FileService, private spinner: NgxSpinnerService, private authService: AuthService, private title: Title, private meta: Meta) {
     this.urlId = router.url.split('/')[2];
   }
 
@@ -249,6 +248,7 @@ export class ProductDetailComponent implements OnInit {
 
     this.isLoading = false;
     this.spinner.hide();
+    this.setTitle();
   }
   plusQuantity() {
     this.productQuantity++;
@@ -327,6 +327,10 @@ export class ProductDetailComponent implements OnInit {
       section.scrollIntoView();
       this.ratingComponentLoaded = true;
     }
+  }
+
+  setTitle() {
+    this.title.setTitle(`${this.product.name}`);
   }
 
   //prime ng image slider

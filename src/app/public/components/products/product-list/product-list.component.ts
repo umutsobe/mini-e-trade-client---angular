@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -206,7 +207,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   ],
 })
 export class ProductListComponent {
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService, @Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private fileService: FileService, private basketService: BasketService, private spinner: NgxSpinnerService, private toastr: ToastrService, private authService: AuthService, private router: Router, private categoryService: CategoryService, @Inject(PLATFORM_ID) private platformId: Object, private title: Title, private meta: Meta) {}
 
   products: List_Product[] = [];
   categories: List_Category[] = [];
@@ -221,9 +222,7 @@ export class ProductListComponent {
   };
   spinnerBootstrap = true;
   isCategoryPage: boolean;
-
   defaultImage = '/assets/dark-preload.webp';
-
   isBrowser: boolean;
 
   async ngOnInit() {
@@ -244,6 +243,7 @@ export class ProductListComponent {
     });
 
     this.getCategoriesForFilter();
+    this.setTitle();
   }
 
   async getProductsByFilter(queryParams: Params, routeParams: Params) {
@@ -429,5 +429,13 @@ export class ProductListComponent {
   routeToProductDetail(url) {
     this.spinner.show();
     this.router.navigateByUrl(`/product/${url}`);
+  }
+
+  setTitle() {
+    if (this.isCategoryPage) {
+      this.title.setTitle(`Category : ${this.productFilter.categoryName}`);
+    } else {
+      this.title.setTitle(`E Commerce Search : ${this.productFilter.keyword ? this.productFilter.keyword : ''}`);
+    }
   }
 }

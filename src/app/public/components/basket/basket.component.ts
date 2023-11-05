@@ -14,12 +14,16 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-basket',
   template: `
-    <div class="container-sm p-0" style="margin-bottom: 600px;">
+    <div class="container-sm p-0" style="margin-bottom: 800px;">
+      <div *ngIf="spinnerElement && isBrowser" class="d-flex justify-content-center mt-3" style="width: 100%;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <div *ngIf="products.length > 0" class="mt-5 col-11 col-sm-11 col-md-10 col-lg-10 col-xl-10 container-sm p-0">
         <div class="d-flex flex-column flex-md-row">
           <div class="col-12 d-block col-md-7 col-lg-8 col-xl-8">
             <h1 class="">Card</h1>
-            <div *ngIf="spinnerElement" class="ms-4 spinner-border text-primary" role="status"></div>
 
             <div *ngFor="let product of products" class="d-flex my-2 py-2 border-top">
               <div class="py-2">
@@ -84,18 +88,20 @@ export class BasketComponent implements OnInit {
   faTrash = faTrash;
   products: List_Basket_Item[] = [];
   spinnerElement = true;
+  isBrowser: boolean;
 
   constructor(private spinner: NgxSpinnerService, private basketService: BasketService, private toastr: ToastrService, private orderService: OrderService, private userService: UserService, @Inject(PLATFORM_ID) private platformId: Object) {}
   async ngOnInit() {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
     if (isPlatformBrowser(this.platformId)) {
-      this.getProducts();
+      await this.getProducts();
     }
   }
 
   async getProducts() {
-    this.products = await this.basketService.get().finally(() => {
-      this.spinnerElement = false;
-    });
+    this.products = await this.basketService.get().finally(() => {});
+    this.spinnerElement = false;
   }
   async minusQuantity(product: List_Basket_Item) {
     this.spinner.show();
