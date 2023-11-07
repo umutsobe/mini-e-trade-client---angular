@@ -101,11 +101,11 @@ import { ProductService } from 'src/app/services/models/product.service';
                 <span class="visually-hidden">Loading...</span>
               </div>
               <div *ngFor="let product of products" class="product-card card m-0 me-2 mb-2 cursor-pointer" style="width: 16rem;">
-                <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath && isBrowser" src="/assets/product.webp" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img (click)="routeToProductDetail(product.url)" *ngIf="!product.productImageShowCasePath && isBrowser" src="/assets/product.webp" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: contain;" type="button" />
 
-                <img *ngIf="!isBrowser" src="/assets/dark-preload.webp" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" />
+                <img *ngIf="!isBrowser" src="/assets/dark-preload.webp" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: contain;" type="button" />
 
-                <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath && isBrowser" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: cover;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
+                <img (click)="routeToProductDetail(product.url)" *ngIf="product.productImageShowCasePath && isBrowser" class="card-img-top mb-0" style="width: 100%;height: 200px;object-fit: contain;" type="button" [defaultImage]="defaultImage" [lazyLoad]="product.productImageShowCasePath" />
 
                 <div class="card-body m-0 p-2">
                   <p (click)="routeToProductDetail(product.url)" type="button" class="product-name m-0 p-0 placeholder-glow" style="font-size: 16px;">{{ product.name }}</p>
@@ -171,7 +171,9 @@ import { ProductService } from 'src/app/services/models/product.service';
         overflow: hidden;
         height: 36px;
       }
-
+      .product-card img {
+        border-radius: 5px;
+      }
       @media (max-width: 560px) {
         .product-card {
           width: 49% !important;
