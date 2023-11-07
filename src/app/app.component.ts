@@ -17,8 +17,6 @@ import { AuthService } from './services/common/auth/auth.service';
   `,
   styles: [
     `
-      /* mat selection list kullanan her yere yapıştır. dark theme'de sorun çıkıyor */
-
       *:focus {
         box-shadow: none !important;
       }

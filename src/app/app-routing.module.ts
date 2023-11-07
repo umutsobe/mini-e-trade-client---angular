@@ -6,7 +6,7 @@ import { AuthGuard } from './guards/common/auth.guard';
 import { AdminPanelGuard } from './guards/admin-panel/admin-panel.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, title: 'E Commerce' },
+  { path: '', component: HomeComponent, title: 'E Commerce - Electronic, Computer, Cell Phone, Book, Toy, Game' },
 
   {
     path: 'admin',

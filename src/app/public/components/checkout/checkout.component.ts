@@ -23,7 +23,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-checkout',
   template: `
-    <div class="container-sm p-0" style="margin-bottom: 800px;">
+    <div class="container-sm p-0" style="margin-bottom: 400px;">
       <div *ngIf="spinnerElement && isBrowser" class="d-flex justify-content-center mt-3" style="width: 100%;">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -168,10 +168,12 @@ import { isPlatformBrowser } from '@angular/common';
         </div>
       </div>
     </div>
-    <div *ngIf="!spinnerElement && isBrowser" class="mt-4 d-flex justify-content-center" style="margin-bottom: 700px;">
-      <div class="d-flex flex-column col-8 col-md-4">
-        <div class="alert alert-info">Your card is empty.</div>
-        <button routerLink="/search" class="btn btn-success mt-2">Continue shopping</button>
+    <div *ngIf="!spinnerElement && isBrowser && products.length < 1">
+      <div class="mt-4 d-flex justify-content-center" style="margin-bottom: 800px;">
+        <div class="d-flex flex-column col-8 col-md-4">
+          <div class="alert alert-info">Your card is empty.</div>
+          <button routerLink="/search" class="btn btn-success mt-2">Continue shopping</button>
+        </div>
       </div>
     </div>
 

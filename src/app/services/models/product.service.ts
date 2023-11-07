@@ -6,6 +6,7 @@ import { List_Product } from 'src/app/contracts/product/list_product';
 import { List_Product_Detail } from 'src/app/contracts/product/lis_product_detail';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
 import { Image } from 'src/app/contracts/product/image';
+import { UpdateProduct } from 'src/app/contracts/product/update_product';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class ProductService {
   async create(product: CreateProduct): Promise<CreateProduct> {
     const observable: Observable<CreateProduct> = this.http.post(
       {
-        controller: 'ProductControllers',
+        controller: 'Product',
         action: 'CreateProduct',
       },
       product
@@ -28,7 +29,7 @@ export class ProductService {
   delete(id: string): Observable<any> {
     return this.http.delete(
       {
-        controller: 'ProductControllers',
+        controller: 'Product',
         action: 'DeleteProductById',
       },
       id
@@ -39,7 +40,7 @@ export class ProductService {
     return this.http.delete(
       {
         action: 'DeleteImage',
-        controller: 'ProductControllers',
+        controller: 'Product',
         queryString: `imageId=${imageId}`, //apideki imageId ismi ile buradaki aynı olmak zorunda
       },
       productId
@@ -48,7 +49,7 @@ export class ProductService {
 
   async changeShowcaseImage(imageId: string, productId: string, successCallBack?: () => void): Promise<void> {
     const changeShowcaseImageObservable = this.http.get({
-      controller: 'ProductControllers',
+      controller: 'Product',
       action: 'ChangeShowcaseImage',
       queryString: `imageId=${imageId}&productId=${productId}`,
     });
@@ -59,7 +60,7 @@ export class ProductService {
   async getCategoriesByProductId(productId: string): Promise<string[]> {
     const observable: Observable<string[]> = this.http.get(
       {
-        controller: 'productControllers',
+        controller: 'product',
         action: 'GetCategoriesByProduct',
       },
       productId
@@ -71,7 +72,7 @@ export class ProductService {
   async assignCategoriesToProduct(productId: string, categoryNames: string[]): Promise<any> {
     const observable: Observable<any> = this.http.post(
       {
-        controller: 'productControllers',
+        controller: 'product',
         action: 'AssignCategoryToProduct',
       },
       { productId: productId, categoryNames: categoryNames }
@@ -82,7 +83,7 @@ export class ProductService {
 
   async getProductsByFilter(filterQueryString: string): Promise<{ totalProductCount: number; products: List_Product[] }> {
     const observable: Observable<{ totalProductCount: number; products: List_Product[] }> = this.http.get({
-      controller: 'productControllers',
+      controller: 'product',
       action: 'GetProductsByFilter',
       queryString: `${filterQueryString}`,
     });
@@ -93,7 +94,7 @@ export class ProductService {
   async getProductByUrlId(urlId: string): Promise<List_Product_Detail> {
     const observable: Observable<List_Product_Detail> = this.http.get(
       {
-        controller: 'productControllers',
+        controller: 'product',
         action: 'GetProductByUrlIdRequest',
       },
       urlId
@@ -103,7 +104,7 @@ export class ProductService {
 
   async getProductsByFilterAdmin(filterQueryString: string): Promise<{ totalProductCount: number; products: List_Product_Admin[] }> {
     const observable: Observable<{ totalProductCount: number; products: List_Product_Admin[] }> = this.http.get({
-      controller: 'productControllers',
+      controller: 'product',
       action: 'GetAllProductsAdmin',
       queryString: `${filterQueryString}`,
     });
@@ -115,9 +116,20 @@ export class ProductService {
     return this.http.get<Image[]>(
       {
         action: 'getproductimages',
-        controller: 'productcontrollers',
+        controller: 'product',
       },
       id
     );
+  }
+  async updateProduct(product: UpdateProduct): Promise<UpdateProduct> {
+    const observable: Observable<UpdateProduct> = this.http.put(
+      {
+        controller: 'Product',
+        action: 'UpdateProduct',
+      },
+      product
+    );
+
+    return await firstValueFrom(observable);
   }
 }

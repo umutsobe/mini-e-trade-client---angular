@@ -1,18 +1,18 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { List_Product } from 'src/app/contracts//product/list_product';
 import { ProductService } from 'src/app/services/models/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { formatDate } from '@angular/common';
 import { IdExchangeService } from 'src/app/services/data-exchange/id-exchange.service';
-import { Image } from 'src/app/contracts/product/image';
 import { List_Category } from 'src/app/contracts/category/list_category';
-import { MatSelectionList } from '@angular/material/list';
 import { CategoryService } from 'src/app/services/models/category.service';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { ProductFilter } from 'src/app/contracts/filter_product';
 import { Subject, debounceTime } from 'rxjs';
 import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin';
+import { ProductPhotoModalComponent } from '../modals/product-photo-modal/product-photo-modal.component';
+import { ProductCategoryModalComponent } from '../modals/product-category-modal/product-category-modal.component';
+import { UpdateProductModalComponent } from '../modals/update-product-modal/update-product-modal.component';
 
 @Component({
   selector: 'app-list',
@@ -68,23 +68,17 @@ import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin
               <td>
                 <img *ngIf="product.isActive" type="button" src="/assets/completed.png" width="25" style="cursor:pointer;" />
               </td>
-              <!-- <td>
-                <button data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="btn btn-primary btn-sm">Category</button>
-              </td> -->
               <td>
                 <img type="button" data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" src="/assets/photo.png" width="25" style="cursor:pointer;" />
               </td>
-              <!-- <td>
-                <img type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" src="/assets/delete.png" width="25" style="cursor:pointer;" />
-              </td> -->
               <td>
                 <div class="dropdown">
                   <img class="dropdown-toggle" src="/assets/edit.png" width="25" style="cursor:pointer;" data-bs-toggle="dropdown" />
 
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                  <ul class="dropdown-menu dropdown-menu-start">
                     <li role="button" data-bs-toggle="modal" data-bs-target="#categoryModal" (click)="openCategoryDialog(product)" class="dropdown-item text-truncate">Select Category</li>
                     <li data-bs-toggle="modal" data-bs-target="#selectPhotoModal" (click)="openPhotoDialog(product)" role="button" class="dropdown-item">Select Photo</li>
-                    <li role="button" class="dropdown-item">Edit Product</li>
+                    <li data-bs-toggle="modal" data-bs-target="#updateModal" (click)="openUpdateProductDialog(product)" role="button" class="dropdown-item">Update Product</li>
                     <li><hr class="dropdown-divider" /></li>
                     <li data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="openDeleteDialog(product)" role="button" class="dropdown-item">!Delete</li>
                   </ul>
@@ -106,90 +100,17 @@ import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin
       </div>
     </div>
 
-    <!-- ---------------------------------------------Dialogs---------------------------------------- -->
-
     <!-- delete dialog -->
-
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Product Deletion Process</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p class="text-danger">Product deletion process is irreversible!!!</p>
-            <p>Product to be deleted: {{ selectedProduct ? selectedProduct.name : '' }}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button (click)="delete()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-product-delete-modal [selectedProduct]="selectedProduct"></app-product-delete-modal>
 
     <!-- photo dialog -->
-
-    <div class="modal fade" id="selectPhotoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product Photo</h1>
-            <div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-          </div>
-          <p class="ms-3 mt-2">Product Id: {{ selectedProduct ? selectedProduct.id : '' }}</p>
-          <p class="ms-3 mt-2">Product Name: {{ selectedProduct ? selectedProduct.name : '' }}</p>
-          <div class="modal-body">
-            <h4 class="text-center">Add Photo to Product</h4>
-            <app-file-upload [definition]="'product'"></app-file-upload>
-            <!-- appfilecomponent child componenttir bu componentte göre -->
-          </div>
-          <div class="list-images">
-            <h4 class="text-center">Product Photos</h4>
-            <div class="d-flex flex-wrap justify-content-center">
-              <div *ngFor="let productImage of productImages" class="card m-1" style="width:11rem">
-                <span class="my-1 d-flex justify-content-center">
-                  Showcase
-                  <input [checked]="productImage.showcase === true" class="ms-1 my-1 form-check-input" type="radio" name="img" (click)="showCase(productImage.id)" />
-                </span>
-
-                <img style="height: 20vh; object-fit: contain;" src="{{ productImage.path }}" class="card-img-top" />
-                <div class="card-body text-center">
-                  <button (click)="deleteImage(selectedProduct.id, productImage.id)" class="btn btn-danger">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-product-photo-modal [selectedProduct]="selectedProduct"></app-product-photo-modal>
 
     <!-- category modal -->
+    <app-product-category-modal [selectedProduct]="selectedProduct"></app-product-category-modal>
 
-    <div class="modal fade" id="categoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-body">
-            <h2>{{ selectedProduct ? selectedProduct.name : '' }}</h2>
-            <mat-selection-list #categoryComponent>
-              <mat-list-option *ngFor="let category of listCategories" selected="{{ category.selected }}">
-                {{ category.name }}
-              </mat-list-option>
-            </mat-selection-list>
-          </div>
-          <div class="modal-footer">
-            <button (click)="assignCategories(categoryComponent)" type="button" class="btn btn-primary">Assign Categories</button>
-            <button (click)="closeCategoryDialog()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- update product modal -->
+    <app-update-product-modal [selectedProduct]="selectedProduct"></app-update-product-modal>
   `,
   styles: [
     `
@@ -220,11 +141,14 @@ import { List_Product_Admin } from 'src/app/contracts/product/list_Product_Admin
         overflow: hidden;
         max-height: 46px;
       }
+      .dropdown-menu {
+        z-index: 9999;
+      }
     `,
   ],
 })
 export class ListComponent implements OnInit {
-  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private toastr: ToastrService, private idService: IdExchangeService, private categoryService: CategoryService) {
+  constructor(private productService: ProductService, private spinner: NgxSpinnerService, private idService: IdExchangeService, private categoryService: CategoryService) {
     this.inputChangeSubject.pipe(debounceTime(this.searchInputDelayTime)).subscribe(() => {
       //search inputu gecikmeli arama
       this.onSearchInputChange();
@@ -237,7 +161,7 @@ export class ListComponent implements OnInit {
   };
   totalProductCount: number;
   totalPageCount: number;
-  pageSize = 8; //backenddekiyle aynı olmalı
+  pageSize = 8;
   productFilter: ProductFilter = {
     page: 0,
     keyword: '',
@@ -256,65 +180,34 @@ export class ListComponent implements OnInit {
 
     this.spinner.hide();
   }
-  //dialog penceresinde seçilen ürün
-  selectedProduct: List_Product;
+  selectedProduct: List_Product = { id: '' };
+  categories: { categories: List_Category[]; totalCategoryCount: number };
 
   openDeleteDialog(element: List_Product) {
     this.selectedProduct = element;
   }
-  delete() {
-    this.spinner.show();
-    this.productService.delete(this.selectedProduct.id).subscribe(
-      () => {
-        this.spinner.hide();
-        this.toastr.success('Product Successfully Deleted');
-        this.getProducts();
-      },
-      () => this.spinner.hide(),
-      () => this.spinner.hide()
-    );
-    this.spinner.hide();
-  }
 
-  productImages: Image[];
-
+  @ViewChild(ProductPhotoModalComponent) productPhotoModalComponent: ProductPhotoModalComponent;
   openPhotoDialog(element) {
     this.selectedProduct = element;
     this.idService.setId(element.id); // file upload componentin hangi id ile işlem yapacağını söylüyor
-    this.listProductPhotos(element.id);
+
+    this.productPhotoModalComponent.listProductPhotos(this.selectedProduct.id);
   }
 
-  listProductPhotos(id: string) {
-    this.spinner.show('Resimler Yükleniyor');
-    this.productService.readImages(id).subscribe(
-      (response) => {
-        this.productImages = response;
-        this.spinner.hide();
-      },
-      () => {
-        this.spinner.hide();
-      }
-    );
-  }
-  deleteImage(productId: string, imageId: string) {
-    this.spinner.show();
-    this.productService.deleteImage(productId, imageId).subscribe(
-      () => {
-        this.spinner.hide();
-        this.listProductPhotos(productId);
-      },
-      () => {
-        this.spinner.hide();
-      }
-    );
-    this.spinner.hide();
-  }
-  showCase(imageId: string) {
-    this.spinner.show();
+  @ViewChild(ProductCategoryModalComponent) productCategoryModalComponent: ProductCategoryModalComponent;
+  categoryModalLoaded = false;
+  openCategoryDialog(product: List_Product) {
+    this.selectedProduct = product;
+    this.categoryModalLoaded = true;
 
-    this.productService.changeShowcaseImage(imageId, this.selectedProduct.id as string, () => {
-      this.spinner.hide();
-    });
+    this.productCategoryModalComponent.getCategories(product.id);
+  }
+  @ViewChild(UpdateProductModalComponent) productUpdateModalComponent: UpdateProductModalComponent;
+  openUpdateProductDialog(product: List_Product) {
+    this.selectedProduct = product;
+
+    this.productUpdateModalComponent.getProduct(this.selectedProduct);
   }
 
   formatDate(dateString: string): string {
@@ -323,43 +216,6 @@ export class ListComponent implements OnInit {
     const date = new Date(dateString);
     if (typeof window !== 'undefined') if (window.innerWidth < 600) return formatDate(date, 'yyyy-MM-dd', 'en-US');
     return formatDate(date, 'yyyy-MM-dd HH:mm:ss', 'en-US');
-  }
-
-  categories: { categories: List_Category[]; totalCategoryCount: number };
-  assignedCategories: Array<string> = [];
-  listCategories: { name: string; selected: boolean }[];
-
-  async openCategoryDialog(element) {
-    this.spinner.show();
-    this.selectedProduct = element;
-    this.assignedCategories = await this.productService.getCategoriesByProductId(element.id);
-
-    this.categories = await this.categoryService.getCategories(0, 100);
-
-    this.listCategories = this.categories.categories.map((r: any) => {
-      return {
-        name: r.name,
-        selected: this.assignedCategories?.indexOf(r.name) > -1,
-      };
-    });
-    this.spinner.hide();
-  }
-
-  assignCategories(categoryComponent: MatSelectionList) {
-    this.spinner.show();
-    const categories: string[] = categoryComponent.selectedOptions.selected.map((o) => o._elementRef.nativeElement.innerText);
-    this.productService
-      .assignCategoriesToProduct(this.selectedProduct.id, categories)
-      .then(() => {
-        this.toastr.success('Categories Successfully Assigned');
-      })
-      .finally(() => {
-        this.spinner.hide();
-      });
-  }
-
-  closeCategoryDialog() {
-    this.listCategories = [];
   }
 
   sortLowPrice() {
