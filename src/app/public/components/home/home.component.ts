@@ -17,7 +17,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   selector: 'app-home',
   template: `
     <div class="container-lg" style="width: 100%;">
-      <div class="carouselSection" style="height: 400px;">
+      <div class="carouselSection">
         <!-- carouselTop -->
         <div id="carouselTop" class="carousel slide" data-bs-ride="carousel" *ngIf="homePageImages.length > 0">
           <div class="carousel-inner w-100">
@@ -25,11 +25,11 @@ import { ProductService } from 'src/app/services/models/product.service';
               <img class="carousel-image w-100" height="400" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultGalleryImage" />
             </div>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
+          <button *ngIf="homePageImages.length > 1" class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
+          <button *ngIf="homePageImages.length > 1" class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
@@ -97,6 +97,9 @@ import { ProductService } from 'src/app/services/models/product.service';
         -webkit-box-orient: vertical;
         overflow: hidden;
         height: 36px;
+      }
+      .carouselSection {
+        height: 400px;
       }
 
       @media (max-width: 570px) {
