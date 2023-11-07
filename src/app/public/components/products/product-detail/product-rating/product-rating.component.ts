@@ -13,6 +13,7 @@ import { ProductService } from 'src/app/services/models/product.service';
 import { ProuductRatingService } from 'src/app/services/models/prouduct-rating.service';
 import { faSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Subject, debounceTime } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-rating',
@@ -156,7 +157,7 @@ export class ProductRatingComponent implements OnInit {
   private inputChangeSubject = new Subject<string>();
   searchInputDelayTime = 300;
 
-  constructor(private ratingService: ProuductRatingService, private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private formBuilder: FormBuilder, private spinner: NgxSpinnerService, private toastr: ToastrService) {
+  constructor(private ratingService: ProuductRatingService, private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private productService: ProductService, private formBuilder: FormBuilder, private spinner: NgxSpinnerService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
     activatedRoute.params.subscribe((params) => {
       this.urlId = params['urlId'];
     });
@@ -242,10 +243,16 @@ export class ProductRatingComponent implements OnInit {
   }
 
   async getProductRatings() {
-    this.productRatings = await this.ratingService.getProductRatings(this.queryStringBuilder()).finally(() => {
+    let productRatings = await this.ratingService.getProductRatings(this.queryStringBuilder()).finally(() => {
       this.bootstrapSpinner = false;
       this.spinner.hide();
     });
+
+    productRatings.ratings.map((rating) => {
+      this.sanitizer.bypassSecurityTrustHtml(rating.comment);
+    });
+
+    this.productRatings = productRatings;
 
     this.totalPageCount = Math.ceil(this.productRatings.totalProductRatingCount / this.productRatingsFilter.size);
   }

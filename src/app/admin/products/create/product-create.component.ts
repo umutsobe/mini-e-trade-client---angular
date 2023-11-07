@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { List_Category } from 'src/app/contracts/category/list_category';
 import { CategoryService } from 'src/app/services/models/category.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-create',
   template: `
@@ -128,7 +129,7 @@ export class ProductCreateComponent {
   frm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private productService: ProductService, private toastr: ToastrService, private spinner: NgxSpinnerService, private categoryService: CategoryService) {
+  constructor(private formBuilder: FormBuilder, private productService: ProductService, private toastr: ToastrService, private spinner: NgxSpinnerService, private categoryService: CategoryService, private sanitizer: DomSanitizer) {
     this.frm = formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(150)]],
       price: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
@@ -169,12 +170,15 @@ export class ProductCreateComponent {
 
     this.spinner.show();
 
+    var safeDescription = this.sanitizer.bypassSecurityTrustHtml(this.description.value);
+    var safeStringDescription = safeDescription.toString();
+
     const product: CreateProduct = {
       name: this.name.value,
       price: parseInt(this.price.value),
       stock: parseFloat(this.stock.value),
 
-      description: this.description.value,
+      description: safeStringDescription,
       categoryNames: this.selectedCategories,
       isActive: this.isActive,
     };
