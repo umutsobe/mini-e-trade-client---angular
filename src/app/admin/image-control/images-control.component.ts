@@ -37,7 +37,7 @@ import { ImageService } from 'src/app/services/models/image.service';
           <button class="btn btn-primary my-1" onclick="document.getElementById('getFile').click()">Select Image and Crop</button>
           <input type="file" id="getFile" style="display:none" (change)="fileChangeEvent($event)" />
           <div style="width: 340px;">
-            <image-cropper *ngIf="isHidden" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="3 / 1" (imageCropped)="imageCropped($event)"></image-cropper>
+            <image-cropper *ngIf="isHidden" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="5 / 2" (imageCropped)="imageCropped($event)"></image-cropper>
           </div>
           <div *ngIf="!isHidden" class="imagePreview mt-2" style="width: 250px; height: 140px;"></div>
           <div *ngIf="isHidden" class="p-2 " style="width: 100%;">
