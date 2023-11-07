@@ -17,7 +17,7 @@ import { ProductService } from 'src/app/services/models/product.service';
   selector: 'app-home',
   template: `
     <div class="container-lg" style="width: 100%;">
-      <div class="">
+      <div class="carouselSection" style="height: 400px;">
         <!-- carouselTop -->
         <div id="carouselTop" class="carousel slide" data-bs-ride="carousel" *ngIf="homePageImages.length > 0">
           <div class="carousel-inner w-100">
@@ -101,6 +101,9 @@ import { ProductService } from 'src/app/services/models/product.service';
 
       @media (max-width: 570px) {
         .carousel-image {
+          height: 150px;
+        }
+        .carouselSection {
           height: 150px;
         }
         .product-card {
