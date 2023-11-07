@@ -16,7 +16,7 @@ import { ProductService } from 'src/app/services/models/product.service';
 @Component({
   selector: 'app-home',
   template: `
-    <div class="container-lg" style="width: 100%;">
+    <div class="container-lg">
       <div class="carouselSection">
         <!-- carouselTop -->
         <div id="carouselTop" class="carousel slide carousel-fade" data-bs-ride="carousel" *ngIf="homePageImages.length > 0">

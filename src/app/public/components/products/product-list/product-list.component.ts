@@ -437,7 +437,7 @@ export class ProductListComponent {
     if (this.isCategoryPage) {
       this.title.setTitle(`Category : ${this.productFilter.categoryName}`);
     } else {
-      this.title.setTitle(`E Commerce Search : ${this.productFilter.keyword ? this.productFilter.keyword : ''}`);
+      this.title.setTitle(`E Commerce Search ${this.productFilter.keyword ? ':' + this.productFilter.keyword : ''}`);
     }
   }
 }
