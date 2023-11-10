@@ -15,6 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { HomeModule } from './public/components/home/home.module';
 import { HttpErrorHandlerInterceptorService } from './services/common/http-error-handler-interceptor.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [AppComponent],
   providers: [
@@ -64,6 +65,7 @@ import { HttpErrorHandlerInterceptorService } from './services/common/http-error
         allowedDomains: [environment.jwtDomain],
       },
     }),
+    NgbModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

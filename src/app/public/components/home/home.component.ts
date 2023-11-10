@@ -18,22 +18,13 @@ import { ProductService } from 'src/app/services/models/product.service';
   template: `
     <div class="container-lg">
       <div class="carouselSection">
-        <!-- carouselTop -->
-        <div id="carouselTop" class="carousel slide carousel-fade" data-bs-ride="carousel" *ngIf="homePageImages.length > 0">
-          <div class="carousel-inner w-100">
-            <div *ngFor="let image of homePageImages; let isFirst = first" class="carousel-item rounded-2" [class.active]="isFirst">
-              <img style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;" class="carousel-image w-100" height="400" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultGalleryImage" />
+        <ngb-carousel *ngIf="homePageImages.length > 0">
+          <ng-template *ngFor="let image of homePageImages" ngbSlide>
+            <div class="">
+              <img class="carousel-image w-100" style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;" alt="{{ image.fileName }}" [lazyLoad]="baseUrl + '/' + image.path" [defaultImage]="defaultGalleryImage" />
             </div>
-          </div>
-          <button *ngIf="homePageImages.length > 1" class="carousel-control-prev" type="button" data-bs-target="#carouselTop" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button *ngIf="homePageImages.length > 1" class="carousel-control-next" type="button" data-bs-target="#carouselTop" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
+          </ng-template>
+        </ngb-carousel>
       </div>
 
       <!-- bestsellers -->
@@ -81,9 +72,6 @@ import { ProductService } from 'src/app/services/models/product.service';
         box-shadow: none;
       }
 
-      .carousel-image {
-        object-fit: cover;
-      }
       ::ng-deep .p-galleria-item-next-icon {
         color: #212529 !important;
       }
@@ -101,6 +89,10 @@ import { ProductService } from 'src/app/services/models/product.service';
         overflow: hidden;
         height: 36px;
       }
+      .carousel-image {
+        object-fit: cover;
+        height: 400px;
+      }
       .carouselSection {
         height: 400px;
       }
@@ -117,10 +109,10 @@ import { ProductService } from 'src/app/services/models/product.service';
 
       @media (max-width: 570px) {
         .carousel-image {
-          height: 150px;
+          height: 200px;
         }
         .carouselSection {
-          height: 150px;
+          height: 200px;
         }
         .product-card {
           width: 49% !important;
