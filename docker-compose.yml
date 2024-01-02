@@ -12,6 +12,7 @@ services:
       - NODE_TLS_REJECT_UNAUTHORIZED=0
     networks:
       - e_commerce
+    restart: always
 
 networks:
   e_commerce:
