@@ -46,8 +46,6 @@
 - Dynamic Clodflare Caching
 
 ## Solution Explorer Overview
-#### Machine: 1 CPU, 2GB RAM
 
-#### Machine Location: Frankfurt
+![Screenshot 2023-10-25 031918](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/9aa36e16-e050-41ab-b902-b84dbd2a7d49)
 
-![postman api test](https://github.com/umutsobe/E-Commerce-ASP.Net-Core-7/assets/120561448/20fde2be-4674-4c44-b604-2a0a73991dcb)
